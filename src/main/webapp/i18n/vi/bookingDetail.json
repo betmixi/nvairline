@@ -1,0 +1,27 @@
+{
+  "dugxApp": {
+    "bookingDetail": {
+      "home": {
+        "title": "Booking Details",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Thêm mới một Booking Detail",
+        "createOrEditLabel": "Thêm mới hoặc cập nhật Booking Detail",
+        "notFound": "No Booking Details found"
+      },
+      "created": "Một Booking Detail mới được tạo với định danh {{ param }}",
+      "updated": "Một Booking Detail cập nhật với định danh {{ param }}",
+      "deleted": "Một Booking Detail đã xóa với định danh {{ param }}",
+      "delete": {
+        "question": "Bạn có chắc là muốn xóa Booking Detail {{ id }}?"
+      },
+      "detail": {
+        "title": "Booking Detail"
+      },
+      "id": "ID",
+      "quantity": "Quantity",
+      "price": "Price",
+      "booking": "Booking",
+      "ticketType": "Ticket Type"
+    }
+  }
+}

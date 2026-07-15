@@ -1,0 +1,188 @@
+application {
+  config {
+    baseName dugx
+    packageName com.dugx.event
+    applicationType monolith
+    authenticationType jwt
+    buildTool maven
+    databaseType sql
+    devDatabaseType postgresql
+    prodDatabaseType postgresql
+    clientFramework angular
+    nativeLanguage en
+    languages [en,vi]
+  }
+
+  entities *
+}
+
+/* ================= ENTITY ================= */
+
+entity Organizer {
+    companyName String required maxlength(100)
+    taxCode String required maxlength(50)
+    description TextBlob
+    verified Boolean
+}
+
+entity Category {
+    name String required maxlength(100)
+    description TextBlob
+}
+
+entity Address {
+    location String required
+    address String required
+    city String required
+    capacity Integer required min(1)
+}
+
+entity Event {
+    title String required
+    description TextBlob
+    banner String
+    startTime Instant
+    endTime Instant
+    status Boolean
+    createdDate Instant
+}
+
+entity EventImage {
+    imageUrl String required
+}
+
+entity TicketType {
+    name String required
+    price BigDecimal required
+    quantity Integer required
+    remaining Integer required
+    saleStart Instant
+    saleEnd Instant
+}
+
+entity Booking {
+    bookingDate Instant
+    totalAmount BigDecimal
+    status String
+}
+
+entity BookingDetail {
+    quantity Integer
+    price BigDecimal
+}
+
+entity Ticket {
+    qrCode TextBlob
+    status String
+    checkedIn Boolean
+}
+
+entity Payment {
+    method String
+    transactionCode String
+    amount BigDecimal
+    status String
+    paymentDate Instant
+}
+
+entity CheckIn {
+    checkInTime Instant
+}
+
+entity Review {
+    rating Integer required min(1) max(5)
+    comment TextBlob
+    createdDate Instant
+}
+
+entity Favorite {
+}
+
+entity Notification {
+    title String
+    content TextBlob
+    read Boolean
+    sentDate Instant
+}
+
+entity Coupon {
+    code String required unique
+    discount BigDecimal
+    startDate Instant
+    endDate Instant
+    quantity Integer
+}
+
+entity Report {
+    reason TextBlob
+    status String
+    createdDate Instant
+}
+
+entity AuditLog {
+    action String
+    tableName String
+    recordId Long
+    createdDate Instant
+}
+
+/* ================= RELATIONSHIP ================= */
+
+relationship OneToOne {
+    Organizer{user(login)} to @OnDelete("CASCADE") User with builtInEntity
+}
+
+relationship ManyToOne {
+
+    Event{category(name)} to Category
+
+    Event{address(location)} to Address
+
+    Event{organizer(companyName)} to Organizer
+
+    EventImage{event(title)} to Event
+
+    TicketType{event(title)} to Event
+
+    Booking{user(login)} to User with builtInEntity
+
+    BookingDetail{booking(id)} to Booking
+
+    BookingDetail{ticketType(name)} to TicketType
+
+    Ticket{bookingDetail(id)} to BookingDetail
+
+    Payment{booking(id)} to Booking
+
+    CheckIn{ticket(id)} to Ticket
+
+    CheckIn{checkedBy(login)} to User with builtInEntity
+
+    Review{user(login)} to User with builtInEntity
+
+    Review{event(title)} to Event
+
+    Favorite{user(login)} to User with builtInEntity
+
+    Favorite{event(title)} to Event
+
+    Notification{user(login)} to User with builtInEntity
+
+    Coupon{event(title)} to Event
+
+    Report{user(login)} to User with builtInEntity
+
+    Report{event(title)} to Event
+
+    AuditLog{user(login)} to User with builtInEntity
+}
+
+/* ================= OPTIONS ================= */
+
+dto * with mapstruct
+
+service * with serviceClass
+
+paginate * with pagination
+
+filter *

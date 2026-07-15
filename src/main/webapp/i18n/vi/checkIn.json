@@ -1,0 +1,26 @@
+{
+  "dugxApp": {
+    "checkIn": {
+      "home": {
+        "title": "Check Ins",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Thêm mới một Check In",
+        "createOrEditLabel": "Thêm mới hoặc cập nhật Check In",
+        "notFound": "No Check Ins found"
+      },
+      "created": "Một Check In mới được tạo với định danh {{ param }}",
+      "updated": "Một Check In cập nhật với định danh {{ param }}",
+      "deleted": "Một Check In đã xóa với định danh {{ param }}",
+      "delete": {
+        "question": "Bạn có chắc là muốn xóa Check In {{ id }}?"
+      },
+      "detail": {
+        "title": "Check In"
+      },
+      "id": "ID",
+      "checkInTime": "Check In Time",
+      "ticket": "Ticket",
+      "checkedBy": "Checked By"
+    }
+  }
+}

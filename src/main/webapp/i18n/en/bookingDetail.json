@@ -1,0 +1,27 @@
+{
+  "dugxApp": {
+    "bookingDetail": {
+      "home": {
+        "title": "Booking Details",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Booking Detail",
+        "createOrEditLabel": "Create or edit a Booking Detail",
+        "notFound": "No Booking Details found"
+      },
+      "created": "A new Booking Detail is created with identifier {{ param }}",
+      "updated": "A Booking Detail is updated with identifier {{ param }}",
+      "deleted": "A Booking Detail is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Booking Detail {{ id }}?"
+      },
+      "detail": {
+        "title": "Booking Detail"
+      },
+      "id": "ID",
+      "quantity": "Quantity",
+      "price": "Price",
+      "booking": "Booking",
+      "ticketType": "Ticket Type"
+    }
+  }
+}

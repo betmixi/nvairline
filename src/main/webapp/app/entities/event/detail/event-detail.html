@@ -1,0 +1,82 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (event(); as eventRef) {
+    <div>
+      <h2 data-cy="eventDetailsHeading"><span jhiTranslate="dugxApp.event.detail.title">Event</span></h2>
+
+      <hr />
+
+      <jhi-alert-error />
+
+      <jhi-alert />
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ eventRef.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.event.title">Title</span></dt>
+        <dd>
+          <span>{{ eventRef.title }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.event.description">Description</span></dt>
+        <dd>
+          <span>{{ eventRef.description }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.event.banner">Banner</span></dt>
+        <dd>
+          <span>{{ eventRef.banner }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.event.startTime">Start Time</span></dt>
+        <dd>
+          <span>{{ eventRef.startTime | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.event.endTime">End Time</span></dt>
+        <dd>
+          <span>{{ eventRef.endTime | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.event.status">Status</span></dt>
+        <dd>
+          <span>{{ eventRef.status }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.event.createdDate">Created Date</span></dt>
+        <dd>
+          <span>{{ eventRef.createdDate | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.event.category">Category</span></dt>
+        <dd>
+          @if (event()!.category) {
+          <div>
+            <a [routerLink]="['/category', event()!.category?.id, 'view']">{{ eventRef.category?.name }}</a>
+          </div>
+          }
+        </dd>
+        <dt><span jhiTranslate="dugxApp.event.address">Address</span></dt>
+        <dd>
+          @if (event()!.address) {
+          <div>
+            <a [routerLink]="['/address', event()!.address?.id, 'view']">{{ eventRef.address?.location }}</a>
+          </div>
+          }
+        </dd>
+        <dt><span jhiTranslate="dugxApp.event.organizer">Organizer</span></dt>
+        <dd>
+          @if (event()!.organizer) {
+          <div>
+            <a [routerLink]="['/organizer', event()!.organizer?.id, 'view']">{{ eventRef.organizer?.companyName }}</a>
+          </div>
+          }
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/event', eventRef.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+    }
+  </div>
+</div>

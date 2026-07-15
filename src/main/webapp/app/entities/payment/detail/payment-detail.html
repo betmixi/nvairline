@@ -1,0 +1,58 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (payment(); as paymentRef) {
+    <div>
+      <h2 data-cy="paymentDetailsHeading"><span jhiTranslate="dugxApp.payment.detail.title">Payment</span></h2>
+
+      <hr />
+
+      <jhi-alert-error />
+
+      <jhi-alert />
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ paymentRef.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.payment.method">Method</span></dt>
+        <dd>
+          <span>{{ paymentRef.method }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.payment.transactionCode">Transaction Code</span></dt>
+        <dd>
+          <span>{{ paymentRef.transactionCode }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.payment.amount">Amount</span></dt>
+        <dd>
+          <span>{{ paymentRef.amount }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.payment.status">Status</span></dt>
+        <dd>
+          <span>{{ paymentRef.status }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.payment.paymentDate">Payment Date</span></dt>
+        <dd>
+          <span>{{ paymentRef.paymentDate | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.payment.booking">Booking</span></dt>
+        <dd>
+          @if (payment()!.booking) {
+          <div>
+            <a [routerLink]="['/booking', payment()!.booking?.id, 'view']">{{ paymentRef.booking?.id }}</a>
+          </div>
+          }
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/payment', paymentRef.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+    }
+  </div>
+</div>

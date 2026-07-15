@@ -1,0 +1,50 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (notification(); as notificationRef) {
+    <div>
+      <h2 data-cy="notificationDetailsHeading"><span jhiTranslate="dugxApp.notification.detail.title">Notification</span></h2>
+
+      <hr />
+
+      <jhi-alert-error />
+
+      <jhi-alert />
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ notificationRef.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.notification.title">Title</span></dt>
+        <dd>
+          <span>{{ notificationRef.title }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.notification.content">Content</span></dt>
+        <dd>
+          <span>{{ notificationRef.content }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.notification.read">Read</span></dt>
+        <dd>
+          <span>{{ notificationRef.read }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.notification.sentDate">Sent Date</span></dt>
+        <dd>
+          <span>{{ notificationRef.sentDate | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.notification.user">User</span></dt>
+        <dd>
+          <span>{{ notificationRef.user?.login }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/notification', notificationRef.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+    }
+  </div>
+</div>

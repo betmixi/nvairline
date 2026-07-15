@@ -1,0 +1,28 @@
+{
+  "dugxApp": {
+    "auditLog": {
+      "home": {
+        "title": "Audit Logs",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Thêm mới một Audit Log",
+        "createOrEditLabel": "Thêm mới hoặc cập nhật Audit Log",
+        "notFound": "No Audit Logs found"
+      },
+      "created": "Một Audit Log mới được tạo với định danh {{ param }}",
+      "updated": "Một Audit Log cập nhật với định danh {{ param }}",
+      "deleted": "Một Audit Log đã xóa với định danh {{ param }}",
+      "delete": {
+        "question": "Bạn có chắc là muốn xóa Audit Log {{ id }}?"
+      },
+      "detail": {
+        "title": "Audit Log"
+      },
+      "id": "ID",
+      "action": "Action",
+      "tableName": "Table Name",
+      "recordId": "Record Id",
+      "createdDate": "Created Date",
+      "user": "User"
+    }
+  }
+}

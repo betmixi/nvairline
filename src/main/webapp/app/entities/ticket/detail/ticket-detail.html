@@ -1,0 +1,50 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (ticket(); as ticketRef) {
+    <div>
+      <h2 data-cy="ticketDetailsHeading"><span jhiTranslate="dugxApp.ticket.detail.title">Ticket</span></h2>
+
+      <hr />
+
+      <jhi-alert-error />
+
+      <jhi-alert />
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ ticketRef.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.ticket.qrCode">Qr Code</span></dt>
+        <dd>
+          <span>{{ ticketRef.qrCode }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.ticket.status">Status</span></dt>
+        <dd>
+          <span>{{ ticketRef.status }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.ticket.checkedIn">Checked In</span></dt>
+        <dd>
+          <span>{{ ticketRef.checkedIn }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.ticket.bookingDetail">Booking Detail</span></dt>
+        <dd>
+          @if (ticket()!.bookingDetail) {
+          <div>
+            <a [routerLink]="['/booking-detail', ticket()!.bookingDetail?.id, 'view']">{{ ticketRef.bookingDetail?.id }}</a>
+          </div>
+          }
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/ticket', ticketRef.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+    }
+  </div>
+</div>

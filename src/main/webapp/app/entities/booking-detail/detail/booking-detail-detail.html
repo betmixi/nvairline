@@ -1,0 +1,54 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (bookingDetail(); as bookingDetailRef) {
+    <div>
+      <h2 data-cy="bookingDetailDetailsHeading"><span jhiTranslate="dugxApp.bookingDetail.detail.title">Booking Detail</span></h2>
+
+      <hr />
+
+      <jhi-alert-error />
+
+      <jhi-alert />
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ bookingDetailRef.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.bookingDetail.quantity">Quantity</span></dt>
+        <dd>
+          <span>{{ bookingDetailRef.quantity }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.bookingDetail.price">Price</span></dt>
+        <dd>
+          <span>{{ bookingDetailRef.price }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.bookingDetail.booking">Booking</span></dt>
+        <dd>
+          @if (bookingDetail()!.booking) {
+          <div>
+            <a [routerLink]="['/booking', bookingDetail()!.booking?.id, 'view']">{{ bookingDetailRef.booking?.id }}</a>
+          </div>
+          }
+        </dd>
+        <dt><span jhiTranslate="dugxApp.bookingDetail.ticketType">Ticket Type</span></dt>
+        <dd>
+          @if (bookingDetail()!.ticketType) {
+          <div>
+            <a [routerLink]="['/ticket-type', bookingDetail()!.ticketType?.id, 'view']">{{ bookingDetailRef.ticketType?.name }}</a>
+          </div>
+          }
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/booking-detail', bookingDetailRef.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,27 @@
+{
+  "dugxApp": {
+    "address": {
+      "home": {
+        "title": "Addresses",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Thêm mới một Address",
+        "createOrEditLabel": "Thêm mới hoặc cập nhật Address",
+        "notFound": "No Addresses found"
+      },
+      "created": "Một Address mới được tạo với định danh {{ param }}",
+      "updated": "Một Address cập nhật với định danh {{ param }}",
+      "deleted": "Một Address đã xóa với định danh {{ param }}",
+      "delete": {
+        "question": "Bạn có chắc là muốn xóa Address {{ id }}?"
+      },
+      "detail": {
+        "title": "Address"
+      },
+      "id": "ID",
+      "location": "Location",
+      "address": "Address",
+      "city": "City",
+      "capacity": "Capacity"
+    }
+  }
+}

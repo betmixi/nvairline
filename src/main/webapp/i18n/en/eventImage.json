@@ -1,0 +1,25 @@
+{
+  "dugxApp": {
+    "eventImage": {
+      "home": {
+        "title": "Event Images",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Event Image",
+        "createOrEditLabel": "Create or edit a Event Image",
+        "notFound": "No Event Images found"
+      },
+      "created": "A new Event Image is created with identifier {{ param }}",
+      "updated": "A Event Image is updated with identifier {{ param }}",
+      "deleted": "A Event Image is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Event Image {{ id }}?"
+      },
+      "detail": {
+        "title": "Event Image"
+      },
+      "id": "ID",
+      "imageUrl": "Image Url",
+      "event": "Event"
+    }
+  }
+}

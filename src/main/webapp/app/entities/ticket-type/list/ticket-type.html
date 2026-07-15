@@ -1,0 +1,155 @@
+<div>
+  <h2 id="page-heading" data-cy="TicketTypeHeading">
+    <span jhiTranslate="dugxApp.ticketType.home.title">Ticket Types</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span jhiTranslate="dugxApp.ticketType.home.refreshListLabel">Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-ticket-type"
+        [routerLink]="['/ticket-type/new']"
+      >
+        <fa-icon icon="plus" />
+        <span jhiTranslate="dugxApp.ticketType.home.createLabel">Create a new Ticket Type</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  <jhi-filter [filters]="filters" />
+
+  @if (ticketTypes().length === 0) {
+  <div class="alert alert-warning" id="no-result">
+    <span jhiTranslate="dugxApp.ticketType.home.notFound">No Ticket Types found</span>
+  </div>
+  } @else {
+  <div class="table-responsive table-entities" id="entities">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+          <th scope="col" jhiSortBy="id">
+            <div class="d-flex">
+              <span jhiTranslate="global.field.id">ID</span>
+
+              <fa-icon class="p-1" icon="sort" />
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="name">
+            <div class="d-flex">
+              <span jhiTranslate="dugxApp.ticketType.name">Name</span>
+
+              <fa-icon class="p-1" icon="sort" />
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="price">
+            <div class="d-flex">
+              <span jhiTranslate="dugxApp.ticketType.price">Price</span>
+
+              <fa-icon class="p-1" icon="sort" />
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="quantity">
+            <div class="d-flex">
+              <span jhiTranslate="dugxApp.ticketType.quantity">Quantity</span>
+
+              <fa-icon class="p-1" icon="sort" />
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="remaining">
+            <div class="d-flex">
+              <span jhiTranslate="dugxApp.ticketType.remaining">Remaining</span>
+
+              <fa-icon class="p-1" icon="sort" />
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="saleStart">
+            <div class="d-flex">
+              <span jhiTranslate="dugxApp.ticketType.saleStart">Sale Start</span>
+
+              <fa-icon class="p-1" icon="sort" />
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="saleEnd">
+            <div class="d-flex">
+              <span jhiTranslate="dugxApp.ticketType.saleEnd">Sale End</span>
+
+              <fa-icon class="p-1" icon="sort" />
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="event.title">
+            <div class="d-flex">
+              <span jhiTranslate="dugxApp.ticketType.event">Event</span>
+              <fa-icon class="p-1" icon="sort" />
+            </div>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (ticketType of ticketTypes(); track trackId(ticketType)) {
+        <tr data-cy="entityTable">
+          <td><a [routerLink]="['/ticket-type', ticketType.id, 'view']">{{ ticketType.id }}</a></td>
+          <td>{{ ticketType.name }}</td>
+          <td>{{ ticketType.price }}</td>
+          <td>{{ ticketType.quantity }}</td>
+          <td>{{ ticketType.remaining }}</td>
+          <td>{{ ticketType.saleStart | formatMediumDatetime }}</td>
+          <td>{{ ticketType.saleEnd | formatMediumDatetime }}</td>
+          <td>
+            @if (ticketType.event) {
+            <div>
+              <a [routerLink]="['/event', ticketType.event.id, 'view']">{{ ticketType.event.title }}</a>
+            </div>
+            }
+          </td>
+          <td class="text-end">
+            <div class="btn-group">
+              <a [routerLink]="['/ticket-type', ticketType.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                <fa-icon icon="eye" />
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+              </a>
+
+              <a [routerLink]="['/ticket-type', ticketType.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                <fa-icon icon="pencil-alt" />
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+              </a>
+
+              <button type="submit" (click)="delete(ticketType)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times" />
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  } @if (ticketTypes().length > 0) {
+  <div>
+    <div class="d-flex justify-content-center">
+      <jhi-item-count [params]="{ page: page(), totalItems: totalItems(), itemsPerPage: itemsPerPage() }" />
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems()"
+        [page]="page()"
+        [pageSize]="itemsPerPage()"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="navigateToPage($event)"
+      />
+    </div>
+  </div>
+  }
+</div>

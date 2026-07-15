@@ -1,0 +1,42 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (eventImage(); as eventImageRef) {
+    <div>
+      <h2 data-cy="eventImageDetailsHeading"><span jhiTranslate="dugxApp.eventImage.detail.title">Event Image</span></h2>
+
+      <hr />
+
+      <jhi-alert-error />
+
+      <jhi-alert />
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ eventImageRef.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.eventImage.imageUrl">Image Url</span></dt>
+        <dd>
+          <span>{{ eventImageRef.imageUrl }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.eventImage.event">Event</span></dt>
+        <dd>
+          @if (eventImage()!.event) {
+          <div>
+            <a [routerLink]="['/event', eventImage()!.event?.id, 'view']">{{ eventImageRef.event?.title }}</a>
+          </div>
+          }
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/event-image', eventImageRef.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+    }
+  </div>
+</div>

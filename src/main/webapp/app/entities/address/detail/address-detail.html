@@ -1,0 +1,46 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (address(); as addressRef) {
+    <div>
+      <h2 data-cy="addressDetailsHeading"><span jhiTranslate="dugxApp.address.detail.title">Address</span></h2>
+
+      <hr />
+
+      <jhi-alert-error />
+
+      <jhi-alert />
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ addressRef.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.address.location">Location</span></dt>
+        <dd>
+          <span>{{ addressRef.location }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.address.address">Address</span></dt>
+        <dd>
+          <span>{{ addressRef.address }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.address.city">City</span></dt>
+        <dd>
+          <span>{{ addressRef.city }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.address.capacity">Capacity</span></dt>
+        <dd>
+          <span>{{ addressRef.capacity }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/address', addressRef.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+    }
+  </div>
+</div>

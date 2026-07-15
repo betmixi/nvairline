@@ -1,0 +1,25 @@
+{
+  "dugxApp": {
+    "favorite": {
+      "home": {
+        "title": "Favorites",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Thêm mới một Favorite",
+        "createOrEditLabel": "Thêm mới hoặc cập nhật Favorite",
+        "notFound": "No Favorites found"
+      },
+      "created": "Một Favorite mới được tạo với định danh {{ param }}",
+      "updated": "Một Favorite cập nhật với định danh {{ param }}",
+      "deleted": "Một Favorite đã xóa với định danh {{ param }}",
+      "delete": {
+        "question": "Bạn có chắc là muốn xóa Favorite {{ id }}?"
+      },
+      "detail": {
+        "title": "Favorite"
+      },
+      "id": "ID",
+      "user": "User",
+      "event": "Event"
+    }
+  }
+}

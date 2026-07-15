@@ -1,0 +1,85 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2
+        id="jhi-booking-detail-heading"
+        data-cy="BookingDetailCreateUpdateHeading"
+        jhiTranslate="dugxApp.bookingDetail.home.createOrEditLabel"
+      >
+        Create or edit a Booking Detail
+      </h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+
+        <div class="mb-3">
+          <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+        }
+
+        <div class="mb-3">
+          <label class="form-label" for="field_quantity" jhiTranslate="dugxApp.bookingDetail.quantity">Quantity</label>
+          <input type="number" class="form-control" name="quantity" id="field_quantity" data-cy="quantity" formControlName="quantity" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_price" jhiTranslate="dugxApp.bookingDetail.price">Price</label>
+          <input type="number" class="form-control" name="price" id="field_price" data-cy="price" formControlName="price" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_booking" jhiTranslate="dugxApp.bookingDetail.booking">Booking</label>
+          <select
+            class="form-control"
+            id="field_booking"
+            data-cy="booking"
+            name="booking"
+            formControlName="booking"
+            [compareWith]="compareBooking"
+          >
+            <option [ngValue]="null"></option>
+            @for (bookingOption of bookingsSharedCollection(); track $index) {
+            <option [ngValue]="bookingOption">{{ bookingOption.id }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_ticketType" jhiTranslate="dugxApp.bookingDetail.ticketType">Ticket Type</label>
+          <select
+            class="form-control"
+            id="field_ticketType"
+            data-cy="ticketType"
+            name="ticketType"
+            formControlName="ticketType"
+            [compareWith]="compareTicketType"
+          >
+            <option [ngValue]="null"></option>
+            @for (ticketTypeOption of ticketTypesSharedCollection(); track $index) {
+            <option [ngValue]="ticketTypeOption">{{ ticketTypeOption.name }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

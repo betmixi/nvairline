@@ -1,0 +1,62 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (ticketType(); as ticketTypeRef) {
+    <div>
+      <h2 data-cy="ticketTypeDetailsHeading"><span jhiTranslate="dugxApp.ticketType.detail.title">Ticket Type</span></h2>
+
+      <hr />
+
+      <jhi-alert-error />
+
+      <jhi-alert />
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ ticketTypeRef.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.ticketType.name">Name</span></dt>
+        <dd>
+          <span>{{ ticketTypeRef.name }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.ticketType.price">Price</span></dt>
+        <dd>
+          <span>{{ ticketTypeRef.price }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.ticketType.quantity">Quantity</span></dt>
+        <dd>
+          <span>{{ ticketTypeRef.quantity }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.ticketType.remaining">Remaining</span></dt>
+        <dd>
+          <span>{{ ticketTypeRef.remaining }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.ticketType.saleStart">Sale Start</span></dt>
+        <dd>
+          <span>{{ ticketTypeRef.saleStart | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.ticketType.saleEnd">Sale End</span></dt>
+        <dd>
+          <span>{{ ticketTypeRef.saleEnd | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.ticketType.event">Event</span></dt>
+        <dd>
+          @if (ticketType()!.event) {
+          <div>
+            <a [routerLink]="['/event', ticketType()!.event?.id, 'view']">{{ ticketTypeRef.event?.title }}</a>
+          </div>
+          }
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/ticket-type', ticketTypeRef.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+    }
+  </div>
+</div>

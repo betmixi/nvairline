@@ -1,0 +1,136 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-ticket-type-heading" data-cy="TicketTypeCreateUpdateHeading" jhiTranslate="dugxApp.ticketType.home.createOrEditLabel">
+        Create or edit a Ticket Type
+      </h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+
+        <div class="mb-3">
+          <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+        } @let nameRef = editForm.get('name')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_name" jhiTranslate="dugxApp.ticketType.name">Name</label>
+          <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
+          @if (nameRef.invalid && (nameRef.dirty || nameRef.touched)) {
+          <div>
+            @if (nameRef.errors?.required) {
+            <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            }
+          </div>
+          }
+        </div>
+
+        @let priceRef = editForm.get('price')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_price" jhiTranslate="dugxApp.ticketType.price">Price</label>
+          <input type="number" class="form-control" name="price" id="field_price" data-cy="price" formControlName="price" />
+          @if (priceRef.invalid && (priceRef.dirty || priceRef.touched)) {
+          <div>
+            @if (priceRef.errors?.required) {
+            <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            }
+            <small class="form-text text-danger" [hidden]="!priceRef.errors?.number" jhiTranslate="entity.validation.number"
+              >This field should be a number.</small
+            >
+          </div>
+          }
+        </div>
+
+        @let quantityRef = editForm.get('quantity')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_quantity" jhiTranslate="dugxApp.ticketType.quantity">Quantity</label>
+          <input type="number" class="form-control" name="quantity" id="field_quantity" data-cy="quantity" formControlName="quantity" />
+          @if (quantityRef.invalid && (quantityRef.dirty || quantityRef.touched)) {
+          <div>
+            @if (quantityRef.errors?.required) {
+            <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            }
+            <small class="form-text text-danger" [hidden]="!quantityRef.errors?.number" jhiTranslate="entity.validation.number"
+              >This field should be a number.</small
+            >
+          </div>
+          }
+        </div>
+
+        @let remainingRef = editForm.get('remaining')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_remaining" jhiTranslate="dugxApp.ticketType.remaining">Remaining</label>
+          <input type="number" class="form-control" name="remaining" id="field_remaining" data-cy="remaining" formControlName="remaining" />
+          @if (remainingRef.invalid && (remainingRef.dirty || remainingRef.touched)) {
+          <div>
+            @if (remainingRef.errors?.required) {
+            <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            }
+            <small class="form-text text-danger" [hidden]="!remainingRef.errors?.number" jhiTranslate="entity.validation.number"
+              >This field should be a number.</small
+            >
+          </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_saleStart" jhiTranslate="dugxApp.ticketType.saleStart">Sale Start</label>
+          <div class="d-flex">
+            <input
+              id="field_saleStart"
+              data-cy="saleStart"
+              type="datetime-local"
+              class="form-control"
+              name="saleStart"
+              formControlName="saleStart"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_saleEnd" jhiTranslate="dugxApp.ticketType.saleEnd">Sale End</label>
+          <div class="d-flex">
+            <input
+              id="field_saleEnd"
+              data-cy="saleEnd"
+              type="datetime-local"
+              class="form-control"
+              name="saleEnd"
+              formControlName="saleEnd"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_event" jhiTranslate="dugxApp.ticketType.event">Event</label>
+          <select class="form-control" id="field_event" data-cy="event" name="event" formControlName="event" [compareWith]="compareEvent">
+            <option [ngValue]="null"></option>
+            @for (eventOption of eventsSharedCollection(); track $index) {
+            <option [ngValue]="eventOption">{{ eventOption.title }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

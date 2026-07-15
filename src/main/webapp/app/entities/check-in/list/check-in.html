@@ -1,0 +1,122 @@
+<div>
+  <h2 id="page-heading" data-cy="CheckInHeading">
+    <span jhiTranslate="dugxApp.checkIn.home.title">Check Ins</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span jhiTranslate="dugxApp.checkIn.home.refreshListLabel">Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-check-in"
+        [routerLink]="['/check-in/new']"
+      >
+        <fa-icon icon="plus" />
+        <span jhiTranslate="dugxApp.checkIn.home.createLabel">Create a new Check In</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  <jhi-filter [filters]="filters" />
+
+  @if (checkIns().length === 0) {
+  <div class="alert alert-warning" id="no-result">
+    <span jhiTranslate="dugxApp.checkIn.home.notFound">No Check Ins found</span>
+  </div>
+  } @else {
+  <div class="table-responsive table-entities" id="entities">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+          <th scope="col" jhiSortBy="id">
+            <div class="d-flex">
+              <span jhiTranslate="global.field.id">ID</span>
+
+              <fa-icon class="p-1" icon="sort" />
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="checkInTime">
+            <div class="d-flex">
+              <span jhiTranslate="dugxApp.checkIn.checkInTime">Check In Time</span>
+
+              <fa-icon class="p-1" icon="sort" />
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="ticket.id">
+            <div class="d-flex">
+              <span jhiTranslate="dugxApp.checkIn.ticket">Ticket</span>
+              <fa-icon class="p-1" icon="sort" />
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="checkedBy.login">
+            <div class="d-flex">
+              <span jhiTranslate="dugxApp.checkIn.checkedBy">Checked By</span>
+              <fa-icon class="p-1" icon="sort" />
+            </div>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (checkIn of checkIns(); track trackId(checkIn)) {
+        <tr data-cy="entityTable">
+          <td><a [routerLink]="['/check-in', checkIn.id, 'view']">{{ checkIn.id }}</a></td>
+          <td>{{ checkIn.checkInTime | formatMediumDatetime }}</td>
+          <td>
+            @if (checkIn.ticket) {
+            <div>
+              <a [routerLink]="['/ticket', checkIn.ticket.id, 'view']">{{ checkIn.ticket.id }}</a>
+            </div>
+            }
+          </td>
+          <td>{{ checkIn.checkedBy?.login }}</td>
+          <td class="text-end">
+            <div class="btn-group">
+              <a [routerLink]="['/check-in', checkIn.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                <fa-icon icon="eye" />
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+              </a>
+
+              <a [routerLink]="['/check-in', checkIn.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                <fa-icon icon="pencil-alt" />
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+              </a>
+
+              <button type="submit" (click)="delete(checkIn)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times" />
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  } @if (checkIns().length > 0) {
+  <div>
+    <div class="d-flex justify-content-center">
+      <jhi-item-count [params]="{ page: page(), totalItems: totalItems(), itemsPerPage: itemsPerPage() }" />
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems()"
+        [page]="page()"
+        [pageSize]="itemsPerPage()"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="navigateToPage($event)"
+      />
+    </div>
+  </div>
+  }
+</div>

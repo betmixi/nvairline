@@ -1,0 +1,58 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (coupon(); as couponRef) {
+    <div>
+      <h2 data-cy="couponDetailsHeading"><span jhiTranslate="dugxApp.coupon.detail.title">Coupon</span></h2>
+
+      <hr />
+
+      <jhi-alert-error />
+
+      <jhi-alert />
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ couponRef.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.coupon.code">Code</span></dt>
+        <dd>
+          <span>{{ couponRef.code }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.coupon.discount">Discount</span></dt>
+        <dd>
+          <span>{{ couponRef.discount }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.coupon.startDate">Start Date</span></dt>
+        <dd>
+          <span>{{ couponRef.startDate | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.coupon.endDate">End Date</span></dt>
+        <dd>
+          <span>{{ couponRef.endDate | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.coupon.quantity">Quantity</span></dt>
+        <dd>
+          <span>{{ couponRef.quantity }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.coupon.event">Event</span></dt>
+        <dd>
+          @if (coupon()!.event) {
+          <div>
+            <a [routerLink]="['/event', coupon()!.event?.id, 'view']">{{ couponRef.event?.title }}</a>
+          </div>
+          }
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/coupon', couponRef.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+    }
+  </div>
+</div>

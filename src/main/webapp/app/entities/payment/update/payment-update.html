@@ -1,0 +1,96 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-payment-heading" data-cy="PaymentCreateUpdateHeading" jhiTranslate="dugxApp.payment.home.createOrEditLabel">
+        Create or edit a Payment
+      </h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+
+        <div class="mb-3">
+          <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+        }
+
+        <div class="mb-3">
+          <label class="form-label" for="field_method" jhiTranslate="dugxApp.payment.method">Method</label>
+          <input type="text" class="form-control" name="method" id="field_method" data-cy="method" formControlName="method" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_transactionCode" jhiTranslate="dugxApp.payment.transactionCode">Transaction Code</label>
+          <input
+            type="text"
+            class="form-control"
+            name="transactionCode"
+            id="field_transactionCode"
+            data-cy="transactionCode"
+            formControlName="transactionCode"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_amount" jhiTranslate="dugxApp.payment.amount">Amount</label>
+          <input type="number" class="form-control" name="amount" id="field_amount" data-cy="amount" formControlName="amount" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_status" jhiTranslate="dugxApp.payment.status">Status</label>
+          <input type="text" class="form-control" name="status" id="field_status" data-cy="status" formControlName="status" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_paymentDate" jhiTranslate="dugxApp.payment.paymentDate">Payment Date</label>
+          <div class="d-flex">
+            <input
+              id="field_paymentDate"
+              data-cy="paymentDate"
+              type="datetime-local"
+              class="form-control"
+              name="paymentDate"
+              formControlName="paymentDate"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_booking" jhiTranslate="dugxApp.payment.booking">Booking</label>
+          <select
+            class="form-control"
+            id="field_booking"
+            data-cy="booking"
+            name="booking"
+            formControlName="booking"
+            [compareWith]="compareBooking"
+          >
+            <option [ngValue]="null"></option>
+            @for (bookingOption of bookingsSharedCollection(); track $index) {
+            <option [ngValue]="bookingOption">{{ bookingOption.id }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+{
+  "dugxApp": {
+    "ticketType": {
+      "home": {
+        "title": "Ticket Types",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Thêm mới một Ticket Type",
+        "createOrEditLabel": "Thêm mới hoặc cập nhật Ticket Type",
+        "notFound": "No Ticket Types found"
+      },
+      "created": "Một Ticket Type mới được tạo với định danh {{ param }}",
+      "updated": "Một Ticket Type cập nhật với định danh {{ param }}",
+      "deleted": "Một Ticket Type đã xóa với định danh {{ param }}",
+      "delete": {
+        "question": "Bạn có chắc là muốn xóa Ticket Type {{ id }}?"
+      },
+      "detail": {
+        "title": "Ticket Type"
+      },
+      "id": "ID",
+      "name": "Name",
+      "price": "Price",
+      "quantity": "Quantity",
+      "remaining": "Remaining",
+      "saleStart": "Sale Start",
+      "saleEnd": "Sale End",
+      "event": "Event"
+    }
+  }
+}

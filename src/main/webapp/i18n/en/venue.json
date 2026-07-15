@@ -1,0 +1,28 @@
+{
+  "dugxApp": {
+    "venue": {
+      "home": {
+        "title": "Venues",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Venue",
+        "createOrEditLabel": "Create or edit a Venue",
+        "notFound": "No Venues found"
+      },
+      "created": "A new Venue is created with identifier {{ param }}",
+      "updated": "A Venue is updated with identifier {{ param }}",
+      "deleted": "A Venue is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Venue {{ id }}?"
+      },
+      "detail": {
+        "title": "Venue"
+      },
+      "id": "ID",
+      "name": "Name",
+      "address": "Address",
+      "city": "City",
+      "country": "Country",
+      "capacity": "Capacity"
+    }
+  }
+}

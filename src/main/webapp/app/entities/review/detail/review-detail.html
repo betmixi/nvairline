@@ -1,0 +1,54 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (review(); as reviewRef) {
+    <div>
+      <h2 data-cy="reviewDetailsHeading"><span jhiTranslate="dugxApp.review.detail.title">Review</span></h2>
+
+      <hr />
+
+      <jhi-alert-error />
+
+      <jhi-alert />
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ reviewRef.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.review.rating">Rating</span></dt>
+        <dd>
+          <span>{{ reviewRef.rating }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.review.comment">Comment</span></dt>
+        <dd>
+          <span>{{ reviewRef.comment }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.review.createdDate">Created Date</span></dt>
+        <dd>
+          <span>{{ reviewRef.createdDate | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.review.user">User</span></dt>
+        <dd>
+          <span>{{ reviewRef.user?.login }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.review.event">Event</span></dt>
+        <dd>
+          @if (review()!.event) {
+          <div>
+            <a [routerLink]="['/event', review()!.event?.id, 'view']">{{ reviewRef.event?.title }}</a>
+          </div>
+          }
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/review', reviewRef.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+    }
+  </div>
+</div>

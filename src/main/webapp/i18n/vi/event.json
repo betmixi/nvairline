@@ -1,0 +1,33 @@
+{
+  "dugxApp": {
+    "event": {
+      "home": {
+        "title": "Events",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Thêm mới một Event",
+        "createOrEditLabel": "Thêm mới hoặc cập nhật Event",
+        "notFound": "No Events found"
+      },
+      "created": "Một Event mới được tạo với định danh {{ param }}",
+      "updated": "Một Event cập nhật với định danh {{ param }}",
+      "deleted": "Một Event đã xóa với định danh {{ param }}",
+      "delete": {
+        "question": "Bạn có chắc là muốn xóa Event {{ id }}?"
+      },
+      "detail": {
+        "title": "Event"
+      },
+      "id": "ID",
+      "title": "Title",
+      "description": "Description",
+      "banner": "Banner",
+      "startTime": "Start Time",
+      "endTime": "End Time",
+      "status": "Status",
+      "createdDate": "Created Date",
+      "category": "Category",
+      "address": "Address",
+      "organizer": "Organizer"
+    }
+  }
+}

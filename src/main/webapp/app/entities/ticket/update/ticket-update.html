@@ -1,0 +1,69 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-ticket-heading" data-cy="TicketCreateUpdateHeading" jhiTranslate="dugxApp.ticket.home.createOrEditLabel">
+        Create or edit a Ticket
+      </h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+
+        <div class="mb-3">
+          <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+        }
+
+        <div class="mb-3">
+          <label class="form-label" for="field_qrCode" jhiTranslate="dugxApp.ticket.qrCode">Qr Code</label>
+          <textarea class="form-control" name="qrCode" id="field_qrCode" data-cy="qrCode" formControlName="qrCode"></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_status" jhiTranslate="dugxApp.ticket.status">Status</label>
+          <input type="text" class="form-control" name="status" id="field_status" data-cy="status" formControlName="status" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_checkedIn" jhiTranslate="dugxApp.ticket.checkedIn">Checked In</label>
+          <input type="checkbox" class="form-check" name="checkedIn" id="field_checkedIn" data-cy="checkedIn" formControlName="checkedIn" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_bookingDetail" jhiTranslate="dugxApp.ticket.bookingDetail">Booking Detail</label>
+          <select
+            class="form-control"
+            id="field_bookingDetail"
+            data-cy="bookingDetail"
+            name="bookingDetail"
+            formControlName="bookingDetail"
+            [compareWith]="compareBookingDetail"
+          >
+            <option [ngValue]="null"></option>
+            @for (bookingDetailOption of bookingDetailsSharedCollection(); track $index) {
+            <option [ngValue]="bookingDetailOption">{{ bookingDetailOption.id }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,28 @@
+{
+  "dugxApp": {
+    "venue": {
+      "home": {
+        "title": "Venues",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Thêm mới một Venue",
+        "createOrEditLabel": "Thêm mới hoặc cập nhật Venue",
+        "notFound": "No Venues found"
+      },
+      "created": "Một Venue mới được tạo với định danh {{ param }}",
+      "updated": "Một Venue cập nhật với định danh {{ param }}",
+      "deleted": "Một Venue đã xóa với định danh {{ param }}",
+      "delete": {
+        "question": "Bạn có chắc là muốn xóa Venue {{ id }}?"
+      },
+      "detail": {
+        "title": "Venue"
+      },
+      "id": "ID",
+      "name": "Name",
+      "address": "Address",
+      "city": "City",
+      "country": "Country",
+      "capacity": "Capacity"
+    }
+  }
+}

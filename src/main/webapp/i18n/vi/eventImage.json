@@ -1,0 +1,25 @@
+{
+  "dugxApp": {
+    "eventImage": {
+      "home": {
+        "title": "Event Images",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Thêm mới một Event Image",
+        "createOrEditLabel": "Thêm mới hoặc cập nhật Event Image",
+        "notFound": "No Event Images found"
+      },
+      "created": "Một Event Image mới được tạo với định danh {{ param }}",
+      "updated": "Một Event Image cập nhật với định danh {{ param }}",
+      "deleted": "Một Event Image đã xóa với định danh {{ param }}",
+      "delete": {
+        "question": "Bạn có chắc là muốn xóa Event Image {{ id }}?"
+      },
+      "detail": {
+        "title": "Event Image"
+      },
+      "id": "ID",
+      "imageUrl": "Image Url",
+      "event": "Event"
+    }
+  }
+}
