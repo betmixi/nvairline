@@ -40,4 +40,16 @@ public interface ReviewRepository extends JpaRepository<Review, Long>, JpaSpecif
 
     @Query("select review from Review review left join fetch review.user left join fetch review.event where review.id =:id")
     Optional<Review> findOneWithToOneRelationships(@Param("id") Long id);
+
+    boolean existsByUserLoginAndEventId(String login, Long eventId);
+    List<Review> findByEventId(Long eventId);
+
+    @Query(
+        """
+                select avg(r.rating)
+                from Review r
+                where r.event.id=:eventId
+        """
+    )
+    Double getAverageRating(@Param("eventId") Long eventId);
 }

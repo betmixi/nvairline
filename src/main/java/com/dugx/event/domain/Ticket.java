@@ -22,7 +22,6 @@ public class Ticket implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Lob
     @Column(name = "qr_code")
     private String qrCode;
 

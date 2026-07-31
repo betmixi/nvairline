@@ -3,8 +3,10 @@ package com.dugx.event.web.rest;
 import com.dugx.event.repository.PaymentRepository;
 import com.dugx.event.service.PaymentQueryService;
 import com.dugx.event.service.PaymentService;
+import com.dugx.event.service.VNPayService;
 import com.dugx.event.service.criteria.PaymentCriteria;
 import com.dugx.event.service.dto.PaymentDTO;
+import com.dugx.event.service.dto.PaymentRequest;
 import com.dugx.event.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -34,6 +36,7 @@ public class PaymentResource {
     private static final Logger LOG = LoggerFactory.getLogger(PaymentResource.class);
 
     private static final String ENTITY_NAME = "payment";
+    private final VNPayService vnPayService;
 
     @Value("${jhipster.clientApp.name:dugx}")
     private String applicationName;
@@ -44,10 +47,21 @@ public class PaymentResource {
 
     private final PaymentQueryService paymentQueryService;
 
-    public PaymentResource(PaymentService paymentService, PaymentRepository paymentRepository, PaymentQueryService paymentQueryService) {
+    public PaymentResource(
+        PaymentService paymentService,
+        PaymentRepository paymentRepository,
+        PaymentQueryService paymentQueryService,
+        VNPayService vnPayService
+    ) {
         this.paymentService = paymentService;
         this.paymentRepository = paymentRepository;
         this.paymentQueryService = paymentQueryService;
+        this.vnPayService = vnPayService;
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<String> testVNPay() {
+        return ResponseEntity.ok(vnPayService.getTmnCode());
     }
 
     /**
@@ -196,4 +210,15 @@ public class PaymentResource {
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
     }
+
+    @PostMapping("/pay")
+    public ResponseEntity<PaymentDTO> pay(@RequestBody PaymentRequest request) {
+        LOG.debug("REST request to pay booking : {}", request);
+
+        PaymentDTO result = paymentService.pay(request);
+
+        return ResponseEntity.ok(result);
+    }
+    // Cac endpoint lien quan den VNPay (create-url, vnpay-return, vnpay-ipn)
+    // duoc dat rieng trong VNPayResource.
 }

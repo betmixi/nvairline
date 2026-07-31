@@ -18,6 +18,7 @@ logging:
     ROOT: DEBUG
     tech.jhipster: DEBUG
     org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
     com.dugx.event: DEBUG
 
 spring:
@@ -32,7 +33,9 @@ spring:
       indent-output: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/dugx
+    url: jdbc:postgresql://localhost:5432/event
+    username: postgres
+    password: 123456
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -89,6 +92,7 @@ jhipster:
       host: localhost
       port: 5000
       ring-buffer-size: 512
+
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class

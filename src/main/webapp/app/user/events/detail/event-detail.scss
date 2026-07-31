@@ -1,0 +1,211 @@
+:host {
+  display: block;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 18px;
+  color: #6b7280;
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover {
+    color: #2563eb;
+  }
+}
+
+.state-box {
+  text-align: center;
+  padding: 90px 20px;
+}
+
+/* ================= BANNER ================= */
+
+.banner-wrap {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  margin-bottom: 32px;
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.12);
+}
+
+.banner {
+  width: 100%;
+  height: 380px;
+  object-fit: cover;
+  display: block;
+}
+
+.banner-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 32px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.72) 100%);
+  color: #fff;
+
+  h1 {
+    font-size: 32px;
+    font-weight: 800;
+    margin: 10px 0 0;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  }
+}
+
+.category-badge {
+  display: inline-block;
+  width: fit-content;
+  padding: 6px 16px;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .banner {
+    height: 220px;
+  }
+
+  .banner-overlay h1 {
+    font-size: 24px;
+  }
+}
+
+/* ================= LAYOUT ================= */
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 992px) {
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ================= MAIN COLUMN ================= */
+
+.meta-row {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: #fff;
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+  margin-bottom: 28px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+
+  strong {
+    color: #1f2937;
+  }
+}
+
+.meta-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.description-section {
+  h4 {
+    font-weight: 800;
+    margin-bottom: 14px;
+    color: #1f2937;
+  }
+}
+
+.description-text {
+  color: #4b5563;
+  line-height: 1.8;
+  white-space: pre-line;
+}
+
+/* ================= SIDE COLUMN ================= */
+
+.buy-card {
+  position: sticky;
+  top: 24px;
+  background: #fff;
+  border-radius: 20px;
+  padding: 26px;
+  box-shadow: 0 15px 40px rgba(15, 23, 42, 0.1);
+}
+
+.price-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 18px;
+}
+
+.price-value {
+  font-size: 24px;
+  font-weight: 800;
+  color: #2563eb;
+}
+
+.buy-btn {
+  border: none;
+  border-radius: 14px;
+  padding: 14px;
+  font-weight: 700;
+  background: linear-gradient(90deg, #2563eb, #4f46e5);
+  transition: 0.25s;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(79, 70, 229, 0.3);
+  }
+
+  &:disabled {
+    background: #cbd5e1;
+  }
+}
+
+.ticket-preview {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid #eef2f7;
+}
+
+.ticket-preview-title {
+  font-weight: 700;
+  color: #374151;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.ticket-preview-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid #f3f4f6;
+  }
+
+  strong {
+    color: #2563eb;
+    flex-shrink: 0;
+    margin-left: 12px;
+  }
+}
+
+.ticket-name {
+  font-weight: 600;
+  color: #1f2937;
+}

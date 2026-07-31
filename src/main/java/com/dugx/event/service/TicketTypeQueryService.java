@@ -7,6 +7,7 @@ import com.dugx.event.service.criteria.TicketTypeCriteria;
 import com.dugx.event.service.dto.TicketTypeDTO;
 import com.dugx.event.service.mapper.TicketTypeMapper;
 import jakarta.persistence.criteria.JoinType;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -48,6 +49,15 @@ public class TicketTypeQueryService extends QueryService<TicketType> {
         LOG.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<TicketType> specification = createSpecification(criteria);
         return ticketTypeRepository.findAll(specification, page).map(ticketTypeMapper::toDto);
+    }
+
+    @Transactional(readOnly = true)
+    public List<TicketTypeDTO> findByCriteria(TicketTypeCriteria criteria) {
+        LOG.debug("find by criteria : {}", criteria);
+
+        final Specification<TicketType> specification = createSpecification(criteria);
+
+        return ticketTypeRepository.findAll(specification).stream().map(ticketTypeMapper::toDto).toList();
     }
 
     /**

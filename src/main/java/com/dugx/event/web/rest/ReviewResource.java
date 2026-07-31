@@ -4,6 +4,7 @@ import com.dugx.event.repository.ReviewRepository;
 import com.dugx.event.service.ReviewQueryService;
 import com.dugx.event.service.ReviewService;
 import com.dugx.event.service.criteria.ReviewCriteria;
+import com.dugx.event.service.dto.CreateReviewRequest;
 import com.dugx.event.service.dto.ReviewDTO;
 import com.dugx.event.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
@@ -197,5 +198,22 @@ public class ReviewResource {
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    @PostMapping("/events/{eventId}")
+    public ResponseEntity<ReviewDTO> createReview(@PathVariable Long eventId, @Valid @RequestBody CreateReviewRequest request) {
+        ReviewDTO dto = reviewService.createReview(eventId, request);
+
+        return ResponseEntity.ok(dto);
+    }
+
+    @GetMapping("/events/{eventId}")
+    public ResponseEntity<List<ReviewDTO>> getReviews(@PathVariable Long eventId) {
+        return ResponseEntity.ok(reviewService.getReviewsByEvent(eventId));
+    }
+
+    @GetMapping("/events/{eventId}/rating")
+    public ResponseEntity<Double> getAverageRating(@PathVariable Long eventId) {
+        return ResponseEntity.ok(reviewService.getAverageRating(eventId));
     }
 }

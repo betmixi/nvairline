@@ -1,0 +1,70 @@
+<div class="container py-4">
+  <h2 class="mb-4">Vé của tôi</h2>
+
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-3">Đang tải vé...</p>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+  <div *ngIf="!isLoading && groups.length === 0" class="empty-state text-center py-5">
+    <h5>Bạn chưa có vé nào</h5>
+    <p class="text-muted">Vé sẽ xuất hiện ở đây ngay sau khi bạn thanh toán thành công.</p>
+    <a class="btn btn-primary" routerLink="/">Khám phá sự kiện</a>
+  </div>
+
+  <div *ngFor="let group of groups; trackBy: trackGroup" class="event-group mb-4">
+    <div class="event-header">
+      <img *ngIf="group.eventBanner" class="event-thumb" [src]="group.eventBanner" [alt]="group.eventTitle" />
+
+      <div class="event-meta">
+        <h5 class="mb-1">{{ group.eventTitle }}</h5>
+
+        <div class="text-muted small">
+          <span *ngIf="group.eventStartTime">{{ group.eventStartTime.format('DD/MM/YYYY HH:mm') }}</span>
+          <span *ngIf="group.location"> &middot; {{ group.location }}</span>
+          <span *ngIf="group.city">, {{ group.city }}</span>
+        </div>
+
+        <div class="small mt-1">{{ group.tickets.length }} vé</div>
+      </div>
+    </div>
+
+    <div class="ticket-list">
+      <div *ngFor="let ticket of group.tickets; trackBy: trackTicket" class="ticket-card" [class.is-used]="ticket.checkedIn">
+        <div class="ticket-info">
+          <div class="d-flex justify-content-between align-items-start">
+            <strong>{{ ticket.ticketTypeName }}</strong>
+
+            <span class="badge" [class.bg-success]="isUsable(ticket)" [class.bg-secondary]="!isUsable(ticket)">
+              {{ ticket.checkedIn ? 'Đã check-in' : ticket.status }}
+            </span>
+          </div>
+
+          <div class="text-muted small mt-2">Đơn hàng #{{ ticket.bookingId }}</div>
+
+          <div class="ticket-code small">{{ ticket.qrCode }}</div>
+
+          <button
+            *ngIf="!qrImageOf(ticket.id)"
+            class="btn btn-outline-primary btn-sm mt-3"
+            [disabled]="isQrLoading(ticket.id)"
+            (click)="showQr(ticket)"
+          >
+            <span *ngIf="!isQrLoading(ticket.id)">Hiện mã QR</span>
+            <span *ngIf="isQrLoading(ticket.id)">
+              <span class="spinner-border spinner-border-sm me-2"></span>
+              Đang tạo...
+            </span>
+          </button>
+        </div>
+
+        <div *ngIf="qrImageOf(ticket.id)" class="ticket-qr">
+          <img [src]="qrImageOf(ticket.id)" alt="Mã QR của vé" />
+          <div class="small text-muted mt-1 text-center">Đưa mã này cho nhân viên soát vé</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

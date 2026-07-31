@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, OnInit, effect, inject, signal, unt
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Data, ParamMap, Router, RouterLink } from '@angular/router';
-
+import { DatePipe } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap/modal';
 import { NgbPagination } from '@ng-bootstrap/ng-bootstrap/pagination';
@@ -28,6 +28,8 @@ import { EventService } from '../service/event.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'jhi-event',
   templateUrl: './event.html',
+  styleUrls: ['./event.scss'],
+
   imports: [
     RouterLink,
     FormsModule,
@@ -42,6 +44,7 @@ import { EventService } from '../service/event.service';
     Filter,
     NgbPagination,
     ItemCount,
+    DatePipe,
   ],
 })
 export class Event implements OnInit {

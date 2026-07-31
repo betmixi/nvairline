@@ -1,0 +1,97 @@
+<div class="revenue-page">
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h1>💰 Revenue Dashboard</h1>
+      <p>Track your revenue and payment overview</p>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="summary-title">Total Revenue</div>
+
+      <div class="summary-value">{{ revenue?.totalRevenue | number:'1.0-2' }} đ</div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-title">Total Events</div>
+
+      <div class="summary-value">{{ revenue?.totalEvents ?? 0 }}</div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-title">Tickets Sold</div>
+
+      <div class="summary-value">{{ revenue?.ticketsSold ?? 0 }}</div>
+    </div>
+  </div>
+
+  <!-- Revenue by Event -->
+  <div class="card-box">
+    <div class="card-title">Revenue by Event</div>
+
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Event</th>
+          <th>Revenue</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @if (!revenue?.eventRevenue?.length) {
+
+        <tr>
+          <td colspan="3" class="text-center text-muted py-5">No revenue data</td>
+        </tr>
+
+        } @else { @for (row of revenue!.eventRevenue; track row.eventId; let i = $index) {
+
+        <tr>
+          <td>{{ i + 1 }}</td>
+          <td>{{ row.eventName }}</td>
+          <td>{{ row.revenue | number:'1.0-2' }} đ</td>
+        </tr>
+
+        } }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Recent Payments -->
+
+  <div class="card-box">
+    <div class="card-title">Recent Payments</div>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Buyer</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @if (!revenue?.recentPayments?.length) {
+
+        <tr>
+          <td colspan="3" class="text-center text-muted py-5">No payment history</td>
+        </tr>
+
+        } @else { @for (payment of revenue!.recentPayments; track $index) {
+
+        <tr>
+          <td>{{ payment.paymentDate | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ payment.buyer }}</td>
+          <td>{{ payment.amount | number:'1.0-2' }} đ</td>
+        </tr>
+
+        } }
+      </tbody>
+    </table>
+  </div>
+</div>

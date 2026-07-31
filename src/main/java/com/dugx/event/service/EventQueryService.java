@@ -3,9 +3,11 @@ package com.dugx.event.service;
 import com.dugx.event.domain.*; // for static metamodels
 import com.dugx.event.domain.Event;
 import com.dugx.event.repository.EventRepository;
+import com.dugx.event.repository.TicketTypeRepository;
 import com.dugx.event.service.criteria.EventCriteria;
 import com.dugx.event.service.dto.EventDTO;
 import com.dugx.event.service.mapper.EventMapper;
+import com.dugx.event.service.mapper.TicketTypeMapper;
 import jakarta.persistence.criteria.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,10 +33,19 @@ public class EventQueryService extends QueryService<Event> {
     private final EventRepository eventRepository;
 
     private final EventMapper eventMapper;
+    private final TicketTypeRepository ticketTypeRepository;
+    private final TicketTypeMapper ticketTypeMapper;
 
-    public EventQueryService(EventRepository eventRepository, EventMapper eventMapper) {
+    public EventQueryService(
+        EventRepository eventRepository,
+        EventMapper eventMapper,
+        TicketTypeRepository ticketTypeRepository,
+        TicketTypeMapper ticketTypeMapper
+    ) {
         this.eventRepository = eventRepository;
         this.eventMapper = eventMapper;
+        this.ticketTypeRepository = ticketTypeRepository;
+        this.ticketTypeMapper = ticketTypeMapper;
     }
 
     /**
@@ -47,7 +58,13 @@ public class EventQueryService extends QueryService<Event> {
     public Page<EventDTO> findByCriteria(EventCriteria criteria, Pageable page) {
         LOG.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Event> specification = createSpecification(criteria);
-        return eventRepository.findAll(specification, page).map(eventMapper::toDto);
+        return eventRepository.findAll(specification, page).map(event -> {
+            EventDTO dto = eventMapper.toDto(event);
+
+            dto.setTicketTypes(ticketTypeRepository.findByEventId(event.getId()).stream().map(ticketTypeMapper::toDto).toList());
+
+            return dto;
+        });
     }
 
     /**
@@ -69,14 +86,14 @@ public class EventQueryService extends QueryService<Event> {
      */
     protected Specification<Event> createSpecification(EventCriteria criteria) {
         Specification<Event> specification = Specification.unrestricted();
-        specification = specification.and((root, query, builder) -> {
-            if (Long.class != query.getResultType()) {
-                root.fetch(Event_.category, JoinType.LEFT);
-                root.fetch(Event_.address, JoinType.LEFT);
-                root.fetch(Event_.organizer, JoinType.LEFT);
-            }
-            return null;
-        });
+        //        specification = specification.and((root, query, builder) -> {
+        //            if (Long.class != query.getResultType()) {
+        //                root.fetch(Event_.category, JoinType.LEFT);
+        //                root.fetch(Event_.address, JoinType.LEFT);
+        //                root.fetch(Event_.organizer, JoinType.LEFT);
+        //            }
+        //            return null;
+        //        });
         if (criteria != null) {
             // This has to be called first, because the distinct method returns null
             specification = specification.and(

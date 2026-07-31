@@ -5,6 +5,8 @@ import com.dugx.event.service.BookingQueryService;
 import com.dugx.event.service.BookingService;
 import com.dugx.event.service.criteria.BookingCriteria;
 import com.dugx.event.service.dto.BookingDTO;
+import com.dugx.event.service.dto.BookingDetailDTO;
+import com.dugx.event.service.dto.BookingRequest;
 import com.dugx.event.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -32,7 +34,6 @@ import tech.jhipster.web.util.ResponseUtil;
 public class BookingResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(BookingResource.class);
-
     private static final String ENTITY_NAME = "booking";
 
     @Value("${jhipster.clientApp.name:dugx}")
@@ -67,6 +68,22 @@ public class BookingResource {
         return ResponseEntity.created(new URI("/api/bookings/" + bookingDTO.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, bookingDTO.getId().toString()))
             .body(bookingDTO);
+    }
+
+    @PostMapping("/book")
+    public ResponseEntity<BookingDTO> book(@RequestBody BookingRequest request) {
+        BookingDTO result = bookingService.book(request);
+
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/my-bookings")
+    public ResponseEntity<List<BookingDTO>> getMyBookings(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
+        Page<BookingDTO> page = bookingService.getMyBookings(pageable);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**

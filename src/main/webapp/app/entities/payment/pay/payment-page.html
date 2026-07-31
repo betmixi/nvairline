@@ -1,0 +1,82 @@
+<div class="container py-5">
+  <div *ngIf="isLoading" class="text-center">
+    <div class="spinner-border"></div>
+
+    <p class="mt-3">Loading...</p>
+  </div>
+
+  <div *ngIf="!isLoading && ticket" class="payment-card">
+    <h2 class="mb-4">Payment</h2>
+
+    <div class="info-row">
+      <span>Event</span>
+
+      <strong> {{ ticket.event?.title }} </strong>
+    </div>
+
+    <div class="info-row">
+      <span>Ticket</span>
+
+      <strong> {{ ticket.name }} </strong>
+    </div>
+
+    <div class="info-row">
+      <span>Price</span>
+
+      <strong> {{ ticket.price | number }} đ </strong>
+    </div>
+
+    <div class="info-row">
+      <span>Quantity</span>
+
+      <strong> {{ quantity }} </strong>
+    </div>
+
+    <hr />
+
+    <div class="info-row total">
+      <span>Total</span>
+
+      <strong> {{ total | number }} đ </strong>
+    </div>
+
+    <hr />
+
+    <div class="mt-3">
+      <label class="form-label" for="couponCode">Mã giảm giá (nếu có)</label>
+
+      <input
+        id="couponCode"
+        name="couponCode"
+        type="text"
+        class="form-control"
+        placeholder="Nhập mã giảm giá"
+        [(ngModel)]="couponCode"
+        [disabled]="isSubmitting"
+      />
+    </div>
+
+    <hr />
+
+    <h5>Phương thức thanh toán</h5>
+
+    <div class="method-box mt-2">
+      <strong>VNPay</strong>
+
+      <div class="text-muted small">Thẻ ATM nội địa, thẻ quốc tế, ví VNPay hoặc QR ngân hàng.</div>
+    </div>
+
+    <div *ngIf="errorMessage" class="alert alert-danger mt-3 mb-0">{{ errorMessage }}</div>
+
+    <button class="btn btn-primary w-100 mt-4" [disabled]="isSubmitting" (click)="pay()">
+      <span *ngIf="!isSubmitting">Thanh toán qua VNPay</span>
+
+      <span *ngIf="isSubmitting">
+        <span class="spinner-border spinner-border-sm me-2"></span>
+        Đang chuyển tới VNPay...
+      </span>
+    </button>
+
+    <button class="btn btn-outline-secondary w-100 mt-2" [disabled]="isSubmitting" (click)="cancel()">Huỷ</button>
+  </div>
+</div>

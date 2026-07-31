@@ -40,4 +40,13 @@ public interface CheckInRepository extends JpaRepository<CheckIn, Long>, JpaSpec
 
     @Query("select checkIn from CheckIn checkIn left join fetch checkIn.checkedBy where checkIn.id =:id")
     Optional<CheckIn> findOneWithToOneRelationships(@Param("id") Long id);
+
+    @Query(
+        """
+        select count(c)
+        from CheckIn c
+        where c.ticket.bookingDetail.ticketType.event.organizer.user.login = :login
+        """
+    )
+    Long totalCheckedIn(@Param("login") String login);
 }

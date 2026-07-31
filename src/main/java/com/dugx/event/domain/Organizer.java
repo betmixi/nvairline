@@ -1,5 +1,6 @@
 package com.dugx.event.domain;
 
+import com.dugx.event.domain.OrganizerStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serial;
@@ -32,7 +33,6 @@ public class Organizer implements Serializable {
     @Column(name = "tax_code", length = 50, nullable = false)
     private String taxCode;
 
-    @Lob
     @Column(name = "description")
     private String description;
 
@@ -43,7 +43,19 @@ public class Organizer implements Serializable {
     @JoinColumn(unique = true)
     private User user;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private OrganizerStatus status;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
+    public OrganizerStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(OrganizerStatus status) {
+        this.status = status;
+    }
 
     public Long getId() {
         return this.id;

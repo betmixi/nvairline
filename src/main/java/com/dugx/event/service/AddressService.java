@@ -29,7 +29,7 @@ public class AddressService {
     }
 
     /**
-     * Save a address.
+     * Save an address.
      *
      * @param addressDTO the entity to save.
      * @return the persisted entity.
@@ -42,7 +42,7 @@ public class AddressService {
     }
 
     /**
-     * Update a address.
+     * Update an address.
      *
      * @param addressDTO the entity to save.
      * @return the persisted entity.
@@ -55,7 +55,7 @@ public class AddressService {
     }
 
     /**
-     * Partially update a address.
+     * Partially update an address.
      *
      * @param addressDTO the entity to update partially.
      * @return the persisted entity.

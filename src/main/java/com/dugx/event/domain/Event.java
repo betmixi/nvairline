@@ -28,8 +28,7 @@ public class Event implements Serializable {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Lob
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "banner")

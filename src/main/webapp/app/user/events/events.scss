@@ -1,0 +1,97 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: #f5f7fb;
+  padding: 40px;
+}
+
+.events-page {
+  max-width: 1400px;
+  margin: auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+
+  h2 {
+    font-size: 34px;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 6px;
+  }
+
+  p {
+    color: #6b7280;
+    font-size: 15px;
+  }
+}
+
+.search-section {
+  position: relative;
+  margin-bottom: 35px;
+
+  input {
+    width: 100%;
+    padding: 16px 20px;
+    border-radius: 14px;
+    border: 1px solid #dbe3ef;
+    font-size: 16px;
+    outline: none;
+    transition: 0.25s;
+
+    &:focus {
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
+    }
+  }
+
+  .clear-btn {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 18px;
+    color: #999;
+  }
+}
+
+.loading,
+.empty {
+  text-align: center;
+  padding: 60px;
+  color: #6b7280;
+}
+
+.event-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 28px;
+}
+
+@media (max-width: 1200px) {
+  .event-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  :host {
+    padding: 20px;
+  }
+
+  .page-header {
+    h2 {
+      font-size: 28px;
+    }
+  }
+
+  .event-grid {
+    grid-template-columns: 1fr;
+  }
+}

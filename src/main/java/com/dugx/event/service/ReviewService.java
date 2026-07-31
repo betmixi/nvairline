@@ -1,9 +1,18 @@
 package com.dugx.event.service;
 
+import com.dugx.event.domain.Event;
 import com.dugx.event.domain.Review;
+import com.dugx.event.domain.User;
+import com.dugx.event.repository.BookingDetailRepository;
+import com.dugx.event.repository.EventRepository;
 import com.dugx.event.repository.ReviewRepository;
+import com.dugx.event.repository.UserRepository;
+import com.dugx.event.security.SecurityUtils;
+import com.dugx.event.service.dto.CreateReviewRequest;
 import com.dugx.event.service.dto.ReviewDTO;
 import com.dugx.event.service.mapper.ReviewMapper;
+import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +33,24 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
 
     private final ReviewMapper reviewMapper;
+    private final BookingDetailRepository bookingDetailRepository;
 
-    public ReviewService(ReviewRepository reviewRepository, ReviewMapper reviewMapper) {
+    private final EventRepository eventRepository;
+
+    private final UserRepository userRepository;
+
+    public ReviewService(
+        ReviewRepository reviewRepository,
+        ReviewMapper reviewMapper,
+        BookingDetailRepository bookingDetailRepository,
+        EventRepository eventRepository,
+        UserRepository userRepository
+    ) {
         this.reviewRepository = reviewRepository;
         this.reviewMapper = reviewMapper;
+        this.bookingDetailRepository = bookingDetailRepository;
+        this.eventRepository = eventRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -105,5 +128,46 @@ public class ReviewService {
     public void delete(Long id) {
         LOG.debug("Request to delete Review : {}", id);
         reviewRepository.deleteById(id);
+    }
+
+    @Transactional
+    public ReviewDTO createReview(Long eventId, CreateReviewRequest request) {
+        String login = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new RuntimeException("User not found"));
+
+        boolean purchased = bookingDetailRepository.hasPurchasedEvent(login, eventId);
+
+        if (!purchased) {
+            throw new RuntimeException("You must purchase this event before reviewing.");
+        }
+
+        boolean reviewed = reviewRepository.existsByUserLoginAndEventId(login, eventId);
+
+        if (reviewed) {
+            throw new RuntimeException("You have already reviewed this event.");
+        }
+
+        User user = userRepository.findOneByLogin(login).orElseThrow(() -> new RuntimeException("User not found"));
+
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new RuntimeException("Event not found"));
+
+        Review review = new Review();
+        review.setUser(user);
+        review.setEvent(event);
+        review.setRating(request.getRating());
+        review.setComment(request.getComment());
+        review.setCreatedDate(Instant.now());
+        review = reviewRepository.save(review);
+        return reviewMapper.toDto(review);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReviewDTO> getReviewsByEvent(Long eventId) {
+        return reviewRepository.findByEventId(eventId).stream().map(reviewMapper::toDto).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public Double getAverageRating(Long eventId) {
+        Double avg = reviewRepository.getAverageRating(eventId);
+        return avg == null ? 0.0 : avg;
     }
 }

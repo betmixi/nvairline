@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -35,9 +36,23 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, JpaSpec
     )
     Page<Booking> findAllWithToOneRelationships(Pageable pageable);
 
+    Page<Booking> findByUser_Login(String login, Pageable pageable);
+
     @Query("select booking from Booking booking left join fetch booking.user")
     List<Booking> findAllWithToOneRelationships();
 
     @Query("select booking from Booking booking left join fetch booking.user where booking.id =:id")
     Optional<Booking> findOneWithToOneRelationships(@Param("id") Long id);
+
+    @Query(
+        """
+        select count(distinct b.id)
+        from Booking b
+        join BookingDetail bd on bd.booking = b
+        join TicketType tt on bd.ticketType = tt
+        join Event e on tt.event = e
+        where e.organizer.user.login = :login
+        """
+    )
+    Long countBookingByOrganizer(@Param("login") String login);
 }

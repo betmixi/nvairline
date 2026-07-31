@@ -28,19 +28,31 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label" for="field_description" jhiTranslate="dugxApp.event.description">Description</label>
-          <textarea
-            class="form-control"
-            name="description"
-            id="field_description"
-            data-cy="description"
-            formControlName="description"
-          ></textarea>
-        </div>
-
-        <div class="mb-3">
           <label class="form-label" for="field_banner" jhiTranslate="dugxApp.event.banner">Banner</label>
-          <input type="text" class="form-control" name="banner" id="field_banner" data-cy="banner" formControlName="banner" />
+
+          @if (editForm.get('banner')?.value) {
+          <div class="mb-2">
+            <img [src]="editForm.get('banner')?.value" alt="Banner preview" class="img-thumbnail" style="max-height: 180px" />
+          </div>
+          }
+
+          <input
+            type="file"
+            class="form-control"
+            accept="image/*"
+            id="field_banner"
+            data-cy="banner"
+            [disabled]="isUploadingBanner()"
+            (change)="onBannerFileSelected($event)"
+          />
+
+          <input type="hidden" name="banner" formControlName="banner" />
+
+          @if (isUploadingBanner()) {
+          <small class="form-text text-muted">Đang tải ảnh lên...</small>
+          } @if (bannerUploadError()) {
+          <small class="form-text text-danger">{{ bannerUploadError() }}</small>
+          }
         </div>
 
         <div class="mb-3">
@@ -149,7 +161,52 @@
         <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
           <fa-icon icon="ban" />&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
         </button>
+        <hr class="my-4" />
 
+        <h4 class="mb-3">🎟 Ticket Types</h4>
+
+        @for (ticket of tickets; track $index) {
+
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Ticket Name</label>
+
+                <input
+                  class="form-control"
+                  [(ngModel)]="ticket.name"
+                  [ngModelOptions]="{standalone: true}"
+                  placeholder="VIP / Standard / Early Bird"
+                />
+              </div>
+
+              <div class="col-md-3 mb-3">
+                <label class="form-label">Price</label>
+
+                <input type="number" class="form-control" [(ngModel)]="ticket.price" [ngModelOptions]="{standalone: true}" />
+              </div>
+
+              <div class="col-md-3 mb-3">
+                <label class="form-label">Quantity</label>
+
+                <input type="number" class="form-control" [(ngModel)]="ticket.quantity" [ngModelOptions]="{standalone: true}" />
+              </div>
+            </div>
+
+            @if (tickets.length > 1) {
+
+            <button type="button" class="btn btn-outline-danger" (click)="removeTicket($index)">🗑 Delete Ticket</button>
+
+            }
+          </div>
+        </div>
+
+        }
+
+        <button type="button" class="btn btn-outline-primary" (click)="addTicket()">➕ Add Ticket Type</button>
+
+        <hr class="my-4" />
         <button
           type="submit"
           id="save-entity"

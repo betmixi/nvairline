@@ -5,6 +5,7 @@ import com.dugx.event.service.CheckInQueryService;
 import com.dugx.event.service.CheckInService;
 import com.dugx.event.service.criteria.CheckInCriteria;
 import com.dugx.event.service.dto.CheckInDTO;
+import com.dugx.event.service.dto.CheckInRequest;
 import com.dugx.event.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -195,5 +196,11 @@ public class CheckInResource {
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    @PostMapping("/check-in")
+    public ResponseEntity<CheckInDTO> checkIn(@RequestBody CheckInRequest request) {
+        CheckInDTO result = checkInService.checkIn(request);
+        return ResponseEntity.ok(result);
     }
 }

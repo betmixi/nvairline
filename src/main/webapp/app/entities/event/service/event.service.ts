@@ -80,6 +80,13 @@ export class EventService extends EventsService {
     return this.http.get<RestEvent>(`${this.resourceUrl}/${encodeURIComponent(id)}`).pipe(map(res => this.convertResponseFromServer(res)));
   }
 
+  /** Xem chi tiet su kien khong can dang nhap (dung cho trang xem truoc khi mua). */
+  findPublic(id: number): Observable<IEvent> {
+    return this.http
+      .get<RestEvent>(`${this.resourceUrl}/public/${encodeURIComponent(id)}`)
+      .pipe(map(res => this.convertResponseFromServer(res)));
+  }
+
   query(req?: any): Observable<HttpResponse<IEvent[]>> {
     const options = createRequestOption(req);
     return this.http
@@ -87,8 +94,23 @@ export class EventService extends EventsService {
       .pipe(map(res => res.clone({ body: this.convertResponseArrayFromServer(res.body!) })));
   }
 
-  delete(id: number): Observable<undefined> {
-    return this.http.delete<undefined>(`${this.resourceUrl}/${encodeURIComponent(id)}`);
+  /** Danh sach su kien khong can dang nhap (dung cho trang chu / danh sach su kien). */
+  queryPublic(req?: any): Observable<HttpResponse<IEvent[]>> {
+    const options = createRequestOption(req);
+    return this.http
+      .get<RestEvent[]>(`${this.resourceUrl}/public`, { params: options, observe: 'response' })
+      .pipe(map(res => res.clone({ body: this.convertResponseArrayFromServer(res.body!) })));
+  }
+
+  delete(id: number): Observable<HttpResponse<{}>> {
+    alert('Đang dùng EventService này');
+
+    console.log(this.resourceUrl);
+    console.log(`${this.resourceUrl}/${id}`);
+
+    return this.http.delete(`${this.resourceUrl}/${id}`, {
+      observe: 'response',
+    });
   }
 
   getEventIdentifier(event: Pick<IEvent, 'id'>): number {

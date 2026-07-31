@@ -27,6 +27,7 @@ import { BookingService } from '../service/booking.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'jhi-booking',
   templateUrl: './booking.html',
+  styleUrl: './booking.scss',
   imports: [
     RouterLink,
     FormsModule,

@@ -8,7 +8,10 @@ import com.dugx.event.service.dto.AddressDTO;
 import com.dugx.event.service.dto.CategoryDTO;
 import com.dugx.event.service.dto.EventDTO;
 import com.dugx.event.service.dto.OrganizerDTO;
-import org.mapstruct.*;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 /**
  * Mapper for the entity {@link Event} and its DTO {@link EventDTO}.

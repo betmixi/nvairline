@@ -26,6 +26,8 @@ public interface CouponRepository extends JpaRepository<Coupon, Long>, JpaSpecif
         return this.findAllWithToOneRelationships(pageable);
     }
 
+    Optional<Coupon> findByCode(String code);
+
     @Query(value = "select coupon from Coupon coupon left join fetch coupon.event", countQuery = "select count(coupon) from Coupon coupon")
     Page<Coupon> findAllWithToOneRelationships(Pageable pageable);
 

@@ -11,7 +11,7 @@ import PageRibbon from '../profiles/page-ribbon';
 
 @Component({
   selector: 'jhi-main',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Default,
   templateUrl: './main.html',
   providers: [AppPageTitleStrategy],
   imports: [RouterOutlet, Footer, PageRibbon],

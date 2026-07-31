@@ -16,6 +16,7 @@ import { RegisterService } from './register.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TranslateDirective, TranslatePipe, RouterLink, ReactiveFormsModule, PasswordStrengthBar],
   templateUrl: './register.html',
+  styleUrls: ['./register.scss'],
 })
 export default class Register implements AfterViewInit {
   login = viewChild.required<ElementRef>('login');

@@ -17,7 +17,7 @@ import { TranslateDirective } from 'app/shared/language';
 import FindLanguageFromKeyPipe from 'app/shared/language/find-language-from-key.pipe';
 
 import ActiveMenuDirective from './active-menu.directive';
-
+import { faThLarge, faChevronDown, faCalendar, faHome, faUser } from '@fortawesome/free-solid-svg-icons';
 @Component({
   selector: 'jhi-navbar',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -43,13 +43,14 @@ export default class Navbar implements OnInit {
   readonly languages = LANGUAGES;
   readonly openAPIEnabled = signal(false);
   readonly version: string;
-  readonly account = inject(AccountService).account;
+  private readonly accountService = inject(AccountService);
+  readonly account = this.accountService.account;
 
   private readonly loginService = inject(LoginService);
   private readonly translateService = inject(TranslateService);
   private readonly stateStorageService = inject(StateStorageService);
   private readonly profileService = inject(ProfileService);
-  private readonly router = inject(Router);
+  protected readonly router = inject(Router);
 
   constructor() {
     const { VERSION } = environment;
@@ -59,7 +60,28 @@ export default class Navbar implements OnInit {
       this.version = '';
     }
   }
+  goHome(): void {
+    if (this.isOrganizerPage()) {
+      void this.router.navigate(['/organizer/dashboard']);
+      return;
+    }
 
+    if (this.accountService.hasAnyAuthority('ROLE_ADMIN')) {
+      void this.router.navigate(['/admin/dashboard']);
+      return;
+    }
+
+    void this.router.navigate(['/']);
+  }
+  /**
+   * True khi dang o khu vuc organizer, ke ca man tao/sua su kien
+   * (/event/new, /event/:id/edit) vi trang do nam ngoai prefix /organizer
+   * nhung van la mot phan cua luong lam viec cua organizer.
+   */
+  isOrganizerPage(): boolean {
+    const url = this.router.url;
+    return url.startsWith('/organizer') || /^\/event\/(new|\d+\/edit)(\?|$)/.test(url);
+  }
   ngOnInit(): void {
     this.profileService.getProfileInfo().subscribe(profileInfo => {
       this.inProduction.set(profileInfo.inProduction ?? true);

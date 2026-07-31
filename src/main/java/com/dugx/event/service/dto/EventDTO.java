@@ -3,7 +3,9 @@ package com.dugx.event.service.dto;
 import jakarta.persistence.Lob;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -35,6 +37,8 @@ public class EventDTO implements Serializable {
     private AddressDTO address;
 
     private OrganizerDTO organizer;
+    private BigDecimal price;
+    private List<TicketTypeDTO> ticketTypes;
 
     public Long getId() {
         return id;
@@ -124,6 +128,18 @@ public class EventDTO implements Serializable {
         this.organizer = organizer;
     }
 
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public List<TicketTypeDTO> getTicketTypes() {
+        return ticketTypes;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -138,6 +154,10 @@ public class EventDTO implements Serializable {
             return false;
         }
         return Objects.equals(this.id, eventDTO.id);
+    }
+
+    public void setTicketTypes(List<TicketTypeDTO> ticketTypes) {
+        this.ticketTypes = ticketTypes;
     }
 
     @Override

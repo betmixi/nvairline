@@ -4,6 +4,7 @@ import com.dugx.event.domain.Event;
 import com.dugx.event.domain.TicketType;
 import com.dugx.event.service.dto.EventDTO;
 import com.dugx.event.service.dto.TicketTypeDTO;
+import com.dugx.event.service.mapper.TicketTypeMapper;
 import org.mapstruct.*;
 
 /**

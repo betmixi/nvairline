@@ -37,4 +37,15 @@ public interface TicketTypeRepository extends JpaRepository<TicketType, Long>, J
 
     @Query("select ticketType from TicketType ticketType left join fetch ticketType.event where ticketType.id =:id")
     Optional<TicketType> findOneWithToOneRelationships(@Param("id") Long id);
+
+    @Modifying
+    @Query(
+        """
+        delete from TicketType t
+        where t.event.id = :eventId
+        """
+    )
+    void deleteAllByEventId(@Param("eventId") Long eventId);
+
+    List<TicketType> findByEventId(Long eventId);
 }

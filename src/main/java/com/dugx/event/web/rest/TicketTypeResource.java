@@ -163,6 +163,15 @@ public class TicketTypeResource {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
+    @GetMapping("/event/{eventId}")
+    public ResponseEntity<List<TicketTypeDTO>> getByEvent(@PathVariable Long eventId) {
+        TicketTypeCriteria criteria = new TicketTypeCriteria();
+
+        criteria.eventId().setEquals(eventId);
+
+        return ResponseEntity.ok(ticketTypeQueryService.findByCriteria(criteria));
+    }
+
     /**
      * {@code GET  /ticket-types/count} : count all the ticketTypes.
      *

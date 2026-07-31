@@ -81,7 +81,9 @@ export class TicketTypeService extends TicketTypesService {
       .get<RestTicketType>(`${this.resourceUrl}/${encodeURIComponent(id)}`)
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
-
+  findByEvent(eventId: number): Observable<HttpResponse<ITicketType[]>> {
+    return this.http.get<ITicketType[]>(`${this.resourceUrl}/event/${eventId}`, { observe: 'response' });
+  }
   query(req?: any): Observable<HttpResponse<ITicketType[]>> {
     const options = createRequestOption(req);
     return this.http

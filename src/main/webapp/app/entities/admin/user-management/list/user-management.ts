@@ -24,6 +24,8 @@ import { IUserManagement } from '../user-management.model';
   selector: 'jhi-user-mgmt',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './user-management.html',
+  styleUrl: './user-management.component.scss',
+
   imports: [
     RouterLink,
     FontAwesomeModule,

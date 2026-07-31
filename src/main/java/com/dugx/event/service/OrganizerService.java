@@ -1,16 +1,23 @@
 package com.dugx.event.service;
 
 import com.dugx.event.domain.Organizer;
+import com.dugx.event.domain.OrganizerStatus;
+import com.dugx.event.domain.User;
 import com.dugx.event.repository.OrganizerRepository;
+import com.dugx.event.repository.UserRepository;
+import com.dugx.event.security.SecurityUtils;
 import com.dugx.event.service.dto.OrganizerDTO;
 import com.dugx.event.service.mapper.OrganizerMapper;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  * Service Implementation for managing {@link com.dugx.event.domain.Organizer}.
@@ -25,9 +32,12 @@ public class OrganizerService {
 
     private final OrganizerMapper organizerMapper;
 
-    public OrganizerService(OrganizerRepository organizerRepository, OrganizerMapper organizerMapper) {
+    private final UserRepository userRepository;
+
+    public OrganizerService(OrganizerRepository organizerRepository, OrganizerMapper organizerMapper, UserRepository userRepository) {
         this.organizerRepository = organizerRepository;
         this.organizerMapper = organizerMapper;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -95,6 +105,66 @@ public class OrganizerService {
     public Optional<OrganizerDTO> findOne(Long id) {
         LOG.debug("Request to get Organizer : {}", id);
         return organizerRepository.findOneWithEagerRelationships(id).map(organizerMapper::toDto);
+    }
+
+    public OrganizerDTO register(OrganizerDTO organizerDTO) {
+        String login = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+
+        if (organizerRepository.findByUserLogin(login).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bạn đã đăng ký Organizer rồi.");
+        }
+
+        User user = userRepository.findOneByLogin(login).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        Organizer organizer = organizerMapper.toEntity(organizerDTO);
+
+        organizer.setUser(user);
+
+        organizer.setStatus(OrganizerStatus.PENDING);
+
+        organizer.setVerified(false);
+
+        organizer = organizerRepository.save(organizer);
+
+        return organizerMapper.toDto(organizer);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<OrganizerDTO> getMyRequest() {
+        String login = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+
+        return organizerRepository.findByUserLogin(login).map(organizerMapper::toDto);
+    }
+
+    @Transactional
+    public OrganizerDTO approve(Long id) {
+        Organizer organizer = organizerRepository.findById(id).orElseThrow(() -> new RuntimeException("Organizer not found"));
+
+        organizer.setStatus(OrganizerStatus.APPROVED);
+        organizer.setVerified(true);
+
+        organizer = organizerRepository.save(organizer);
+
+        return organizerMapper.toDto(organizer);
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrganizerDTO> getPendingOrganizers() {
+        return organizerRepository.findPending(OrganizerStatus.PENDING).stream().map(organizerMapper::toDto).toList();
+    }
+
+    @Transactional
+    public OrganizerDTO reject(Long id) {
+        Organizer organizer = organizerRepository
+            .findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Organizer not found"));
+
+        organizer.setStatus(OrganizerStatus.REJECTED);
+        organizer.setVerified(false);
+
+        organizer = organizerRepository.save(organizer);
+
+        return organizerMapper.toDto(organizer);
     }
 
     /**

@@ -11,7 +11,7 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring")
 public interface TicketMapper extends EntityMapper<TicketDTO, Ticket> {
-    @Mapping(target = "bookingDetail", source = "bookingDetail", qualifiedByName = "bookingDetailId")
+    @Mapping(target = "bookingDetail", source = "bookingDetail")
     TicketDTO toDto(Ticket s);
 
     @Named("bookingDetailId")

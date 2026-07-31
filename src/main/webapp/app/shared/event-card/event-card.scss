@@ -1,0 +1,97 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.event-card {
+  height: 100%;
+  background: #fff;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+  transition: 0.35s;
+}
+
+.event-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 28px 55px rgba(37, 99, 235, 0.15);
+}
+
+.event-image {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+  transition: 0.45s;
+}
+
+.event-card:hover .event-image {
+  transform: scale(1.06);
+}
+
+/* ================= TEXT ================= */
+
+.event-card h4 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #222;
+  margin-top: 12px;
+}
+
+.event-title-link {
+  color: inherit;
+  text-decoration: none;
+  font-weight: inherit;
+
+  &:hover {
+    color: #2563eb;
+  }
+}
+
+.event-card p {
+  color: #6b7280;
+  font-size: 15px;
+}
+
+/* ================= CATEGORY ================= */
+
+.category {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 30px;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+/* ================= PRICE ================= */
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 22px;
+}
+
+.price {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2563eb;
+}
+
+/* ================= BUTTON ================= */
+
+.btn-primary {
+  border: none;
+  border-radius: 14px;
+  padding: 11px 24px;
+  font-weight: 700;
+  background: linear-gradient(90deg, #2563eb, #4f46e5);
+  transition: 0.3s;
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(79, 70, 229, 0.3);
+}

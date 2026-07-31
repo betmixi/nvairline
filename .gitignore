@@ -75,6 +75,11 @@ out/
 /target/
 
 ######################
+# Uploaded files (banner su kien...)
+######################
+/uploads/
+
+######################
 # Gradle
 ######################
 .gradle/

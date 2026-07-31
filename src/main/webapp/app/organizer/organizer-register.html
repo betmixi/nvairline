@@ -1,0 +1,57 @@
+<div class="container mt-5">
+  <h2>Become Organizer</h2>
+
+  @if(loading){
+
+  <p>Loading...</p>
+
+  } @else if(request?.status === 'PENDING'){
+
+  <div class="alert alert-warning">
+    <h4>Application Submitted</h4>
+
+    <p>Your organizer request is waiting for administrator approval.</p>
+  </div>
+
+  } @else if(request?.status === 'APPROVED'){
+
+  <div class="alert alert-success">
+    <h4>🎉 Congratulations!</h4>
+
+    <p>Your organizer account has been approved.</p>
+
+    <button class="btn btn-success" routerLink="/organizer/dashboard">Go to Organizer Dashboard</button>
+  </div>
+
+  } @else if(request?.status === 'REJECTED'){
+
+  <div class="alert alert-danger">
+    <h4>Application Rejected</h4>
+
+    <p>Your organizer request has been rejected.</p>
+
+    <button class="btn btn-primary" (click)="request = null">Apply Again</button>
+  </div>
+  } @else {
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="mb-3">
+      <label>Company Name</label>
+      <input class="form-control" formControlName="companyName" />
+    </div>
+
+    <div class="mb-3">
+      <label>Tax Code</label>
+      <input class="form-control" formControlName="taxCode" />
+    </div>
+
+    <div class="mb-3">
+      <label>Description</label>
+      <textarea class="form-control" formControlName="description"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+
+  }
+</div>

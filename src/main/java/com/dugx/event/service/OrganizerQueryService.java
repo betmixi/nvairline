@@ -84,6 +84,7 @@ public class OrganizerQueryService extends QueryService<Organizer> {
                     buildStringSpecification(criteria.getCompanyName(), Organizer_.companyName),
                     buildStringSpecification(criteria.getTaxCode(), Organizer_.taxCode),
                     buildSpecification(criteria.getVerified(), Organizer_.verified),
+                    buildSpecification(criteria.getStatus(), Organizer_.status),
                     buildSpecification(criteria.getUserId(), root -> root.join(Organizer_.user, JoinType.LEFT).get(User_.id))
                 )
             );

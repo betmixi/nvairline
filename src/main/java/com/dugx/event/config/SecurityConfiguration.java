@@ -65,6 +65,14 @@ public class SecurityConfiguration {
                     .requestMatchers("/api/activate").permitAll()
                     .requestMatchers("/api/account/reset-password/init").permitAll()
                     .requestMatchers("/api/account/reset-password/finish").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/payments/test").permitAll()
+                    // VNPay goi nguoc ve ma khong kem JWT cua nguoi dung
+                    .requestMatchers(HttpMethod.GET, "/api/payments/vnpay-return").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/payments/vnpay-ipn").permitAll()
+                    // Cho khach chua dang nhap xem chi tiet su kien truoc khi mua ve
+                    .requestMatchers(HttpMethod.GET, "/api/events/public/**").permitAll()
+                    // Anh da tai len (banner su kien...) phai xem duoc cong khai, giong URL anh ngoai
+                    .requestMatchers(HttpMethod.GET, "/api/uploads/images/**").permitAll()
                     .requestMatchers("/api/admin/**").hasAuthority(AuthoritiesConstants.ADMIN)
                     .requestMatchers("/api/**").authenticated()
                     .requestMatchers("/v3/api-docs/**").hasAuthority(AuthoritiesConstants.ADMIN)

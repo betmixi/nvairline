@@ -1,0 +1,32 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: #f5f7fb;
+  padding: 40px;
+}
+
+.payment-card {
+  max-width: 600px;
+  margin: auto;
+  background: white;
+  border-radius: 18px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 15px 0;
+  font-size: 17px;
+}
+
+.total {
+  font-size: 22px;
+  color: #2563eb;
+  font-weight: bold;
+}
+
+input[type='radio'] {
+  margin-right: 8px;
+}

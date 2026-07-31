@@ -1,0 +1,39 @@
+<div class="events-page">
+  <div class="page-header">
+    <div>
+      <h2>🎉 All Events</h2>
+
+      <p>Discover amazing events happening around you</p>
+    </div>
+  </div>
+
+  <div class="search-section">
+    <input type="text" placeholder="Search by event, category, organizer..." [(ngModel)]="searchText" (input)="searchEvents()" />
+
+    @if(searchText){
+
+    <button class="clear-btn" (click)="clearSearch()">✕</button>
+
+    }
+  </div>
+
+  @if(isLoading){
+
+  <div class="loading">Loading events...</div>
+
+  } @else if(filteredEvents.length === 0){
+
+  <div class="empty">
+    <h3>No events found</h3>
+
+    <p>Try another keyword.</p>
+  </div>
+
+  } @else{
+  <div class="event-grid">
+    @for(event of filteredEvents; track trackById($index,event)){
+    <jhi-event-card [event]="event" />
+    }
+  </div>
+  }
+</div>

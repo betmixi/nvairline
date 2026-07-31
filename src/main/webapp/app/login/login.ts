@@ -13,6 +13,7 @@ import { TranslateDirective } from 'app/shared/language';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TranslateDirective, TranslatePipe, ReactiveFormsModule, RouterLink],
   templateUrl: './login.html',
+  styleUrl: './login.scss',
 })
 export default class Login implements OnInit, AfterViewInit {
   username = viewChild.required<ElementRef>('username');
@@ -46,10 +47,19 @@ export default class Login implements OnInit, AfterViewInit {
     this.loginService.login(this.loginForm.getRawValue()).subscribe({
       next: () => {
         this.authenticationError.set(false);
-        if (!this.router.currentNavigation()) {
-          // There were no routing during login (eg from navigationToStoredUrl)
-          this.router.navigate(['']);
-        }
+
+        this.accountService.identity(true).subscribe(account => {
+          if (!account) {
+            this.router.navigate(['/']);
+            return;
+          }
+
+          if (account.authorities.includes('ROLE_ADMIN')) {
+            this.router.navigate(['/admin/dashboard']);
+          } else {
+            this.router.navigate(['/']);
+          }
+        });
       },
       error: () => this.authenticationError.set(true),
     });

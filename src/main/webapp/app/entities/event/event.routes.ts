@@ -31,6 +31,10 @@ const eventRoute: Routes = [
     canActivate: [UserRouteAccessService],
   },
   {
+    path: ':id/ticket',
+    loadComponent: () => import('./ticket/event-ticket').then(m => m.default),
+  },
+  {
     path: ':id/edit',
     loadComponent: () => import('./update/event-update').then(m => m.EventUpdate),
     resolve: {

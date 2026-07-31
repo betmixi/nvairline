@@ -4,15 +4,19 @@ import com.dugx.event.repository.TicketRepository;
 import com.dugx.event.service.TicketQueryService;
 import com.dugx.event.service.TicketService;
 import com.dugx.event.service.criteria.TicketCriteria;
+import com.dugx.event.service.dto.MyTicketDTO;
 import com.dugx.event.service.dto.TicketDTO;
 import com.dugx.event.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -195,5 +199,68 @@ public class TicketResource {
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    @GetMapping("/my-tickets")
+    public ResponseEntity<List<TicketDTO>> getMyTickets(@ParameterObject Pageable pageable) {
+        Page<TicketDTO> page = ticketService.getMyTickets(pageable);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<TicketDTO> getTicketDetail(@PathVariable Long id) {
+        TicketDTO dto = ticketService.getTicket(id);
+        return ResponseEntity.ok(dto);
+    }
+
+    @GetMapping("/booking/{bookingId}")
+    public ResponseEntity<List<TicketDTO>> getTicketsByBooking(@PathVariable Long bookingId) {
+        return ResponseEntity.ok(ticketService.getTicketsByBooking(bookingId));
+    }
+
+    @GetMapping("/qr/{qrCode}")
+    public ResponseEntity<TicketDTO> getTicketByQr(@PathVariable String qrCode) {
+        return ResponseEntity.ok(ticketService.getTicketByQr(qrCode));
+    }
+
+    /**
+     * {@code GET /api/tickets/my-wallet} : "vi ve" cua nguoi dung dang dang nhap.
+     *
+     * Khac voi /my-tickets, endpoint nay tra ve du lieu da lam phang kem thong tin
+     * su kien, loai ve va dia diem de man hinh khong phai goi them API.
+     *
+     * @param pageable thong tin phan trang.
+     * @return danh sach ve kem header phan trang.
+     */
+    @GetMapping("/my-wallet")
+    public ResponseEntity<List<MyTicketDTO>> getMyTicketWallet(@ParameterObject Pageable pageable) {
+        LOG.debug("REST request to get my ticket wallet");
+
+        Page<MyTicketDTO> page = ticketService.getMyTicketWallet(pageable);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * {@code GET /api/tickets/:id/qr-image} : anh ma QR cua mot ve.
+     *
+     * Chi chu ve moi xem duoc. Tra ve data URI de gan thang vao thuoc tinh src.
+     *
+     * @param id id cua ve.
+     * @return JSON dang { "dataUri": "data:image/png;base64,..." }
+     */
+    @GetMapping("/{id}/qr-image")
+    public ResponseEntity<Map<String, String>> getTicketQrImage(@PathVariable("id") Long id) {
+        LOG.debug("REST request to get QR image of Ticket : {}", id);
+
+        Map<String, String> body = new HashMap<>();
+        body.put("dataUri", ticketService.getQrImage(id));
+
+        return ResponseEntity.ok(body);
     }
 }

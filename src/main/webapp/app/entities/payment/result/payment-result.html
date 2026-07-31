@@ -1,0 +1,41 @@
+<div class="container py-5">
+  <div class="result-card mx-auto" [class.is-success]="success" [class.is-failed]="!success">
+    <div class="result-icon">
+      <span *ngIf="success">&#10003;</span>
+      <span *ngIf="!success">&#10005;</span>
+    </div>
+
+    <h2 class="mt-3">{{ success ? 'Thanh toán thành công' : 'Thanh toán thất bại' }}</h2>
+
+    <p class="text-muted">{{ message }}</p>
+
+    <div *ngIf="isLoading" class="text-center my-4">
+      <div class="spinner-border text-primary" role="status"></div>
+    </div>
+
+    <div *ngIf="!isLoading && booking" class="booking-summary">
+      <div class="summary-row">
+        <span>Mã đơn hàng</span>
+        <strong>#{{ booking.id }}</strong>
+      </div>
+
+      <div class="summary-row">
+        <span>Tổng tiền</span>
+        <strong>{{ booking.totalAmount | number: '1.0-0' }} đ</strong>
+      </div>
+
+      <div class="summary-row">
+        <span>Trạng thái</span>
+        <strong>{{ booking.status }}</strong>
+      </div>
+    </div>
+
+    <div *ngIf="success" class="alert alert-success mt-4 mb-0">Vé của bạn đã được phát hành. Xem mã QR trong mục đơn hàng.</div>
+
+    <div *ngIf="!success" class="alert alert-warning mt-4 mb-0">Đơn hàng đã được huỷ và số vé giữ chỗ đã được hoàn lại.</div>
+
+    <button class="btn btn-primary w-100 mt-4" *ngIf="success" (click)="goToMyTickets()">Xem vé của tôi</button>
+
+    <button class="btn btn-outline-secondary w-100 mt-2" (click)="goHome()">Về trang chủ</button>
+  </div>
+</div>

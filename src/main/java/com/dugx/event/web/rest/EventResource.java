@@ -15,6 +15,7 @@ import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -156,6 +157,54 @@ public class EventResource {
 
         Page<EventDTO> page = eventQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    @GetMapping("/public")
+    public ResponseEntity<List<EventDTO>> getPublicEvents(
+        EventCriteria criteria,
+        @org.springdoc.core.annotations.ParameterObject Pageable pageable
+    ) {
+        criteria.status().setEquals(true);
+
+        Page<EventDTO> page = eventQueryService.findByCriteria(criteria, pageable);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    //xem chi têtsst
+    @GetMapping("/public/{id}")
+    public ResponseEntity<EventDTO> getPublicEvent(@PathVariable Long id) {
+        Optional<EventDTO> eventDTO = eventService.findOne(id);
+
+        if (eventDTO.isEmpty() || !Boolean.TRUE.equals(eventDTO.get().getStatus())) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(eventDTO.get());
+    }
+
+    @GetMapping("/public/search")
+    public ResponseEntity<List<EventDTO>> searchPublicEvents(EventCriteria criteria, @ParameterObject Pageable pageable) {
+        criteria.status().setEquals(true);
+
+        Page<EventDTO> page = eventQueryService.findByCriteria(criteria, pageable);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    @GetMapping("/my-events")
+    public ResponseEntity<List<EventDTO>> getMyEvents(@ParameterObject Pageable pageable) {
+        LOG.debug("REST request to get my events");
+
+        Page<EventDTO> page = eventService.findMyEvents(pageable);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 

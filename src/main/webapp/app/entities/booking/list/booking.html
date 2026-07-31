@@ -1,115 +1,161 @@
-<div>
-  <h2 id="page-heading" data-cy="BookingHeading">
-    <span jhiTranslate="dugxApp.booking.home.title">Bookings</span>
+<div class="booking-page">
+  <!-- HEADER -->
+  <div class="booking-header">
+    <div class="header-left">
+      <span class="header-badge"> 📖 BOOKING MANAGEMENT </span>
 
-    <div class="d-flex justify-content-end">
-      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
-        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
-        <span jhiTranslate="dugxApp.booking.home.refreshListLabel">Refresh list</span>
-      </button>
+      <h1>Manage Bookings</h1>
 
-      <button
-        id="jh-create-entity"
-        data-cy="entityCreateButton"
-        class="btn btn-primary jh-create-entity create-booking"
-        [routerLink]="['/booking/new']"
-      >
-        <fa-icon icon="plus" />
-        <span jhiTranslate="dugxApp.booking.home.createLabel">Create a new Booking</span>
-      </button>
+      <p>View, edit and manage all booking records in your system.</p>
     </div>
-  </h2>
+
+    <div class="header-right">
+      <div class="stat-card blue">
+        <div class="emoji">📦</div>
+
+        <div>
+          <h3>{{ totalItems() }}</h3>
+
+          <span>Total Bookings</span>
+        </div>
+      </div>
+
+      <div class="stat-card green">
+        <div class="emoji">✅</div>
+
+        <div>
+          <h3>{{ bookings().filter(b => b.status === 'PAID').length }}</h3>
+
+          <span>Paid</span>
+        </div>
+      </div>
+
+      <div class="stat-card orange">
+        <div class="emoji">⏳</div>
+
+        <div>
+          <h3>{{ bookings().filter(b => b.status === 'PENDING').length }}</h3>
+
+          <span>Pending</span>
+        </div>
+      </div>
+
+      <div class="stat-card red">
+        <div class="emoji">❌</div>
+
+        <div>
+          <h3>{{ bookings().filter(b => b.status === 'CANCELLED').length }}</h3>
+
+          <span>Cancelled</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOOLBAR -->
+
+  <div class="booking-toolbar">
+    <button class="btn-refresh" (click)="load()" [disabled]="isLoading()">🔄 Refresh</button>
+
+    <button class="btn-create" routerLink="/booking/new">➕ New Booking</button>
+  </div>
 
   <jhi-alert-error />
 
   <jhi-alert />
 
   <jhi-filter [filters]="filters" />
-
-  @if (bookings().length === 0) {
-  <div class="alert alert-warning" id="no-result">
-    <span jhiTranslate="dugxApp.booking.home.notFound">No Bookings found</span>
-  </div>
-  } @else {
-  <div class="table-responsive table-entities" id="entities">
-    <table class="table table-striped" aria-describedby="page-heading">
+  <div class="booking-table-wrapper">
+    <table class="booking-table">
       <thead>
-        <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
-          <th scope="col" jhiSortBy="id">
-            <div class="d-flex">
-              <span jhiTranslate="global.field.id">ID</span>
+        <tr>
+          <th>#</th>
 
-              <fa-icon class="p-1" icon="sort" />
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="bookingDate">
-            <div class="d-flex">
-              <span jhiTranslate="dugxApp.booking.bookingDate">Booking Date</span>
+          <th>📅 Booking Date</th>
 
-              <fa-icon class="p-1" icon="sort" />
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="totalAmount">
-            <div class="d-flex">
-              <span jhiTranslate="dugxApp.booking.totalAmount">Total Amount</span>
+          <th>💰 Total</th>
 
-              <fa-icon class="p-1" icon="sort" />
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="status">
-            <div class="d-flex">
-              <span jhiTranslate="dugxApp.booking.status">Status</span>
+          <th>📌 Status</th>
 
-              <fa-icon class="p-1" icon="sort" />
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="user.login">
-            <div class="d-flex">
-              <span jhiTranslate="dugxApp.booking.user">User</span>
-              <fa-icon class="p-1" icon="sort" />
-            </div>
-          </th>
-          <th scope="col"></th>
+          <th>👤 User</th>
+
+          <th class="text-center">⚙ Actions</th>
         </tr>
       </thead>
+
       <tbody>
         @for (booking of bookings(); track trackId(booking)) {
-        <tr data-cy="entityTable">
-          <td><a [routerLink]="['/booking', booking.id, 'view']">{{ booking.id }}</a></td>
+
+        <tr>
+          <td>
+            <a [routerLink]="['/booking', booking.id, 'view']" class="booking-id"> #{{ booking.id }} </a>
+          </td>
+
           <td>{{ booking.bookingDate | formatMediumDatetime }}</td>
-          <td>{{ booking.totalAmount }}</td>
-          <td>{{ booking.status }}</td>
-          <td>{{ booking.user?.login }}</td>
-          <td class="text-end">
-            <div class="btn-group">
-              <a [routerLink]="['/booking', booking.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
-                <fa-icon icon="eye" />
-                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
-              </a>
 
-              <a [routerLink]="['/booking', booking.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
-                <fa-icon icon="pencil-alt" />
-                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
-              </a>
+          <td class="price">{{ booking.totalAmount }}</td>
 
-              <button type="submit" (click)="delete(booking)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
-                <fa-icon icon="times" />
-                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
-              </button>
+          <td>
+            @if (booking.status === 'PAID') {
+
+            <span class="status paid"> 🟢 Paid </span>
+
+            } @else if (booking.status === 'PENDING') {
+
+            <span class="status pending"> 🟡 Pending </span>
+
+            } @else {
+
+            <span class="status cancel"> 🔴 Cancelled </span>
+
+            }
+          </td>
+
+          <td>
+            <div class="user-box">👤 {{ booking.user?.login }}</div>
+          </td>
+
+          <td>
+            <div class="action-group">
+              <a [routerLink]="['/booking', booking.id, 'view']" class="btn-action btn-view"> 👁 View </a>
+
+              <a [routerLink]="['/booking', booking.id, 'edit']" class="btn-action btn-edit"> ✏ Edit </a>
+
+              <button (click)="delete(booking)" class="btn-action btn-delete">🗑 Delete</button>
             </div>
           </td>
         </tr>
+
         }
       </tbody>
     </table>
   </div>
+  @if (bookings().length === 0) {
+
+  <div class="empty-state">
+    <div class="empty-icon">📭</div>
+
+    <h3>No Bookings Found</h3>
+
+    <p>There are currently no bookings in the system.</p>
+
+    <button class="btn-create" routerLink="/booking/new">➕ Create Booking</button>
+  </div>
+
   } @if (bookings().length > 0) {
-  <div>
-    <div class="d-flex justify-content-center">
-      <jhi-item-count [params]="{ page: page(), totalItems: totalItems(), itemsPerPage: itemsPerPage() }" />
+
+  <div class="booking-pagination">
+    <div class="pagination-info">
+      <jhi-item-count
+        [params]="{
+        page: page(),
+        totalItems: totalItems(),
+        itemsPerPage: itemsPerPage()
+      }"
+      />
     </div>
 
-    <div class="d-flex justify-content-center">
+    <div class="pagination-box">
       <ngb-pagination
         [collectionSize]="totalItems()"
         [page]="page()"
@@ -121,5 +167,6 @@
       />
     </div>
   </div>
+
   }
 </div>

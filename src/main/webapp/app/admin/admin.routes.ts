@@ -3,6 +3,11 @@ import { Routes } from '@angular/router';
 
 const routes: Routes = [
   {
+    path: 'dashboard',
+    loadComponent: () => import('./dashboard/dashboard').then(m => m.DashboardComponent),
+    title: 'Admin Dashboard',
+  },
+  {
     path: 'docs',
     loadComponent: () => import('./docs/docs'),
     title: 'global.menu.admin.apidocs',
@@ -26,6 +31,11 @@ const routes: Routes = [
     path: 'metrics',
     loadComponent: () => import('./metrics/metrics'),
     title: 'metrics.title',
+  },
+  {
+    path: 'organizer-requests',
+    loadComponent: () => import('./organizer-request/organizer-request'),
+    title: 'Organizer Requests',
   },
   /* jhipster-needle-add-admin-route - JHipster will add admin routes here */
 ];

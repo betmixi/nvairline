@@ -144,6 +144,10 @@ spring:
   mvc:
     problemdetails:
       enabled: true
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 8MB
   security:
     oauth2:
       resourceserver:
@@ -228,3 +232,11 @@ jhipster:
 # ===================================================================
 
 # application:
+application:
+  vnpay:
+    tmn-code: 9XY85F1D
+    hash-secret: OOPACBKDMOPASRDWTHVNMIUADQDRVFJH
+    pay-url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+    return-url: https://yummy-clanking-tightwad.ngrok-free.dev/api/payments/vnpay-return
+    # Trang Angular hien thi ket qua thanh toan cho nguoi dung
+    frontend-return-url: http://localhost:4200/payment/result

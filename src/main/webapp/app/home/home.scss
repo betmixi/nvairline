@@ -1,23 +1,266 @@
-/* ==========================================================================
-Main page styles
-========================================================================== */
-
-.hipster {
-  display: inline-block;
-  width: 347px;
-  height: 497px;
-  background: url('../../content/images/jhipster_family_member_2.svg') no-repeat center top;
-  background-size: contain;
+:host {
+  display: block;
+  background: #f6f8fc;
 }
 
-/* wait autoprefixer update to allow simple generation of high pixel density media query */
-@media only screen and (-webkit-min-device-pixel-ratio: 2),
-  only screen and (-moz-min-device-pixel-ratio: 2),
-  only screen and (-o-min-device-pixel-ratio: 2/1),
-  only screen and (min-resolution: 192dpi),
-  only screen and (min-resolution: 2dppx) {
-  .hipster {
-    background: url('../../content/images/jhipster_family_member_2.svg') no-repeat center top;
-    background-size: contain;
+/* =========================
+        HERO
+========================= */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+
+  min-height: 460px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 70px 0;
+
+  color: #fff;
+
+  border-radius: 30px;
+
+  background: linear-gradient(135deg, #2563eb 0%, #4f46e5 55%, #7c3aed 100%);
+}
+
+.hero .container {
+  max-width: 1320px;
+  position: relative;
+  z-index: 2;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+
+  width: 520px;
+  height: 520px;
+
+  border-radius: 50%;
+
+  right: -120px;
+  top: -150px;
+
+  background: rgba(255, 255, 255, 0.08);
+
+  filter: blur(8px);
+}
+
+.hero::after {
+  content: '';
+
+  position: absolute;
+
+  width: 250px;
+  height: 250px;
+
+  border-radius: 50%;
+
+  left: -70px;
+  bottom: -70px;
+
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.hero h1 {
+  font-size: 58px;
+
+  font-weight: 800;
+
+  line-height: 1.15;
+
+  margin-bottom: 22px;
+}
+
+.hero p {
+  font-size: 19px;
+
+  line-height: 1.8;
+
+  opacity: 0.92;
+
+  max-width: 620px;
+
+  margin-bottom: 35px;
+}
+
+/* =========================
+        HERO IMAGE
+========================= */
+
+.hero-image {
+  width: 100%;
+  max-width: 430px;
+  height: 300px;
+
+  object-fit: cover;
+
+  border-radius: 24px;
+
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.28);
+
+  animation: float 5s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* =========================
+        SEARCH
+========================= */
+
+.search-box {
+  display: flex;
+
+  gap: 15px;
+
+  align-items: center;
+
+  margin-top: 25px;
+}
+
+.search-box input {
+  flex: 1;
+
+  height: 56px;
+
+  border: none;
+
+  outline: none;
+
+  border-radius: 16px;
+
+  padding: 0 22px;
+
+  font-size: 17px;
+
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+}
+
+.search-box button {
+  width: 160px;
+
+  height: 56px;
+
+  border: none;
+
+  border-radius: 16px;
+
+  font-size: 18px;
+
+  font-weight: 700;
+
+  background: #ffc107;
+
+  color: #222;
+
+  transition: 0.3s;
+}
+
+.search-box button:hover {
+  transform: translateY(-3px);
+
+  box-shadow: 0 20px 35px rgba(255, 193, 7, 0.4);
+}
+
+/* =========================
+        SECTION
+========================= */
+
+section {
+  padding: 70px 0;
+}
+
+h2 {
+  font-size: 38px;
+
+  font-weight: 800;
+
+  margin-bottom: 35px;
+
+  color: #1f2937;
+}
+
+/* =========================
+        BUTTON
+========================= */
+
+.btn-outline-primary {
+  border-radius: 14px;
+
+  padding: 11px 22px;
+
+  font-weight: 600;
+}
+
+/* =========================
+        BADGE
+========================= */
+
+.badge {
+  border-radius: 30px;
+
+  font-size: 14px;
+
+  padding: 8px 14px;
+}
+
+/* =========================
+        RESPONSIVE
+========================= */
+
+@media (max-width: 992px) {
+  .hero {
+    min-height: auto;
+
+    padding: 55px 20px;
+
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-size: 42px;
+  }
+
+  .hero p {
+    font-size: 17px;
+  }
+
+  .hero-image {
+    margin-top: 40px;
+
+    max-width: 100%;
+
+    height: 250px;
+  }
+
+  .search-box {
+    flex-direction: column;
+  }
+
+  .search-box input,
+  .search-box button {
+    width: 100%;
+  }
+
+  section {
+    padding: 45px 0;
+  }
+
+  h2 {
+    font-size: 30px;
   }
 }

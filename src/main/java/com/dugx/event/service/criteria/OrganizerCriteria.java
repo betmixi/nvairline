@@ -1,5 +1,6 @@
 package com.dugx.event.service.criteria;
 
+import com.dugx.event.domain.OrganizerStatus;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
@@ -29,7 +30,7 @@ public class OrganizerCriteria implements Serializable, Criteria {
     private StringFilter companyName;
 
     private StringFilter taxCode;
-
+    private OrganizerStatusFilter status;
     private BooleanFilter verified;
 
     private LongFilter userId;
@@ -44,7 +45,41 @@ public class OrganizerCriteria implements Serializable, Criteria {
         this.taxCode = other.optionalTaxCode().map(StringFilter::copy).orElse(null);
         this.verified = other.optionalVerified().map(BooleanFilter::copy).orElse(null);
         this.userId = other.optionalUserId().map(LongFilter::copy).orElse(null);
+        this.status = other.optionalStatus().map(OrganizerStatusFilter::copy).orElse(null);
         this.distinct = other.distinct;
+    }
+
+    public static class OrganizerStatusFilter extends Filter<OrganizerStatus> {
+
+        public OrganizerStatusFilter() {}
+
+        public OrganizerStatusFilter(OrganizerStatusFilter filter) {
+            super(filter);
+        }
+
+        @Override
+        public OrganizerStatusFilter copy() {
+            return new OrganizerStatusFilter(this);
+        }
+    }
+
+    public OrganizerStatusFilter getStatus() {
+        return status;
+    }
+
+    public Optional<OrganizerStatusFilter> optionalStatus() {
+        return Optional.ofNullable(status);
+    }
+
+    public OrganizerStatusFilter status() {
+        if (status == null) {
+            status = new OrganizerStatusFilter();
+        }
+        return status;
+    }
+
+    public void setStatus(OrganizerStatusFilter status) {
+        this.status = status;
     }
 
     @Override
@@ -181,13 +216,14 @@ public class OrganizerCriteria implements Serializable, Criteria {
             Objects.equals(taxCode, that.taxCode) &&
             Objects.equals(verified, that.verified) &&
             Objects.equals(userId, that.userId) &&
+            Objects.equals(status, that.status) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, companyName, taxCode, verified, userId, distinct);
+        return Objects.hash(id, companyName, taxCode, status, verified, userId, distinct);
     }
 
     // prettier-ignore
@@ -200,6 +236,7 @@ public class OrganizerCriteria implements Serializable, Criteria {
             optionalVerified().map(f -> "verified=" + f + ", ").orElse("") +
             optionalUserId().map(f -> "userId=" + f + ", ").orElse("") +
             optionalDistinct().map(f -> "distinct=" + f + ", ").orElse("") +
+            optionalStatus().map(f -> "status=" + f + ", ").orElse("")+
         "}";
     }
 }

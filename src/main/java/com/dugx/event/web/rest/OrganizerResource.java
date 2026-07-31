@@ -1,10 +1,13 @@
 package com.dugx.event.web.rest;
 
+import com.dugx.event.domain.Organizer;
 import com.dugx.event.repository.OrganizerRepository;
+import com.dugx.event.service.OrganizerDashboardService;
 import com.dugx.event.service.OrganizerQueryService;
 import com.dugx.event.service.OrganizerService;
 import com.dugx.event.service.criteria.OrganizerCriteria;
 import com.dugx.event.service.dto.OrganizerDTO;
+import com.dugx.event.service.dto.OrganizerDashboardDTO;
 import com.dugx.event.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -20,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -45,15 +49,25 @@ public class OrganizerResource {
     private final OrganizerRepository organizerRepository;
 
     private final OrganizerQueryService organizerQueryService;
+    private final OrganizerDashboardService organizerDashboardService;
 
     public OrganizerResource(
         OrganizerService organizerService,
         OrganizerRepository organizerRepository,
-        OrganizerQueryService organizerQueryService
+        OrganizerQueryService organizerQueryService,
+        OrganizerDashboardService organizerDashboardService
     ) {
         this.organizerService = organizerService;
         this.organizerRepository = organizerRepository;
         this.organizerQueryService = organizerQueryService;
+        this.organizerDashboardService = organizerDashboardService;
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<OrganizerDTO> register(@Valid @RequestBody OrganizerDTO organizerDTO) {
+        OrganizerDTO result = organizerService.register(organizerDTO);
+
+        return ResponseEntity.ok(result);
     }
 
     /**
@@ -63,6 +77,7 @@ public class OrganizerResource {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new organizerDTO, or with status {@code 400 (Bad Request)} if the organizer has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("")
     public ResponseEntity<OrganizerDTO> createOrganizer(@Valid @RequestBody OrganizerDTO organizerDTO) throws URISyntaxException {
         LOG.debug("REST request to save Organizer : {}", organizerDTO);
@@ -156,11 +171,14 @@ public class OrganizerResource {
         OrganizerCriteria criteria,
         @org.springdoc.core.annotations.ParameterObject Pageable pageable
     ) {
-        LOG.debug("REST request to get Organizers by criteria: {}", criteria);
+        List<Organizer> list = organizerRepository.findAll();
+
+        System.out.println("========== DB ==========");
+        list.forEach(o -> System.out.println(o.getId() + " | " + o.getCompanyName() + " | " + o.getStatus()));
 
         Page<OrganizerDTO> page = organizerQueryService.findByCriteria(criteria, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
+
+        return ResponseEntity.ok(page.getContent());
     }
 
     /**
@@ -175,17 +193,46 @@ public class OrganizerResource {
         return ResponseEntity.ok().body(organizerQueryService.countByCriteria(criteria));
     }
 
+    @GetMapping("/dashboard")
+    public ResponseEntity<OrganizerDashboardDTO> getDashboard() {
+        return ResponseEntity.ok(organizerDashboardService.getDashboard());
+    }
+
     /**
      * {@code GET  /organizers/:id} : get the "id" organizer.
      *
      * @param id the id of the organizerDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the organizerDTO, or with status {@code 404 (Not Found)}.
      */
+
     @GetMapping("/{id}")
     public ResponseEntity<OrganizerDTO> getOrganizer(@PathVariable("id") Long id) {
         LOG.debug("REST request to get Organizer : {}", id);
         Optional<OrganizerDTO> organizerDTO = organizerService.findOne(id);
         return ResponseUtil.wrapOrNotFound(organizerDTO);
+    }
+
+    @PutMapping("/{id}/approve")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<OrganizerDTO> approveOrganizer(@PathVariable Long id) {
+        OrganizerDTO result = organizerService.approve(id);
+        return ResponseEntity.ok(result);
+    }
+
+    @PutMapping("/{id}/reject")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<OrganizerDTO> rejectOrganizer(@PathVariable Long id) {
+        OrganizerDTO result = organizerService.reject(id);
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/my-request")
+    public ResponseEntity<OrganizerDTO> getMyRequest() {
+        Optional<OrganizerDTO> organizerDTO = organizerService.getMyRequest();
+        if (organizerDTO.isPresent()) {
+            return ResponseEntity.ok(organizerDTO.get());
+        }
+        return ResponseEntity.ok().build();
     }
 
     /**

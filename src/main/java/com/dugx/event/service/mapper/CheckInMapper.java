@@ -11,16 +11,11 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity {@link CheckIn} and its DTO {@link CheckInDTO}.
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { TicketMapper.class })
 public interface CheckInMapper extends EntityMapper<CheckInDTO, CheckIn> {
-    @Mapping(target = "ticket", source = "ticket", qualifiedByName = "ticketId")
+    @Mapping(target = "ticket", source = "ticket")
     @Mapping(target = "checkedBy", source = "checkedBy", qualifiedByName = "userLogin")
     CheckInDTO toDto(CheckIn s);
-
-    @Named("ticketId")
-    @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "id", source = "id")
-    TicketDTO toDtoTicketId(Ticket ticket);
 
     @Named("userLogin")
     @BeanMapping(ignoreByDefault = true)

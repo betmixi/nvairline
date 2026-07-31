@@ -1,179 +1,169 @@
-<div>
-  <h2 id="page-heading" data-cy="EventHeading">
-    <span jhiTranslate="dugxApp.event.home.title">Events</span>
+<div class="event-page">
+  <!-- ================= HEADER ================= -->
 
-    <div class="d-flex justify-content-end">
-      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
-        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
-        <span jhiTranslate="dugxApp.event.home.refreshListLabel">Refresh list</span>
+  <div class="page-header">
+    <div class="header-info">
+      <span class="page-badge"> EVENT MANAGEMENT </span>
+
+      <h2>Manage Events</h2>
+
+      <p>Create, edit and manage all events in your system.</p>
+    </div>
+
+    <div class="header-action">
+      <button class="btn btn-refresh" (click)="load()" [disabled]="isLoading()">
+        <span class="icon">🔄</span>
+
+        Refresh
       </button>
 
-      <button
-        id="jh-create-entity"
-        data-cy="entityCreateButton"
-        class="btn btn-primary jh-create-entity create-event"
-        [routerLink]="['/event/new']"
-      >
-        <fa-icon icon="plus" />
-        <span jhiTranslate="dugxApp.event.home.createLabel">Create a new Event</span>
+      <button class="btn btn-create" [routerLink]="['/event/new']">
+        <span class="icon">➕</span>
+
+        New Event
       </button>
     </div>
-  </h2>
-
-  <jhi-alert-error />
-
-  <jhi-alert />
-
-  <jhi-filter [filters]="filters" />
-
-  @if (events().length === 0) {
-  <div class="alert alert-warning" id="no-result">
-    <span jhiTranslate="dugxApp.event.home.notFound">No Events found</span>
   </div>
-  } @else {
-  <div class="table-responsive table-entities" id="entities">
-    <table class="table table-striped" aria-describedby="page-heading">
-      <thead>
-        <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
-          <th scope="col" jhiSortBy="id">
-            <div class="d-flex">
-              <span jhiTranslate="global.field.id">ID</span>
 
-              <fa-icon class="p-1" icon="sort" />
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="title">
-            <div class="d-flex">
-              <span jhiTranslate="dugxApp.event.title">Title</span>
+  <!-- ================= ALERT ================= -->
 
-              <fa-icon class="p-1" icon="sort" />
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="description">
-            <div class="d-flex">
-              <span jhiTranslate="dugxApp.event.description">Description</span>
+  <jhi-alert-error></jhi-alert-error>
 
-              <fa-icon class="p-1" icon="sort" />
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="banner">
-            <div class="d-flex">
-              <span jhiTranslate="dugxApp.event.banner">Banner</span>
+  <jhi-alert></jhi-alert>
 
-              <fa-icon class="p-1" icon="sort" />
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="startTime">
-            <div class="d-flex">
-              <span jhiTranslate="dugxApp.event.startTime">Start Time</span>
+  <!-- ================= FILTER ================= -->
 
-              <fa-icon class="p-1" icon="sort" />
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="endTime">
-            <div class="d-flex">
-              <span jhiTranslate="dugxApp.event.endTime">End Time</span>
+  <jhi-filter [filters]="filters"> </jhi-filter>
 
-              <fa-icon class="p-1" icon="sort" />
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="status">
-            <div class="d-flex">
-              <span jhiTranslate="dugxApp.event.status">Status</span>
+  <!-- ================= EMPTY ================= -->
 
-              <fa-icon class="p-1" icon="sort" />
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="createdDate">
-            <div class="d-flex">
-              <span jhiTranslate="dugxApp.event.createdDate">Created Date</span>
+  @if(events().length === 0){
 
-              <fa-icon class="p-1" icon="sort" />
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="category.name">
-            <div class="d-flex">
-              <span jhiTranslate="dugxApp.event.category">Category</span>
-              <fa-icon class="p-1" icon="sort" />
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="address.location">
-            <div class="d-flex">
-              <span jhiTranslate="dugxApp.event.address">Address</span>
-              <fa-icon class="p-1" icon="sort" />
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="organizer.companyName">
-            <div class="d-flex">
-              <span jhiTranslate="dugxApp.event.organizer">Organizer</span>
-              <fa-icon class="p-1" icon="sort" />
-            </div>
-          </th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (event of events(); track trackId(event)) {
-        <tr data-cy="entityTable">
-          <td><a [routerLink]="['/event', event.id, 'view']">{{ event.id }}</a></td>
-          <td>{{ event.title }}</td>
-          <td>{{ event.description }}</td>
-          <td>{{ event.banner }}</td>
-          <td>{{ event.startTime | formatMediumDatetime }}</td>
-          <td>{{ event.endTime | formatMediumDatetime }}</td>
-          <td>{{ event.status }}</td>
-          <td>{{ event.createdDate | formatMediumDatetime }}</td>
-          <td>
-            @if (event.category) {
-            <div>
-              <a [routerLink]="['/category', event.category.id, 'view']">{{ event.category.name }}</a>
-            </div>
-            }
-          </td>
-          <td>
-            @if (event.address) {
-            <div>
-              <a [routerLink]="['/address', event.address.id, 'view']">{{ event.address.location }}</a>
-            </div>
-            }
-          </td>
-          <td>
-            @if (event.organizer) {
-            <div>
-              <a [routerLink]="['/organizer', event.organizer.id, 'view']">{{ event.organizer.companyName }}</a>
-            </div>
-            }
-          </td>
-          <td class="text-end">
-            <div class="btn-group">
-              <a [routerLink]="['/event', event.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
-                <fa-icon icon="eye" />
-                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
-              </a>
+  <div class="empty-box">
+    <div class="empty-icon">🎫</div>
 
-              <a [routerLink]="['/event', event.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
-                <fa-icon icon="pencil-alt" />
-                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
-              </a>
+    <h3>No Events Found</h3>
 
-              <button type="submit" (click)="delete(event)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
-                <fa-icon icon="times" />
-                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
-              </button>
-            </div>
-          </td>
-        </tr>
+    <p>There are currently no events available.</p>
+  </div>
+
+  } @else{
+
+  <!-- ================= GRID ================= -->
+
+  <div class="event-grid">
+    @for(event of events(); track trackId(event)){
+
+    <div class="event-card">
+      <!-- Banner -->
+
+      <div class="event-banner">
+        @if(event.banner){
+
+        <img [src]="event.banner" alt="Event Banner" />
+
+        } @else{
+
+        <div class="no-banner">No Image</div>
+
         }
-      </tbody>
-    </table>
-  </div>
-  } @if (events().length > 0) {
-  <div>
-    <div class="d-flex justify-content-center">
-      <jhi-item-count [params]="{ page: page(), totalItems: totalItems(), itemsPerPage: itemsPerPage() }" />
+
+        <div class="banner-overlay"></div>
+
+        @if(event.status){
+
+        <span class="status-badge public"> Public </span>
+
+        } @else{
+
+        <span class="status-badge private"> Private </span>
+
+        }
+      </div>
+
+      <!-- ================= CONTENT ================= -->
+
+      <div class="event-content">
+        <!-- ================= TITLE ================= -->
+
+        <div class="event-top">
+          <h3 class="event-title">{{ event.title }}</h3>
+
+          <span class="event-id"> #{{ event.id }} </span>
+        </div>
+
+        <!-- ================= ORGANIZER ================= -->
+
+        <div class="organizer">
+          <span class="organizer-icon">👤</span>
+
+          <div class="organizer-info">
+            <span class="label"> Organizer </span>
+
+            <span class="value"> @if(event.organizer){ {{ event.organizer.companyName }} }@else{ No Organizer } </span>
+          </div>
+        </div>
+
+        <!-- ================= QUICK INFO ================= -->
+
+        <div class="event-info">
+          <div class="info-row">
+            <span>📅</span>
+
+            <span> {{ event.startTime | formatMediumDatetime }} </span>
+          </div>
+
+          @if(event.address){
+
+          <div class="info-row">
+            <span>📍</span>
+
+            <span> {{ event.address.location }} </span>
+          </div>
+
+          }
+        </div>
+
+        <!-- ================= ACTION ================= -->
+
+        <div class="card-footer">
+          <a [routerLink]="['/event', event.id, 'view']" class="btn btn-view">
+            <span>👁️</span>
+
+            <span>View</span>
+          </a>
+
+          <div class="right-action">
+            <a [routerLink]="['/event', event.id, 'edit']" class="btn btn-edit">
+              <span>✏️</span>
+            </a>
+
+            <button type="button" class="btn btn-delete" (click)="delete(event)">
+              <span>🗑️</span>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="d-flex justify-content-center">
+    }
+  </div>
+
+  <!-- ================= PAGINATION ================= -->
+
+  <div class="pagination-wrapper">
+    <div class="pagination-top">
+      <jhi-item-count
+        [params]="{
+            page: page(),
+            totalItems: totalItems(),
+            itemsPerPage: itemsPerPage()
+          }"
+      >
+      </jhi-item-count>
+    </div>
+
+    <div class="pagination-bottom">
       <ngb-pagination
         [collectionSize]="totalItems()"
         [page]="page()"
@@ -182,8 +172,10 @@
         [rotate]="true"
         [boundaryLinks]="true"
         (pageChange)="navigateToPage($event)"
-      />
+      >
+      </ngb-pagination>
     </div>
   </div>
+
   }
 </div>

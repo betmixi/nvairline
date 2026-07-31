@@ -1,5 +1,6 @@
 package com.dugx.event.service.dto;
 
+import com.dugx.event.domain.OrganizerStatus;
 import jakarta.persistence.Lob;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
@@ -66,6 +67,16 @@ public class OrganizerDTO implements Serializable {
 
     public void setVerified(Boolean verified) {
         this.verified = verified;
+    }
+
+    private OrganizerStatus status;
+
+    public OrganizerStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(OrganizerStatus status) {
+        this.status = status;
     }
 
     public UserDTO getUser() {

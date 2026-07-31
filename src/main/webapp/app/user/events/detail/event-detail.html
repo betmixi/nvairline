@@ -1,0 +1,102 @@
+<div class="detail-page container py-4">
+  <a class="back-link" routerLink="/events">← Tất cả sự kiện</a>
+
+  @if (isLoading) {
+
+  <div class="state-box">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-3">Đang tải thông tin sự kiện...</p>
+  </div>
+
+  } @else if (notFound || !event) {
+
+  <div class="state-box">
+    <h3>Không tìm thấy sự kiện</h3>
+    <p class="text-muted">Sự kiện có thể đã bị gỡ hoặc đường dẫn không đúng.</p>
+    <a class="btn btn-primary" routerLink="/events">Xem sự kiện khác</a>
+  </div>
+
+  } @else {
+
+  <div class="banner-wrap">
+    <img class="banner" [src]="event.banner || 'content/images/logo-jhipster.png'" [alt]="event.title" />
+
+    <div class="banner-overlay">
+      @if (event.category) {
+      <span class="category-badge">{{ event.category.name }}</span>
+      }
+      <h1>{{ event.title }}</h1>
+    </div>
+  </div>
+
+  <div class="detail-grid">
+    <div class="main-col">
+      <div class="meta-row">
+        @if (event.startTime) {
+        <div class="meta-item">
+          <span class="meta-icon">📅</span>
+          <div>
+            <strong>{{ event.startTime.format('dddd, DD/MM/YYYY') }}</strong>
+            <div class="text-muted small">
+              {{ event.startTime.format('HH:mm') }} @if (event.endTime) { – {{ event.endTime.format('HH:mm') }} }
+            </div>
+          </div>
+        </div>
+        } @if (event.address) {
+        <div class="meta-item">
+          <span class="meta-icon">📍</span>
+          <div>
+            <strong>{{ event.address.location }}</strong>
+          </div>
+        </div>
+        } @if (event.organizer) {
+        <div class="meta-item">
+          <span class="meta-icon">👤</span>
+          <div>
+            <strong>{{ event.organizer.companyName }}</strong>
+            <div class="text-muted small">Đơn vị tổ chức</div>
+          </div>
+        </div>
+        }
+      </div>
+
+      <section class="description-section">
+        <h4>Giới thiệu sự kiện</h4>
+        <p class="description-text">{{ event.description || 'Chưa có mô tả cho sự kiện này.' }}</p>
+      </section>
+    </div>
+
+    <aside class="side-col">
+      <div class="buy-card">
+        <div class="price-line">
+          <span class="text-muted">Giá vé từ</span>
+          <strong class="price-value"> {{ lowestPrice !== null ? (lowestPrice | number) + ' đ' : 'Liên hệ' }} </strong>
+        </div>
+
+        <button class="btn btn-primary w-100 buy-btn" [disabled]="!hasAvailableTickets" (click)="buyTicket()">
+          {{ hasAvailableTickets ? 'Mua vé ngay' : 'Đã hết vé' }}
+        </button>
+
+        @if (event.ticketTypes?.length) {
+
+        <div class="ticket-preview">
+          <div class="ticket-preview-title">Loại vé</div>
+
+          @for (ticket of event.ticketTypes; track ticket.id) {
+          <div class="ticket-preview-row">
+            <div>
+              <div class="ticket-name">{{ ticket.name }}</div>
+              <div class="text-muted small">{{ (ticket.remaining ?? 0) > 0 ? (ticket.remaining) + ' vé còn lại' : 'Hết vé' }}</div>
+            </div>
+            <strong>{{ ticket.price | number }} đ</strong>
+          </div>
+          }
+        </div>
+
+        }
+      </div>
+    </aside>
+  </div>
+
+  }
+</div>

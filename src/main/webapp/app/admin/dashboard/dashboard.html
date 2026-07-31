@@ -1,0 +1,135 @@
+<div class="admin-dashboard">
+  <!-- Header -->
+  <div class="dash-head">
+    <div>
+      <h2>Admin Dashboard</h2>
+      <p>Welcome back, Admin!</p>
+    </div>
+  </div>
+
+  <!-- Dashboard Cards -->
+
+  <div class="stat-grid">
+    <!-- Total Users -->
+    <div class="stat-tile accent-violet" routerLink="/user-management">
+      <div class="icon-badge">
+        <fa-icon [icon]="faUsers"></fa-icon>
+      </div>
+
+      <div class="tile-body">
+        <span class="label">Total Users</span>
+        <h2>{{ dashboard?.totalUsers ?? 0 }}</h2>
+        <small>Registered users</small>
+      </div>
+    </div>
+
+    <!-- Total Events -->
+    <div class="stat-tile accent-emerald" routerLink="/event">
+      <div class="icon-badge">
+        <fa-icon [icon]="faCalendar"></fa-icon>
+      </div>
+
+      <div class="tile-body">
+        <span class="label">Total Events</span>
+        <h2>{{ dashboard?.totalEvents ?? 0 }}</h2>
+        <small>View events</small>
+      </div>
+    </div>
+
+    <!-- Total Bookings -->
+    <div class="stat-tile accent-sky" routerLink="/booking">
+      <div class="icon-badge">
+        <fa-icon [icon]="faTicket"></fa-icon>
+      </div>
+
+      <div class="tile-body">
+        <span class="label">Total Bookings</span>
+        <h2>{{ dashboard?.totalBookings ?? 0 }}</h2>
+        <small>Booking records</small>
+      </div>
+    </div>
+
+    <!-- Tickets -->
+    <div class="stat-tile accent-sky" routerLink="/ticket">
+      <div class="icon-badge">
+        <fa-icon [icon]="faTicket"></fa-icon>
+      </div>
+
+      <div class="tile-body">
+        <span class="label">Tickets</span>
+        <h2>Manage</h2>
+        <small>View all tickets</small>
+      </div>
+    </div>
+
+    <!-- Pending Organizers -->
+    <div class="stat-tile accent-violet" (click)="goOrganizerRequests()">
+      <div class="icon-badge">
+        <fa-icon [icon]="faUserClock"></fa-icon>
+      </div>
+
+      <div class="tile-body">
+        <span class="label">Pending Organizers</span>
+        <h2>{{ organizers.length }}</h2>
+        <small>Waiting approval</small>
+      </div>
+    </div>
+
+    <!-- Revenue -->
+    <div class="stat-tile accent-amber" routerLink="/payment">
+      <div class="icon-badge">
+        <fa-icon [icon]="faMoney"></fa-icon>
+      </div>
+
+      <div class="tile-body">
+        <span class="label">Total Revenue</span>
+        <h2>{{ dashboard?.totalRevenue ?? 0 | number:'1.0-0' }} ₫</h2>
+        <small>Total income</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top events ranking -->
+
+  <div class="chart-panel">
+    <div class="chart-panel-head">
+      <div>
+        <h3>Sự kiện bán chạy nhất</h3>
+        <p>Top 5 sự kiện, tính trên các đơn đã thanh toán</p>
+      </div>
+
+      <div class="measure-switch" role="group" aria-label="Chọn tiêu chí xếp hạng">
+        <button type="button" [class.is-active]="measure === 'tickets'" (click)="setMeasure('tickets')">Số vé</button>
+
+        <button type="button" [class.is-active]="measure === 'revenue'" (click)="setMeasure('revenue')">Doanh thu</button>
+      </div>
+    </div>
+
+    @if (rankedEvents.length) {
+
+    <ol class="rank-chart">
+      @for (row of rankedEvents; track row.title; let i = $index) {
+      <li class="rank-row">
+        <div class="rank-badge" [style.background]="row.color">{{ i + 1 }}</div>
+
+        <div class="rank-main">
+          <div class="rank-top">
+            <span class="rank-title">{{ row.title }}</span>
+            <span class="rank-value">{{ row.display }}</span>
+          </div>
+
+          <div class="rank-track">
+            <div class="rank-fill" [style.width.%]="row.percent" [style.background]="row.color"></div>
+          </div>
+        </div>
+      </li>
+      }
+    </ol>
+
+    } @else {
+
+    <p class="chart-empty">Chưa có dữ liệu bán vé.</p>
+
+    }
+  </div>
+</div>
