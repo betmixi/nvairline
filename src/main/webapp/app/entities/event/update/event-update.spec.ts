@@ -11,8 +11,6 @@ import { IAddress } from 'app/entities/address/address.model';
 import { AddressService } from 'app/entities/address/service/address.service';
 import { ICategory } from 'app/entities/category/category.model';
 import { CategoryService } from 'app/entities/category/service/category.service';
-import { IOrganizer } from 'app/entities/organizer/organizer.model';
-import { OrganizerService } from 'app/entities/organizer/service/organizer.service';
 import { IEvent } from '../event.model';
 import { EventService } from '../service/event.service';
 
@@ -27,7 +25,6 @@ describe('Event Management Update Component', () => {
   let eventService: EventService;
   let categoryService: CategoryService;
   let addressService: AddressService;
-  let organizerService: OrganizerService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -49,7 +46,6 @@ describe('Event Management Update Component', () => {
     eventService = TestBed.inject(EventService);
     categoryService = TestBed.inject(CategoryService);
     addressService = TestBed.inject(AddressService);
-    organizerService = TestBed.inject(OrganizerService);
 
     comp = fixture.componentInstance;
   });
@@ -99,43 +95,18 @@ describe('Event Management Update Component', () => {
       expect(comp.addressesSharedCollection()).toEqual(expectedCollection);
     });
 
-    it('should call Organizer query and add missing value', () => {
-      const event: IEvent = { id: 3268 };
-      const organizer: IOrganizer = { id: 278 };
-      event.organizer = organizer;
-
-      const organizerCollection: IOrganizer[] = [{ id: 278 }];
-      vitest.spyOn(organizerService, 'query').mockReturnValue(of(new HttpResponse({ body: organizerCollection })));
-      const additionalOrganizers = [organizer];
-      const expectedCollection: IOrganizer[] = [...additionalOrganizers, ...organizerCollection];
-      vitest.spyOn(organizerService, 'addOrganizerToCollectionIfMissing').mockReturnValue(expectedCollection);
-
-      activatedRoute.data = of({ event });
-      comp.ngOnInit();
-
-      expect(organizerService.query).toHaveBeenCalled();
-      expect(organizerService.addOrganizerToCollectionIfMissing).toHaveBeenCalledWith(
-        organizerCollection,
-        ...additionalOrganizers.map(i => expect.objectContaining(i) as typeof i),
-      );
-      expect(comp.organizersSharedCollection()).toEqual(expectedCollection);
-    });
-
     it('should update editForm', () => {
       const event: IEvent = { id: 3268 };
       const category: ICategory = { id: 6752 };
       event.category = category;
       const address: IAddress = { id: 2318 };
       event.address = address;
-      const organizer: IOrganizer = { id: 278 };
-      event.organizer = organizer;
 
       activatedRoute.data = of({ event });
       comp.ngOnInit();
 
       expect(comp.categoriesSharedCollection()).toContainEqual(category);
       expect(comp.addressesSharedCollection()).toContainEqual(address);
-      expect(comp.organizersSharedCollection()).toContainEqual(organizer);
       expect(comp.event).toEqual(event);
     });
   });
@@ -226,16 +197,6 @@ describe('Event Management Update Component', () => {
         vitest.spyOn(addressService, 'compareAddress');
         comp.compareAddress(entity, entity2);
         expect(addressService.compareAddress).toHaveBeenCalledWith(entity, entity2);
-      });
-    });
-
-    describe('compareOrganizer', () => {
-      it('should forward to organizerService', () => {
-        const entity = { id: 278 };
-        const entity2 = { id: 29151 };
-        vitest.spyOn(organizerService, 'compareOrganizer');
-        comp.compareOrganizer(entity, entity2);
-        expect(organizerService.compareOrganizer).toHaveBeenCalledWith(entity, entity2);
       });
     });
   });

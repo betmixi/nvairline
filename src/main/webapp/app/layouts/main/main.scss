@@ -1,0 +1,46 @@
+/* =========================
+        APP SHELL
+        Bo cuc tong the: sidebar ben trai co dinh + noi dung ben phai.
+        Chieu rong sidebar duoc dieu khien boi bien --sidebar-width, thay doi
+        khi sidebar dong/mo (class .is-collapsed tren jhi-navbar).
+========================= */
+
+.app-shell {
+  display: flex;
+  align-items: stretch;
+  min-height: 100vh;
+}
+
+.app-content {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ================= ADMIN AREA ================= */
+
+.container-fluid.admin-page-container {
+  flex: 1 1 auto;
+  background: #f5f7fb;
+  padding: 32px 36px 56px;
+}
+
+@media (max-width: 768px) {
+  .container-fluid.admin-page-container {
+    padding: 20px 16px 40px;
+  }
+}
+
+/* Trang xac thuc (dang nhap/dang ky) tu thiet ke full-screen rieng, khong can sidebar.
+   jhi-navbar duoc router-outlet chen vao nen khong mang attribute encapsulation cua
+   Main - phai dung ::ng-deep de vuot qua view encapsulation. */
+.app-shell.hide-navbar ::ng-deep jhi-navbar {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .app-shell {
+    flex-direction: column;
+  }
+}

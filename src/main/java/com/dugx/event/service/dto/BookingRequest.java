@@ -1,27 +1,23 @@
 package com.dugx.event.service.dto;
 
+import java.util.List;
+
+/**
+ * Yeu cau dat ve. Mot chieu chi co 1 leg trong {@code legs}, khu hoi/nhieu chang co nhieu leg.
+ * {@code couponCode} ap dung cho ca booking, tu dong khop voi chang co Event trung voi coupon.
+ */
 public class BookingRequest {
 
-    private Long ticketTypeId;
-
-    private Integer quantity;
+    private List<LegRequest> legs;
 
     private String couponCode;
 
-    public Long getTicketTypeId() {
-        return ticketTypeId;
+    public List<LegRequest> getLegs() {
+        return legs;
     }
 
-    public void setTicketTypeId(Long ticketTypeId) {
-        this.ticketTypeId = ticketTypeId;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
+    public void setLegs(List<LegRequest> legs) {
+        this.legs = legs;
     }
 
     public String getCouponCode() {

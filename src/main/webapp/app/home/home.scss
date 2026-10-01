@@ -1,6 +1,20 @@
 :host {
   display: block;
-  background: #f6f8fc;
+  background: #f4f7fc;
+}
+
+/* =========================
+        SHARED WIDTH WRAPPER
+        Dung chung cho hero, the tim kiem va luoi chuyen bay de dam bao
+        cung mot chieu rong tuyet doi, khong lech.
+========================= */
+
+.home-container {
+  width: 100%;
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 0 16px;
+  box-sizing: border-box;
 }
 
 /* =========================
@@ -8,172 +22,866 @@
 ========================= */
 
 .hero {
+  min-height: 100vh;
+  padding: 90px 0 150px;
+  color: #fff;
+  text-align: center;
+  background-image: linear-gradient(180deg, rgba(3, 20, 33, 0) 0%, rgba(3, 20, 33, 0.55) 100%), url('/content/images/hero-chua.jpg');
+  background-size: cover;
+  background-position: center;
   position: relative;
   overflow: hidden;
+  box-sizing: border-box;
+}
 
-  min-height: 460px;
+.hero-inner {
+  position: absolute;
+  top: 14%;
+  right: 8%;
+  max-width: 460px;
+  text-align: left;
+}
 
-  display: flex;
-  align-items: center;
+@media (max-width: 768px) {
+  .hero-inner {
+    top: 10%;
+    right: 50%;
+    transform: translateX(50%);
+    max-width: 90%;
+  }
+}
 
-  padding: 70px 0;
-
-  color: #fff;
-
+.badge-brand {
+  display: inline-block;
+  background: rgba(249, 176, 0, 0.16);
+  color: #f9b000;
+  border: 1px solid rgba(249, 176, 0, 0.4);
   border-radius: 30px;
-
-  background: linear-gradient(135deg, #2563eb 0%, #4f46e5 55%, #7c3aed 100%);
-}
-
-.hero .container {
-  max-width: 1320px;
-  position: relative;
-  z-index: 2;
-}
-
-.hero::before {
-  content: '';
-  position: absolute;
-
-  width: 520px;
-  height: 520px;
-
-  border-radius: 50%;
-
-  right: -120px;
-  top: -150px;
-
-  background: rgba(255, 255, 255, 0.08);
-
-  filter: blur(8px);
-}
-
-.hero::after {
-  content: '';
-
-  position: absolute;
-
-  width: 250px;
-  height: 250px;
-
-  border-radius: 50%;
-
-  left: -70px;
-  bottom: -70px;
-
-  background: rgba(255, 255, 255, 0.05);
+  font-weight: 700;
+  padding: 6px 16px;
+  font-size: 13px;
+  margin-bottom: 16px;
 }
 
 .hero h1 {
-  font-size: 58px;
-
+  font-size: 44px;
   font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 14px;
+}
 
-  line-height: 1.15;
-
-  margin-bottom: 22px;
+.text-gold {
+  color: #f9b000;
 }
 
 .hero p {
-  font-size: 19px;
-
-  line-height: 1.8;
-
-  opacity: 0.92;
-
-  max-width: 620px;
-
-  margin-bottom: 35px;
-}
-
-/* =========================
-        HERO IMAGE
-========================= */
-
-.hero-image {
-  width: 100%;
-  max-width: 430px;
-  height: 300px;
-
-  object-fit: cover;
-
-  border-radius: 24px;
-
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.28);
-
-  animation: float 5s ease-in-out infinite;
-}
-
-@keyframes float {
-  0% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-12px);
-  }
-
-  100% {
-    transform: translateY(0);
-  }
-}
-
-/* =========================
-        SEARCH
-========================= */
-
-.search-box {
-  display: flex;
-
-  gap: 15px;
-
-  align-items: center;
-
-  margin-top: 25px;
-}
-
-.search-box input {
-  flex: 1;
-
-  height: 56px;
-
-  border: none;
-
-  outline: none;
-
-  border-radius: 16px;
-
-  padding: 0 22px;
-
   font-size: 17px;
-
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+  opacity: 0.9;
+  max-width: 620px;
+  margin: 0 auto 26px;
 }
 
-.search-box button {
-  width: 160px;
-
-  height: 56px;
-
-  border: none;
-
-  border-radius: 16px;
-
-  font-size: 18px;
-
-  font-weight: 700;
-
-  background: #ffc107;
-
-  color: #222;
-
-  transition: 0.3s;
+.btn-hero-cta {
+  border: 1.5px solid #fff;
+  border-radius: 30px;
+  padding: 12px 28px;
+  font-weight: 600;
+  font-size: 15px;
+  color: #fff;
+  background: transparent;
+  transition: 0.25s;
 }
 
-.search-box button:hover {
+.btn-hero-cta:hover {
+  background: #fff;
+  color: #0a2559;
   transform: translateY(-3px);
+}
 
-  box-shadow: 0 20px 35px rgba(255, 193, 7, 0.4);
+@media (max-width: 768px) {
+  .hero {
+    min-height: 460px;
+    padding: 60px 0 150px;
+  }
+
+  .hero h1 {
+    font-size: 28px;
+  }
+}
+
+/* =========================
+        FLOATING SEARCH CARD
+========================= */
+
+.search-card {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 30px 60px rgba(0, 10, 40, 0.22);
+  margin-top: -36vh;
+  margin-bottom: 40px;
+  position: relative;
+}
+
+.search-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #e7ebf3;
+  padding: 0 20px;
+  border-radius: 20px 20px 0 0;
+  overflow: hidden;
+}
+
+.search-tab {
+  border: none;
+  background: transparent;
+  padding: 18px 16px;
+  font-weight: 700;
+  font-size: 14px;
+  color: #6b7280;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  transition: 0.2s;
+  white-space: nowrap;
+}
+
+.search-tab:hover {
+  color: #01319f;
+}
+
+.search-tab.active {
+  color: #01319f;
+  border-bottom-color: #f9b000;
+}
+
+.search-tab.disabled {
+  color: #a7b0c0;
+}
+
+.search-panel {
+  padding: 24px 24px 28px;
+}
+
+.search-panel-placeholder {
+  text-align: center;
+  color: #6b7280;
+  padding: 40px 20px;
+}
+
+/* =========================
+        MANAGE BOOKING TAB ("Quan ly dat cho") - dung lai khung .airport-field cho giong tim chuyen bay
+========================= */
+
+.airport-input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0a2559;
+  cursor: text;
+
+  &::placeholder {
+    color: #9aa5ba;
+    font-weight: 600;
+  }
+}
+
+.manage-booking-result {
+  margin-top: 18px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: #eef8f0;
+  color: #1a7431;
+  font-size: 14px;
+
+  a {
+    color: #01319f;
+    font-weight: 700;
+  }
+}
+
+.manage-booking-not-found {
+  background: #fdeeee;
+  color: #b3261e;
+}
+
+.manage-booking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.manage-booking-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border: 1px solid #e7ebf3;
+  border-radius: 14px;
+  background: #fff;
+  text-decoration: none;
+  color: inherit;
+  transition: 0.2s;
+
+  &:hover {
+    border-color: #01319f;
+    box-shadow: 0 10px 24px rgba(1, 49, 159, 0.08);
+    transform: translateY(-1px);
+    color: inherit;
+  }
+}
+
+.manage-booking-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.manage-booking-title {
+  display: block;
+  font-size: 14px;
+  color: #0a2559;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.manage-booking-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.manage-booking-code {
+  font-family: monospace;
+  color: #9aa5ba;
+}
+
+.manage-booking-status {
+  flex-shrink: 0;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  background: #eef8f0;
+  color: #1a7431;
+  white-space: nowrap;
+
+  &.is-used {
+    background: #eef1f5;
+    color: #6b7280;
+  }
+
+  &.is-cancelled {
+    background: #fdeeee;
+    color: #b3261e;
+  }
+}
+
+.manage-booking-arrow {
+  flex-shrink: 0;
+  font-size: 20px;
+  color: #c3cbdc;
+}
+
+.trip-type-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.trip-pill {
+  border: 1px solid #d6ddec;
+  background: #fff;
+  color: #4a5a7a;
+  border-radius: 30px;
+  padding: 8px 18px;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.trip-pill.active {
+  background: #01319f;
+  border-color: #01319f;
+  color: #fff;
+}
+
+.search-fields-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 14px;
+}
+
+.airport-field {
+  flex: 1 1 200px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border: 1px solid #d6ddec;
+  border-radius: 12px;
+  padding: 8px 14px;
+  min-width: 180px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.airport-field:hover,
+.airport-field.active {
+  border-color: #01319f;
+}
+
+.airport-field.active {
+  box-shadow: 0 0 0 3px rgba(1, 49, 159, 0.12);
+}
+
+.airport-field label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #8f9bb3;
+  letter-spacing: 0.4px;
+}
+
+.airport-display {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.field-clear-btn {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 50%;
+  background: #eef1f6;
+  color: #6b7280;
+  font-size: 11px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.2s;
+  z-index: 1;
+}
+
+.field-clear-btn:hover {
+  background: #dc2626;
+  color: #fff;
+}
+
+.airport-code {
+  font-size: 26px;
+  font-weight: 800;
+  color: #0a2559;
+  line-height: 1;
+}
+
+.airport-placeholder {
+  font-size: 14px;
+  font-weight: 600;
+  color: #9aa5ba;
+  opacity: 0.6;
+  line-height: 1.3;
+  transition: opacity 0.2s;
+}
+
+.airport-field.active .airport-placeholder {
+  opacity: 1;
+  color: #0a2559;
+}
+
+.airport-city-pill {
+  display: inline-block;
+  background: #eef3ff;
+  color: #01319f;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.airport-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  z-index: 40;
+  width: 380px;
+  max-width: 90vw;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 20px 45px rgba(16, 24, 40, 0.18);
+  overflow: hidden;
+  cursor: default;
+}
+
+.airport-dropdown-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  border-bottom: 1px solid #eef1f7;
+
+  .search-icon {
+    font-size: 15px;
+    opacity: 0.6;
+  }
+
+  input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 15px;
+    color: #0a2559;
+
+    &::placeholder {
+      color: #9aa5ba;
+    }
+  }
+}
+
+.airport-dropdown-list {
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.airport-dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 12px 18px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover {
+    background: #f4f7fc;
+  }
+
+  &.active {
+    background: #eaf1ff;
+  }
+}
+
+.airport-dropdown-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.airport-dropdown-city {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0a2559;
+}
+
+.airport-dropdown-country {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.airport-dropdown-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.airport-dropdown-code-pill {
+  display: inline-block;
+  border: 1px solid #d6ddec;
+  border-radius: 20px;
+  padding: 2px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #01319f;
+}
+
+.airport-dropdown-sub {
+  font-size: 11px;
+  color: #9aa5ba;
+  white-space: nowrap;
+}
+
+.airport-dropdown-empty {
+  padding: 24px 18px;
+  text-align: center;
+  color: #9aa5ba;
+  font-size: 14px;
+}
+
+.date-field {
+  flex: 1 1 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 150px;
+}
+
+.date-field label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #8f9bb3;
+  letter-spacing: 0.4px;
+}
+
+.date-range-field {
+  position: relative;
+  border: 1px solid #d6ddec;
+  border-radius: 12px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+
+  &:hover,
+  &.active {
+    border-color: #01319f;
+  }
+}
+
+.date-range-value {
+  font-size: 16px !important;
+}
+
+.date-range-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  z-index: 40;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 20px 45px rgba(16, 24, 40, 0.18);
+  padding: 16px;
+  cursor: default;
+}
+
+.custom-day {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  font-size: 14px;
+  color: #0a2559;
+
+  &.inside {
+    background: #eaf1ff;
+  }
+
+  &.range {
+    background: #01319f;
+    color: #fff;
+  }
+}
+
+.swap-btn {
+  border: 1px solid #d6ddec;
+  background: #f4f7fc;
+  color: #01319f;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  font-size: 18px;
+  font-weight: 700;
+  flex: 0 0 auto;
+  margin-bottom: 4px;
+  transition: 0.25s;
+}
+
+.swap-btn:hover {
+  background: #01319f;
+  color: #fff;
+  transform: rotate(180deg);
+}
+
+.btn-search {
+  flex: 0 0 auto;
+  border: none;
+  border-radius: 10px;
+  padding: 11px 22px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #01319f, #0a4fd6);
+  box-shadow: 0 8px 18px rgba(1, 49, 159, 0.3);
+  transition: 0.25s;
+  white-space: nowrap;
+}
+
+.btn-search:hover {
+  transform: translateY(-2px);
+  color: #fff;
+}
+
+.search-error-message {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: rgba(220, 38, 38, 0.08);
+  color: #dc2626;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .search-card {
+    margin-top: -130px;
+  }
+
+  .search-fields-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .swap-btn {
+    align-self: center;
+  }
+}
+
+/* =========================
+        QUICK SERVICES ROW
+========================= */
+
+.quick-services-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 28px 24px;
+}
+
+.quick-service {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 120px;
+  text-decoration: none;
+  color: #4a5a7a;
+  transition: 0.2s;
+}
+
+.quick-service:hover {
+  color: #01319f;
+  transform: translateY(-3px);
+}
+
+.quick-service-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #eef3ff;
+  font-size: 24px;
+}
+
+.quick-service-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .quick-services-row {
+    justify-content: space-around;
+  }
+
+  .quick-service {
+    flex: 1 1 90px;
+  }
+}
+
+/* =========================
+        FLASH NEWS
+========================= */
+
+.flash-news {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: #fff;
+  border: 1px solid #e7ebf3;
+  border-radius: 14px;
+  padding: 14px 22px;
+  margin-bottom: 30px;
+  box-shadow: 0 10px 25px rgba(16, 24, 40, 0.06);
+}
+
+.flash-news-badge {
+  flex: 0 0 auto;
+  background: #eef3ff;
+  color: #01319f;
+  font-weight: 800;
+  font-size: 14px;
+  padding: 8px 18px;
+  border-radius: 30px;
+  white-space: nowrap;
+}
+
+.flash-news-headline {
+  flex: 1 1 auto;
+  color: #1f2937;
+  font-size: 14px;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.flash-news-date {
+  flex: 0 0 auto;
+  color: #9aa5ba;
+  font-size: 13px;
+}
+
+.flash-news-nav {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.flash-news-btn {
+  border: 1px solid #d6ddec;
+  background: #fff;
+  color: #01319f;
+  border-radius: 8px;
+  width: 26px;
+  height: 26px;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.flash-news-btn:hover {
+  background: #01319f;
+  color: #fff;
+}
+
+.flash-news-page {
+  font-size: 13px;
+  font-weight: 700;
+  color: #4a5a7a;
+  min-width: 40px;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .flash-news {
+    flex-wrap: wrap;
+  }
+
+  .flash-news-headline {
+    order: 3;
+    flex: 1 1 100%;
+    white-space: normal;
+  }
+}
+
+/* =========================
+        SPREAD BANNER (dai ngang: chu trai, anh phai)
+========================= */
+
+.spread-banner {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  min-height: 240px;
+  background: linear-gradient(120deg, #052e42, #0a4a68);
+  border-radius: 24px;
+  padding: 28px 48px;
+  margin-bottom: 40px;
+  overflow: hidden;
+  position: relative;
+}
+
+.spread-text {
+  flex: 0 0 40%;
+  max-width: 420px;
+  position: relative;
+  z-index: 1;
+
+  h2 {
+    font-size: 32px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 16px;
+  }
+
+  p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 22px;
+  }
+}
+
+.spread-image {
+  flex: 1 1 60%;
+  width: 100%;
+  max-width: 620px;
+  height: 184px;
+  object-fit: cover;
+  object-position: center 72%;
+  border-radius: 16px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+}
+
+.btn-spread-cta {
+  border: none;
+  border-radius: 30px;
+  padding: 12px 30px;
+  font-weight: 700;
+  color: #052e42;
+  background: linear-gradient(135deg, #f9b000, #ffcb4d);
+  box-shadow: 0 10px 22px rgba(249, 176, 0, 0.35);
+  transition: 0.25s;
+}
+
+.btn-spread-cta:hover {
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .spread-banner {
+    flex-direction: column;
+    text-align: center;
+    padding: 32px 24px;
+  }
+
+  .spread-text {
+    flex: none;
+    max-width: 100%;
+  }
+
+  .spread-image {
+    flex: none;
+  }
 }
 
 /* =========================
@@ -185,82 +893,21 @@ section {
 }
 
 h2 {
-  font-size: 38px;
-
+  font-size: 32px;
   font-weight: 800;
-
-  margin-bottom: 35px;
-
+  margin-bottom: 30px;
   color: #1f2937;
 }
 
-/* =========================
-        BUTTON
-========================= */
-
 .btn-outline-primary {
   border-radius: 14px;
-
   padding: 11px 22px;
-
   font-weight: 600;
+  color: #01319f;
+  border-color: #01319f;
 }
 
-/* =========================
-        BADGE
-========================= */
-
-.badge {
-  border-radius: 30px;
-
-  font-size: 14px;
-
-  padding: 8px 14px;
-}
-
-/* =========================
-        RESPONSIVE
-========================= */
-
-@media (max-width: 992px) {
-  .hero {
-    min-height: auto;
-
-    padding: 55px 20px;
-
-    text-align: center;
-  }
-
-  .hero h1 {
-    font-size: 42px;
-  }
-
-  .hero p {
-    font-size: 17px;
-  }
-
-  .hero-image {
-    margin-top: 40px;
-
-    max-width: 100%;
-
-    height: 250px;
-  }
-
-  .search-box {
-    flex-direction: column;
-  }
-
-  .search-box input,
-  .search-box button {
-    width: 100%;
-  }
-
-  section {
-    padding: 45px 0;
-  }
-
-  h2 {
-    font-size: 30px;
-  }
+.btn-outline-primary:hover {
+  background: #01319f;
+  border-color: #01319f;
 }

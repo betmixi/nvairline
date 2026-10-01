@@ -1,0 +1,135 @@
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2>💺 Quản lý ghế</h2>
+
+      @if(aircraft()){
+
+      <p class="text-muted mb-0">
+        Máy bay :
+        <strong>{{ aircraft()?.name }}</strong>
+        · {{ aircraft()?.totalRows }} hàng x {{ aircraft()?.totalColumns }} cột · {{ seats().length }} ghế
+      </p>
+
+      }
+    </div>
+
+    <button class="btn btn-success" (click)="finish()">Xong</button>
+  </div>
+
+  <!-- Create Seat -->
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-header">Thêm ghế</div>
+
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-4">
+          <label class="form-label"> Hàng ghế </label>
+
+          <input type="text" class="form-control" placeholder="VD: A" [(ngModel)]="newSeat.rowLabel" />
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label"> Số ghế </label>
+
+          <input type="number" class="form-control" min="1" [(ngModel)]="newSeat.seatNumber" />
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label"> Loại ghế </label>
+
+          <select class="form-select" [(ngModel)]="newSeat.seatType">
+            @for (seatType of seatTypes; track seatType) {
+            <option [ngValue]="seatType">{{ seatTypeLabel(seatType) }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      @if (errorMessage) {
+      <div class="alert alert-danger mt-3 mb-0">{{ errorMessage }}</div>
+      }
+
+      <div class="mt-4">
+        <button class="btn btn-primary" [disabled]="isSaving" (click)="saveSeat()">➕ Thêm ghế</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Seat List -->
+
+  <div class="card shadow-sm">
+    <div class="card-header">Danh sách ghế</div>
+
+    @if (seats().length > 0) {
+    <div class="search-bar">
+      <input
+        type="text"
+        class="form-control search-input"
+        placeholder="🔍 Tìm theo hàng ghế, số ghế, mã ghế (VD: A12)..."
+        [(ngModel)]="keyword"
+      />
+
+      <div class="type-filter">
+        <button type="button" [class.active]="seatTypeFilter === 'ALL'" (click)="seatTypeFilter = 'ALL'">Tất cả</button>
+        @for (seatType of seatTypes; track seatType) {
+        <button type="button" [class.active]="seatTypeFilter === seatType" (click)="seatTypeFilter = seatType">
+          {{ seatTypeLabel(seatType) }}
+        </button>
+        }
+      </div>
+    </div>
+    }
+
+    <div class="card-body p-0">
+      @if (seats().length === 0) {
+      <div class="alert alert-warning m-3 mb-0">Máy bay này chưa có ghế nào.</div>
+      } @else if (filteredSeats.length === 0) {
+      <div class="alert alert-warning m-3 mb-0">Không tìm thấy ghế phù hợp.</div>
+      } @else {
+      <table class="table table-hover mb-0">
+        <thead>
+          <tr>
+            <th>Hàng ghế</th>
+
+            <th>Số ghế</th>
+
+            <th>Mã ghế</th>
+
+            <th width="220">Loại ghế</th>
+
+            <th width="120">Hành động</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for(seat of filteredSeats;track seat.id){
+
+          <tr>
+            <td>{{ seat.rowLabel }}</td>
+
+            <td>{{ seat.seatNumber }}</td>
+
+            <td>{{ seat.rowLabel }}{{ seat.seatNumber }}</td>
+
+            <td>
+              <select class="form-select form-select-sm" [ngModel]="seat.seatType" (ngModelChange)="updateSeatType(seat, $event)">
+                @for (seatType of seatTypes; track seatType) {
+                <option [ngValue]="seatType">{{ seatTypeLabel(seatType) }}</option>
+                }
+              </select>
+            </td>
+
+            <td>
+              <button class="btn btn-sm btn-danger" (click)="delete(seat)">Xoá</button>
+            </td>
+          </tr>
+
+          }
+        </tbody>
+      </table>
+      }
+    </div>
+  </div>
+</div>

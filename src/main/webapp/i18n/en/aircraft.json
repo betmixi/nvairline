@@ -1,0 +1,27 @@
+{
+  "dugxApp": {
+    "aircraft": {
+      "home": {
+        "title": "Aircraft",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Aircraft",
+        "createOrEditLabel": "Create or edit an Aircraft",
+        "notFound": "No Aircraft found"
+      },
+      "created": "A new Aircraft is created with identifier {{ param }}",
+      "updated": "An Aircraft is updated with identifier {{ param }}",
+      "deleted": "An Aircraft is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Aircraft {{ id }}?"
+      },
+      "detail": {
+        "title": "Aircraft"
+      },
+      "id": "ID",
+      "name": "Aircraft name",
+      "totalRows": "Total Rows",
+      "totalColumns": "Total Columns",
+      "roomType": "Aircraft Type"
+    }
+  }
+}

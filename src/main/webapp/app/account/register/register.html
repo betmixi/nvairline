@@ -4,41 +4,41 @@
   <div class="login-left">
     <div class="overlay">
       <div class="brand">
-        <div class="logo">🎟️</div>
+        <div class="logo">✈️</div>
 
-        <h1>DUGX EVENT</h1>
+        <h1>Vietnam Airlines</h1>
 
-        <p>Join thousands of users creating and managing amazing events.</p>
+        <p>Tạo tài khoản Lotusmiles để đặt vé nhanh hơn và tích điểm mỗi chuyến bay.</p>
       </div>
 
       <div class="feature-list">
         <div class="feature">
-          <div class="feature-icon">🚀</div>
-
-          <div>
-            <h4>Create Events</h4>
-
-            <p>Publish your own events in minutes.</p>
-          </div>
-        </div>
-
-        <div class="feature">
           <div class="feature-icon">🎫</div>
 
           <div>
-            <h4>Book Tickets</h4>
+            <h4>Đặt vé nhanh chóng</h4>
 
-            <p>Secure and fast online booking.</p>
+            <p>Tìm và giữ chỗ chuyến bay chỉ trong vài bước.</p>
           </div>
         </div>
 
         <div class="feature">
-          <div class="feature-icon">📈</div>
+          <div class="feature-icon">💺</div>
 
           <div>
-            <h4>Statistics</h4>
+            <h4>Chọn chỗ ngồi yêu thích</h4>
 
-            <p>Monitor revenue and attendees easily.</p>
+            <p>Xem sơ đồ ghế và nâng hạng dễ dàng.</p>
+          </div>
+        </div>
+
+        <div class="feature">
+          <div class="feature-icon">👑</div>
+
+          <div>
+            <h4>Tích điểm Lotusmiles</h4>
+
+            <p>Mỗi chuyến bay đều được cộng dồn ưu đãi.</p>
           </div>
         </div>
       </div>
@@ -48,32 +48,37 @@
   <!-- RIGHT PANEL -->
 
   <div class="login-right">
+    <a class="btn-back-home" routerLink="/">← Trang chủ</a>
+
     <div class="login-card">
       <div class="login-header">
-        <h2>Create Account ✨</h2>
+        <h2>Tạo tài khoản ✨</h2>
 
-        <p>Register to start using Dugx Event</p>
+        <p>Đăng ký để bắt đầu sử dụng Vietnam Airlines</p>
       </div>
 
       @if (success()) {
 
-      <div class="alert alert-success">Registration successful. Please check your email to activate your account.</div>
+      <div class="alert alert-success">
+        Đăng ký thành công! Tài khoản của bạn đã sẵn sàng sử dụng.
+        <a routerLink="/login" class="alert-link">Đăng nhập ngay</a>
+      </div>
 
       } @if (error()) {
 
-      <div class="alert alert-danger">Registration failed.</div>
+      <div class="alert alert-danger">Đăng ký thất bại.</div>
 
       } @if (errorUserExists()) {
 
-      <div class="alert alert-danger">Username already exists.</div>
+      <div class="alert alert-danger">Tên đăng nhập đã tồn tại.</div>
 
       } @if (errorEmailExists()) {
 
-      <div class="alert alert-danger">Email already exists.</div>
+      <div class="alert alert-danger">Email đã được sử dụng.</div>
 
       } @if (doNotMatch()) {
 
-      <div class="alert alert-danger">Password confirmation does not match.</div>
+      <div class="alert alert-danger">Mật khẩu xác nhận không khớp.</div>
 
       } @if (!success()) {
 
@@ -81,27 +86,27 @@
         <!-- USERNAME -->
 
         <div class="form-group">
-          <label> Username </label>
+          <label> Tên đăng nhập </label>
 
-          <input class="form-control" type="text" formControlName="login" placeholder="Enter username" data-cy="username" />
+          <input #login class="form-control" type="text" formControlName="login" placeholder="Nhập tên đăng nhập" data-cy="username" />
           @let loginRef = registerForm.get('login')!; @if (loginRef.invalid && (loginRef.dirty || loginRef.touched)) {
 
           <div class="validation">
             @if (loginRef.errors?.required) {
 
-            <small class="text-danger"> Username is required. </small>
+            <small class="text-danger"> Vui lòng nhập tên đăng nhập. </small>
 
             } @if (loginRef.errors?.minlength) {
 
-            <small class="text-danger"> Username must contain at least 1 character. </small>
+            <small class="text-danger"> Tên đăng nhập cần ít nhất 1 ký tự. </small>
 
             } @if (loginRef.errors?.maxlength) {
 
-            <small class="text-danger"> Username cannot exceed 50 characters. </small>
+            <small class="text-danger"> Tên đăng nhập không quá 50 ký tự. </small>
 
             } @if (loginRef.errors?.pattern) {
 
-            <small class="text-danger"> Invalid username format. </small>
+            <small class="text-danger"> Định dạng tên đăng nhập không hợp lệ. </small>
 
             }
           </div>
@@ -114,22 +119,22 @@
         <div class="form-group">
           <label> Email </label>
 
-          <input type="email" class="form-control" formControlName="email" placeholder="Enter your email" data-cy="email" />
+          <input type="email" class="form-control" formControlName="email" placeholder="Nhập email của bạn" data-cy="email" />
 
           @let emailRef = registerForm.get('email')!; @if (emailRef.invalid && (emailRef.dirty || emailRef.touched)) {
 
           <div class="validation">
             @if (emailRef.errors?.required) {
 
-            <small class="text-danger"> Email is required. </small>
+            <small class="text-danger"> Vui lòng nhập email. </small>
 
             } @if (emailRef.errors?.email) {
 
-            <small class="text-danger"> Invalid email address. </small>
+            <small class="text-danger"> Địa chỉ email không hợp lệ. </small>
 
             } @if (emailRef.errors?.maxlength) {
 
-            <small class="text-danger"> Email is too long. </small>
+            <small class="text-danger"> Email quá dài. </small>
 
             }
           </div>
@@ -140,24 +145,24 @@
         <!-- PASSWORD -->
 
         <div class="form-group">
-          <label> Password </label>
+          <label> Mật khẩu </label>
 
-          <input class="form-control" type="password" formControlName="password" placeholder="Create password" data-cy="firstPassword" />
+          <input class="form-control" type="password" formControlName="password" placeholder="Tạo mật khẩu" data-cy="firstPassword" />
 
           @let passwordRef = registerForm.get('password')!; @if (passwordRef.invalid && (passwordRef.dirty || passwordRef.touched)) {
 
           <div class="validation">
             @if (passwordRef.errors?.required) {
 
-            <small class="text-danger"> Password is required. </small>
+            <small class="text-danger"> Vui lòng nhập mật khẩu. </small>
 
             } @if (passwordRef.errors?.minlength) {
 
-            <small class="text-danger"> Password must contain at least 4 characters. </small>
+            <small class="text-danger"> Mật khẩu cần ít nhất 4 ký tự. </small>
 
             } @if (passwordRef.errors?.maxlength) {
 
-            <small class="text-danger"> Password cannot exceed 50 characters. </small>
+            <small class="text-danger"> Mật khẩu không quá 50 ký tự. </small>
 
             }
           </div>
@@ -170,13 +175,13 @@
         <!-- CONFIRM PASSWORD -->
 
         <div class="form-group">
-          <label> Confirm Password </label>
+          <label> Xác nhận mật khẩu </label>
 
           <input
             class="form-control"
             type="password"
             formControlName="confirmPassword"
-            placeholder="Confirm password"
+            placeholder="Nhập lại mật khẩu"
             data-cy="secondPassword"
           />
           @let confirmPasswordRef = registerForm.get('confirmPassword')!; @if (confirmPasswordRef.invalid && (confirmPasswordRef.dirty ||
@@ -185,15 +190,15 @@
           <div class="validation">
             @if (confirmPasswordRef.errors?.required) {
 
-            <small class="text-danger"> Confirmation password is required. </small>
+            <small class="text-danger"> Vui lòng xác nhận mật khẩu. </small>
 
             } @if (confirmPasswordRef.errors?.minlength) {
 
-            <small class="text-danger"> Confirmation password must contain at least 4 characters. </small>
+            <small class="text-danger"> Mật khẩu xác nhận cần ít nhất 4 ký tự. </small>
 
             } @if (confirmPasswordRef.errors?.maxlength) {
 
-            <small class="text-danger"> Confirmation password cannot exceed 50 characters. </small>
+            <small class="text-danger"> Mật khẩu xác nhận không quá 50 ký tự. </small>
 
             }
           </div>
@@ -201,19 +206,19 @@
           }
         </div>
 
-        <button type="submit" class="login-btn" [disabled]="registerForm.invalid">Create Account</button>
+        <button type="submit" class="login-btn" [disabled]="registerForm.invalid">Tạo tài khoản</button>
       </form>
 
       }
 
       <div class="divider">
-        <span> OR </span>
+        <span> HOẶC </span>
       </div>
 
       <div class="register-box">
-        <p>Already have an account?</p>
+        <p>Đã có tài khoản?</p>
 
-        <a routerLink="/login" class="register-btn"> Sign In </a>
+        <a routerLink="/login" class="register-btn"> Đăng nhập </a>
       </div>
     </div>
   </div>

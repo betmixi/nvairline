@@ -2,20 +2,20 @@
   "dugxApp": {
     "event": {
       "home": {
-        "title": "Events",
+        "title": "Chuyến bay",
         "refreshListLabel": "Refresh list",
-        "createLabel": "Thêm mới một Event",
-        "createOrEditLabel": "Thêm mới hoặc cập nhật Event",
-        "notFound": "No Events found"
+        "createLabel": "Thêm mới một chuyến bay",
+        "createOrEditLabel": "Thêm mới hoặc cập nhật chuyến bay",
+        "notFound": "Không có chuyến bay nào"
       },
-      "created": "Một Event mới được tạo với định danh {{ param }}",
-      "updated": "Một Event cập nhật với định danh {{ param }}",
-      "deleted": "Một Event đã xóa với định danh {{ param }}",
+      "created": "Một chuyến bay mới được tạo với định danh {{ param }}",
+      "updated": "Một chuyến bay cập nhật với định danh {{ param }}",
+      "deleted": "Một chuyến bay đã xóa với định danh {{ param }}",
       "delete": {
-        "question": "Bạn có chắc là muốn xóa Event {{ id }}?"
+        "question": "Bạn có chắc là muốn xóa chuyến bay {{ id }}?"
       },
       "detail": {
-        "title": "Event"
+        "title": "Chuyến bay"
       },
       "id": "ID",
       "title": "Title",
@@ -26,8 +26,7 @@
       "status": "Status",
       "createdDate": "Created Date",
       "category": "Category",
-      "address": "Address",
-      "organizer": "Organizer"
+      "address": "Address"
     }
   }
 }

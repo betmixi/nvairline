@@ -1,6 +1,7 @@
 @import 'bootstrap-variables';
 @import 'bootstrap/scss/functions';
 @import 'bootstrap/scss/variables';
+@import 'admin-theme';
 
 /* ==============================================================
 Bootstrap tweaks
@@ -70,6 +71,17 @@ Generic styles
   padding: 1.5%;
   margin-top: 20px;
   border: none;
+}
+
+.container-fluid.full-bleed {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.jh-card.full-bleed {
+  padding: 0;
+  margin-top: 0;
+  border-radius: 0;
 }
 
 .error {
@@ -233,10 +245,6 @@ angular-cli removes postcss-rtl processed inline css, processed rules must be ad
     }
   }
 }
-* {
-  font-family: 'Poppins', sans-serif;
-}
-
 body {
   background: #f5f7fb;
 }

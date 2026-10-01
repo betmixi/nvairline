@@ -37,9 +37,11 @@ public class CacheConfiguration {
             createCache(cm, com.dugx.event.domain.Authority.class.getName());
             createCache(cm, com.dugx.event.domain.Event.class.getName());
             createCache(cm, com.dugx.event.domain.Category.class.getName());
-            createCache(cm, com.dugx.event.domain.Organizer.class.getName());
             createCache(cm, com.dugx.event.domain.Venue.class.getName());
-            createCache(cm, com.dugx.event.domain.TicketType.class.getName());
+            createCache(cm, com.dugx.event.domain.Aircraft.class.getName());
+            createCache(cm, com.dugx.event.domain.Seat.class.getName());
+            createCache(cm, com.dugx.event.domain.Showtime.class.getName());
+            createCache(cm, com.dugx.event.domain.ShowtimeSeat.class.getName());
             createCache(cm, com.dugx.event.domain.Booking.class.getName());
             createCache(cm, com.dugx.event.domain.BookingDetail.class.getName());
             createCache(cm, com.dugx.event.domain.Payment.class.getName());

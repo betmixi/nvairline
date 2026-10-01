@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -59,6 +60,7 @@ public class CheckInResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_STAFF')")
     public ResponseEntity<CheckInDTO> createCheckIn(@RequestBody CheckInDTO checkInDTO) throws URISyntaxException {
         LOG.debug("REST request to save CheckIn : {}", checkInDTO);
         if (checkInDTO.getId() != null) {
@@ -81,6 +83,7 @@ public class CheckInResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_STAFF')")
     public ResponseEntity<CheckInDTO> updateCheckIn(
         @PathVariable(value = "id", required = false) final Long id,
         @RequestBody CheckInDTO checkInDTO
@@ -115,6 +118,7 @@ public class CheckInResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_STAFF')")
     public ResponseEntity<CheckInDTO> partialUpdateCheckIn(
         @PathVariable(value = "id", required = false) final Long id,
         @RequestBody CheckInDTO checkInDTO
@@ -147,6 +151,7 @@ public class CheckInResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Check Ins in body.
      */
     @GetMapping("")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_STAFF')")
     public ResponseEntity<List<CheckInDTO>> getAllCheckIns(
         CheckInCriteria criteria,
         @org.springdoc.core.annotations.ParameterObject Pageable pageable
@@ -165,6 +170,7 @@ public class CheckInResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
      */
     @GetMapping("/count")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_STAFF')")
     public ResponseEntity<Long> countCheckIns(CheckInCriteria criteria) {
         LOG.debug("REST request to count CheckIns by criteria: {}", criteria);
         return ResponseEntity.ok().body(checkInQueryService.countByCriteria(criteria));
@@ -177,6 +183,7 @@ public class CheckInResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the checkInDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_STAFF')")
     public ResponseEntity<CheckInDTO> getCheckIn(@PathVariable("id") Long id) {
         LOG.debug("REST request to get CheckIn : {}", id);
         Optional<CheckInDTO> checkInDTO = checkInService.findOne(id);
@@ -190,6 +197,7 @@ public class CheckInResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_STAFF')")
     public ResponseEntity<Void> deleteCheckIn(@PathVariable("id") Long id) {
         LOG.debug("REST request to delete CheckIn : {}", id);
         checkInService.delete(id);
@@ -199,6 +207,7 @@ public class CheckInResource {
     }
 
     @PostMapping("/check-in")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_STAFF')")
     public ResponseEntity<CheckInDTO> checkIn(@RequestBody CheckInRequest request) {
         CheckInDTO result = checkInService.checkIn(request);
         return ResponseEntity.ok(result);

@@ -26,8 +26,7 @@
       "status": "Status",
       "createdDate": "Created Date",
       "category": "Category",
-      "address": "Address",
-      "organizer": "Organizer"
+      "address": "Address"
     }
   }
 }

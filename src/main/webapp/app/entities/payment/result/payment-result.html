@@ -30,7 +30,15 @@
       </div>
     </div>
 
-    <div *ngIf="success" class="alert alert-success mt-4 mb-0">Vé của bạn đã được phát hành. Xem mã QR trong mục đơn hàng.</div>
+    <div *ngIf="success" class="alert alert-success mt-4 mb-0">Vé của bạn đã được phát hành.</div>
+
+    <div *ngIf="success && tickets.length > 0" class="ticket-qr-list">
+      <div *ngFor="let ticket of tickets" class="ticket-qr-item">
+        <div class="ticket-qr-label">Số vé</div>
+        <div class="ticket-qr-code">{{ ticket.qrCode }}</div>
+        <div class="ticket-qr-seat" *ngIf="ticket.seatLabel">Ghế {{ ticket.seatLabel }}</div>
+      </div>
+    </div>
 
     <div *ngIf="!success" class="alert alert-warning mt-4 mb-0">Đơn hàng đã được huỷ và số vé giữ chỗ đã được hoàn lại.</div>
 

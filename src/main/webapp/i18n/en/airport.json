@@ -1,0 +1,26 @@
+{
+  "dugxApp": {
+    "airport": {
+      "home": {
+        "title": "Airports",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Airport",
+        "createOrEditLabel": "Create or edit an Airport",
+        "notFound": "No Airports found"
+      },
+      "created": "A new Airport is created with identifier {{ param }}",
+      "updated": "An Airport is updated with identifier {{ param }}",
+      "deleted": "An Airport is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Airport {{ id }}?"
+      },
+      "detail": {
+        "title": "Airport"
+      },
+      "id": "ID",
+      "code": "Airport code (IATA)",
+      "name": "Airport name",
+      "city": "City"
+    }
+  }
+}

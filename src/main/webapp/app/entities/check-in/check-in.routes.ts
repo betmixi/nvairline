@@ -2,8 +2,11 @@ import { Routes } from '@angular/router';
 
 import { ASC } from 'app/config/navigation.constants';
 import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
+import { Authority } from 'app/shared/jhipster/constants';
 
 import CheckInResolve from './route/check-in-routing-resolve.service';
+
+const STAFF_AUTHORITIES = { authorities: [Authority.ADMIN, Authority.STAFF] };
 
 const checkInRoute: Routes = [
   {
@@ -11,6 +14,7 @@ const checkInRoute: Routes = [
     loadComponent: () => import('./list/check-in').then(m => m.CheckIn),
     data: {
       defaultSort: `id,${ASC}`,
+      ...STAFF_AUTHORITIES,
     },
     canActivate: [UserRouteAccessService],
   },
@@ -20,6 +24,7 @@ const checkInRoute: Routes = [
     resolve: {
       checkIn: CheckInResolve,
     },
+    data: STAFF_AUTHORITIES,
     canActivate: [UserRouteAccessService],
   },
   {
@@ -28,6 +33,7 @@ const checkInRoute: Routes = [
     resolve: {
       checkIn: CheckInResolve,
     },
+    data: STAFF_AUTHORITIES,
     canActivate: [UserRouteAccessService],
   },
   {
@@ -36,6 +42,7 @@ const checkInRoute: Routes = [
     resolve: {
       checkIn: CheckInResolve,
     },
+    data: STAFF_AUTHORITIES,
     canActivate: [UserRouteAccessService],
   },
 ];

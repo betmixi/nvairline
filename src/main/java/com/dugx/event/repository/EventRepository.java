@@ -28,16 +28,18 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
     }
 
     @Query(
-        value = "select event from Event event left join fetch event.category left join fetch event.address left join fetch event.organizer",
+        value = "select event from Event event left join fetch event.category left join fetch event.address left join fetch event.departureAirport left join fetch event.arrivalAirport",
         countQuery = "select count(event) from Event event"
     )
     Page<Event> findAllWithToOneRelationships(Pageable pageable);
 
-    @Query("select event from Event event left join fetch event.category left join fetch event.address left join fetch event.organizer")
+    @Query(
+        "select event from Event event left join fetch event.category left join fetch event.address left join fetch event.departureAirport left join fetch event.arrivalAirport"
+    )
     List<Event> findAllWithToOneRelationships();
 
     @Query(
-        "select event from Event event left join fetch event.category left join fetch event.address left join fetch event.organizer where event.id =:id"
+        "select event from Event event left join fetch event.category left join fetch event.address left join fetch event.departureAirport left join fetch event.arrivalAirport where event.id =:id"
     )
     Optional<Event> findOneWithToOneRelationships(@Param("id") Long id);
 
@@ -52,14 +54,12 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
     )
     Page<Event> search(@Param("keyword") String keyword, Pageable pageable);
 
-    Long countByOrganizerUserLogin(String login);
-
-    Long countByOrganizerUserLoginAndStatusTrue(String login);
-
     @Query(
         """
         select e
         from Event e
+        left join fetch e.category
+        left join fetch e.address
         order by e.createdDate desc
         """
     )
@@ -67,98 +67,19 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
 
     @Query(
         """
-        select e
-        from Event e
-        left join fetch e.category
-        left join fetch e.address
-        left join fetch e.organizer
-        where e.organizer.user.login = :login
-        order by e.createdDate desc
-        """
-    )
-    Page<Event> findByOrganizerLogin(@Param("login") String login, Pageable pageable);
-
-    @Query(
-        """
-        select e
-        from Event e
-        left join fetch e.category
-        left join fetch e.address
-        left join fetch e.organizer
-        where e.organizer.user.login = :login
-        """
-    )
-    List<Event> findAllByOrganizerLogin(@Param("login") String login);
-
-    @Query(
-        """
-        select e
-        from Event e
-        left join fetch e.category
-        left join fetch e.address
-        left join fetch e.organizer
-        where e.organizer.user.login = :login
-        order by e.createdDate desc
-        """
-    )
-    Page<Event> findMyEvents(@Param("login") String login, Pageable pageable);
-
-    @Query(
-        """
-        select min(t.price)
-        from TicketType t
-        where t.event.id = :eventId
+        select min(s.basePrice)
+        from Showtime s
+        where s.event.id = :eventId
         """
     )
     BigDecimal findMinPrice(@Param("eventId") Long eventId);
 
     @Query(
         """
-        select coalesce(sum(b.quantity),0)
+        select count(b)
         from BookingDetail b
-        where b.ticketType.event.id = :eventId
+        where b.showtimeSeat.showtime.event.id = :eventId
         """
     )
     Long findTicketsSold(@Param("eventId") Long eventId);
-
-    @Query(
-        """
-        select e
-        from Event e
-        left join fetch e.category
-        left join fetch e.address
-        left join fetch e.organizer
-        where e.id = :id
-        and e.organizer.user.login = :login
-        """
-    )
-    Optional<Event> findMyEventById(@Param("id") Long id, @Param("login") String login);
-
-    @Query(
-        """
-        select e
-        from Event e
-        left join fetch e.category c
-        left join fetch e.address a
-        left join fetch e.organizer o
-        left join TicketType tt on tt.event = e
-        left join BookingDetail bd on bd.ticketType = tt
-        where e.organizer.user.login = :login
-        group by e, c, a, o
-        order by coalesce(sum(bd.quantity),0) desc
-        """
-    )
-    List<Event> findTop3BestSellingEvents(@Param("login") String login, Pageable pageable);
-
-    @Query(
-        value = """
-        select name
-        from ticket_type
-        where event_id = :eventId
-        order by price
-        limit 1
-        """,
-        nativeQuery = true
-    )
-    String findTicketTypeName(@Param("eventId") Long eventId);
 }

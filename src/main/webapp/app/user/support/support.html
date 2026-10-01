@@ -1,0 +1,84 @@
+<div class="container py-4">
+  <a class="btn-back-home" routerLink="/">← Trang chủ</a>
+
+  <h2 class="mb-1 mt-3">❓ Liên hệ hỗ trợ</h2>
+  <p class="text-muted mb-4">Chọn nội dung cần hỗ trợ, gửi yêu cầu và theo dõi phản hồi từ Vietnam Airlines.</p>
+
+  <div class="support-grid">
+    <div class="contact-card">
+      <h5>Thông tin liên hệ</h5>
+      <ul class="contact-list">
+        <li>☎️ Hotline: <strong>1900 1100</strong> (24/7)</li>
+        <li>📧 Email: <strong>support&#64;vietnamairlines.dugx</strong></li>
+        <li>📍 Trụ sở: 200 Nguyễn Sơn, Long Biên, Hà Nội</li>
+      </ul>
+    </div>
+
+    <div class="request-form-card">
+      <h5>Gửi yêu cầu hỗ trợ</h5>
+
+      <div class="topic-picker">
+        <span class="topic-label">Chọn nội dung cần hỗ trợ:</span>
+        <div class="topic-list">
+          @for (topic of topics; track topic) {
+          <button type="button" class="topic-pill" [class.active]="selectedTopic === topic" (click)="selectTopic(topic)">
+            {{ topic }}
+          </button>
+          }
+        </div>
+      </div>
+
+      <textarea
+        class="form-control request-input"
+        rows="4"
+        placeholder="Nhập nội dung yêu cầu hỗ trợ..."
+        [(ngModel)]="content"
+        [disabled]="isSubmitting"
+      ></textarea>
+
+      @if (submitError) {
+      <div class="alert alert-danger mt-2 mb-0">{{ submitError }}</div>
+      } @if (submitSuccess) {
+      <div class="alert alert-success mt-2 mb-0">Gửi yêu cầu hỗ trợ thành công!</div>
+      }
+
+      <button type="button" class="btn btn-primary request-submit" [disabled]="isSubmitting" (click)="submitRequest()">
+        {{ isSubmitting ? 'Đang gửi...' : 'Gửi yêu cầu hỗ trợ' }}
+      </button>
+    </div>
+  </div>
+
+  <section class="my-requests-section">
+    <h5>Yêu cầu của tôi</h5>
+
+    @if (isLoadingRequests) {
+    <div class="text-center py-4">
+      <span class="spinner-border spinner-border-sm"></span>
+    </div>
+    } @else if (myRequests.length === 0) {
+    <p class="text-muted">Bạn chưa gửi yêu cầu hỗ trợ nào.</p>
+    } @else {
+    <div class="request-list">
+      @for (request of myRequests; track request.id) {
+      <div class="request-item">
+        <div class="request-item-head">
+          <span class="request-topic">{{ request.topic }}</span>
+          <span class="request-status" [class.is-replied]="request.status === 'REPLIED'">
+            {{ request.status === 'REPLIED' ? '✅ Đã phản hồi' : '⏳ Đang chờ phản hồi' }}
+          </span>
+        </div>
+        <p class="request-content">{{ request.content }}</p>
+        <small class="text-muted">{{ request.createdDate | date: 'dd/MM/yyyy HH:mm' }}</small>
+
+        @if (request.reply) {
+        <div class="request-reply">
+          <strong>Phản hồi từ Vietnam Airlines:</strong>
+          <p>{{ request.reply }}</p>
+        </div>
+        }
+      </div>
+      }
+    </div>
+    }
+  </section>
+</div>

@@ -46,10 +46,32 @@ public interface ReviewRepository extends JpaRepository<Review, Long>, JpaSpecif
 
     @Query(
         """
+                select r
+                from Review r
+                where r.event.id=:eventId and (r.hidden = false or r.hidden is null)
+                order by r.createdDate desc
+        """
+    )
+    List<Review> findVisibleByEventId(@Param("eventId") Long eventId);
+
+    @Query(
+        """
                 select avg(r.rating)
                 from Review r
-                where r.event.id=:eventId
+                where r.event.id=:eventId and (r.hidden = false or r.hidden is null)
         """
     )
     Double getAverageRating(@Param("eventId") Long eventId);
+
+    /** Toan bo danh gia trong he thong, moi nhat truoc (dung cho trang quan tri). */
+    @Query(
+        """
+        select r
+        from Review r
+        left join fetch r.user
+        left join fetch r.event
+        order by r.createdDate desc
+        """
+    )
+    List<Review> findAllForAdmin();
 }

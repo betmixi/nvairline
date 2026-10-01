@@ -1,9 +1,9 @@
 import dayjs from 'dayjs/esm';
 
 import { IAddress } from 'app/entities/address/address.model';
+import { IAirport } from 'app/entities/airport/airport.model';
 import { ICategory } from 'app/entities/category/category.model';
-import { IOrganizer } from 'app/entities/organizer/organizer.model';
-import { ITicketType } from '../ticket-type/ticket-type.model';
+import { IShowtime } from 'app/entities/showtime/showtime.model';
 export interface IEvent {
   id: number;
   title?: string | null;
@@ -13,11 +13,15 @@ export interface IEvent {
   endTime?: dayjs.Dayjs | null;
   status?: boolean | null;
   createdDate?: dayjs.Dayjs | null;
+  supportsOneWay?: boolean | null;
+  supportsRoundTrip?: boolean | null;
+  supportsMultiCity?: boolean | null;
   category?: Pick<ICategory, 'id' | 'name'> | null;
   address?: Pick<IAddress, 'id' | 'location'> | null;
-  organizer?: Pick<IOrganizer, 'id' | 'companyName'> | null;
   price?: number | null;
-  ticketTypes?: ITicketType[] | null;
+  showtimes?: IShowtime[] | null;
+  departureAirport?: Pick<IAirport, 'id' | 'code' | 'name' | 'city'> | null;
+  arrivalAirport?: Pick<IAirport, 'id' | 'code' | 'name' | 'city'> | null;
 }
 
 export type NewEvent = Omit<IEvent, 'id'> & { id: null };

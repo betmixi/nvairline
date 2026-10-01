@@ -5,7 +5,6 @@ import dayjs from 'dayjs/esm';
 
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { AdminDashboard } from './admin-dashboard.model';
-import { IOrganizer } from 'app/entities/organizer/organizer.model';
 
 @Injectable({
   providedIn: 'root',
@@ -29,26 +28,5 @@ export class AdminDashboardService {
         })),
       })),
     );
-  }
-
-  /**
-   * Pending organizers
-   */
-  getPendingOrganizers(): Observable<IOrganizer[]> {
-    return this.http.get<IOrganizer[]>(this.applicationConfigService.getEndpointFor('api/admin/organizers/pending'));
-  }
-
-  /**
-   * Approve organizer
-   */
-  approveOrganizer(id: number): Observable<IOrganizer> {
-    return this.http.patch<IOrganizer>(this.applicationConfigService.getEndpointFor(`api/admin/organizers/${id}/approve`), {});
-  }
-
-  /**
-   * Reject organizer
-   */
-  rejectOrganizer(id: number): Observable<IOrganizer> {
-    return this.http.patch<IOrganizer>(this.applicationConfigService.getEndpointFor(`api/admin/organizers/${id}/reject`), {});
   }
 }

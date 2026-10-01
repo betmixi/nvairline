@@ -4,18 +4,25 @@ import { Observable, map } from 'rxjs';
 
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 
+/** Mot chang bay trong yeu cau thanh toan (mot chieu chi co 1 leg, khu hoi/nhieu chang co nhieu leg). */
+export interface ICheckoutLegRequest {
+  showtimeId: number;
+  seatIds: number[];
+  /** Số kg hành lý ký gửi trả trước chọn kèm theo từng ghế, khoá là seatId. */
+  baggageBySeat?: Record<number, number> | null;
+}
+
 /**
  * Yêu cầu tạo link thanh toán.
  *
  * Có hai cách dùng:
  * - Truyền `bookingId` cho một booking PENDING đã tạo trước đó.
- * - Hoặc truyền `ticketTypeId` + `quantity` (+ `couponCode`) để backend tự tạo
- *   booking rồi sinh link thanh toán trong cùng một lần gọi.
+ * - Hoặc truyền `legs` (+ `couponCode`) để backend tự tạo booking (một chiều chỉ có 1 leg,
+ *   khứ hồi/nhiều chặng có nhiều leg) rồi sinh link thanh toán trong cùng một lần gọi.
  */
 export interface ICheckoutRequest {
   bookingId?: number | null;
-  ticketTypeId?: number | null;
-  quantity?: number | null;
+  legs?: ICheckoutLegRequest[] | null;
   couponCode?: string | null;
 }
 

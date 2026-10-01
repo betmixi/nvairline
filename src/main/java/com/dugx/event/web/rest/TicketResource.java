@@ -22,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -62,6 +63,7 @@ public class TicketResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_STAFF')")
     public ResponseEntity<TicketDTO> createTicket(@RequestBody TicketDTO ticketDTO) throws URISyntaxException {
         LOG.debug("REST request to save Ticket : {}", ticketDTO);
         if (ticketDTO.getId() != null) {
@@ -84,6 +86,7 @@ public class TicketResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_STAFF')")
     public ResponseEntity<TicketDTO> updateTicket(
         @PathVariable(value = "id", required = false) final Long id,
         @RequestBody TicketDTO ticketDTO
@@ -118,6 +121,7 @@ public class TicketResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_STAFF')")
     public ResponseEntity<TicketDTO> partialUpdateTicket(
         @PathVariable(value = "id", required = false) final Long id,
         @RequestBody TicketDTO ticketDTO
@@ -150,6 +154,7 @@ public class TicketResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Tickets in body.
      */
     @GetMapping("")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_STAFF')")
     public ResponseEntity<List<TicketDTO>> getAllTickets(
         TicketCriteria criteria,
         @org.springdoc.core.annotations.ParameterObject Pageable pageable
@@ -168,6 +173,7 @@ public class TicketResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
      */
     @GetMapping("/count")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_STAFF')")
     public ResponseEntity<Long> countTickets(TicketCriteria criteria) {
         LOG.debug("REST request to count Tickets by criteria: {}", criteria);
         return ResponseEntity.ok().body(ticketQueryService.countByCriteria(criteria));
@@ -180,6 +186,7 @@ public class TicketResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the ticketDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_STAFF')")
     public ResponseEntity<TicketDTO> getTicket(@PathVariable("id") Long id) {
         LOG.debug("REST request to get Ticket : {}", id);
         Optional<TicketDTO> ticketDTO = ticketService.findOne(id);
@@ -193,6 +200,7 @@ public class TicketResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_STAFF')")
     public ResponseEntity<Void> deleteTicket(@PathVariable("id") Long id) {
         LOG.debug("REST request to delete Ticket : {}", id);
         ticketService.delete(id);
@@ -262,5 +270,11 @@ public class TicketResource {
         body.put("dataUri", ticketService.getQrImage(id));
 
         return ResponseEntity.ok(body);
+    }
+
+    @GetMapping("/showtimes/{id}/tickets")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_STAFF')")
+    public ResponseEntity<List<TicketDTO>> getTickets(@PathVariable Long id) {
+        return ResponseEntity.ok(ticketService.getByShowtime(id));
     }
 }

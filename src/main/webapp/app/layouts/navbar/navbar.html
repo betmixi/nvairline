@@ -1,268 +1,130 @@
-<nav data-cy="navbar" class="navbar navbar-dark navbar-expand-md bg-dark">
-  <div class="container-fluid">
-    <a class="navbar-brand logo" routerLink="/" (click)="collapseNavbar()">
-      <span class="logo-img"></span>
-      <span class="navbar-title" jhiTranslate="global.title">Dugx</span>
-      <span class="navbar-version">{{ version }}</span>
+<nav data-cy="navbar" class="sidebar">
+  <div class="sidebar-header">
+    <a class="brand" routerLink="/" (click)="goHome()">
+      <span class="brand-icon">✈️</span>
+      <span class="brand-text" jhiTranslate="global.title">Vietnam Airlines</span>
     </a>
-    <a
-      class="navbar-toggler d-lg-none"
-      href="javascript:void(0);"
-      data-toggle="collapse"
-      data-target="#navbarResponsive"
-      aria-controls="navbarResponsive"
-      aria-expanded="false"
+
+    <button type="button" class="collapse-toggle d-none d-md-inline-flex" (click)="toggleSidebar()" aria-label="Thu gọn / mở rộng menu">
+      {{ isSidebarCollapsed() ? '›' : '‹' }}
+    </button>
+
+    <button
+      type="button"
+      class="mobile-toggle d-md-none"
       aria-label="Toggle navigation"
       (click)="isNavbarCollapsed.update(isNavbarCollapsed => !isNavbarCollapsed)"
     >
       <fa-icon icon="bars" />
-    </a>
-    <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed()">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-          <a class="nav-link" (click)="goHome(); collapseNavbar()">
-            <span>
-              <fa-icon icon="home" />
-              <span jhiTranslate="global.menu.home"> Home </span>
-            </span>
-          </a>
-        </li>
-        <li ngbDropdown class="nav-item dropdown" display="dynamic">
-          <ul class="dropdown-menu" ngbDropdownMenu>
-            <li>
-              <a
-                class="dropdown-item"
-                routerLink="/category"
-                routerLinkActive="active"
-                [routerLinkActiveOptions]="{ exact: true }"
-                (click)="collapseNavbar()"
-              >
-                All Categories
-              </a>
-            </li>
+    </button>
+  </div>
 
-            <li>
-              <a class="dropdown-item" (click)="collapseNavbar()"> 🎵 Music </a>
-            </li>
+  <div class="sidebar-body" [ngbCollapse]="isNavbarCollapsed()">
+    @if (!account()?.authorities?.includes('ROLE_ADMIN')) {
+    <ul class="nav-list">
+      <li routerLinkActive="active">
+        <a class="nav-item-link" routerLink="/events" (click)="collapseNavbar()">
+          <span class="nav-icon">🎫</span>
+          <span class="nav-label">Mua vé</span>
+        </a>
+      </li>
 
-            <li>
-              <a class="dropdown-item" (click)="collapseNavbar()"> 💼 Conference </a>
-            </li>
+      <li routerLinkActive="active">
+        <a class="nav-item-link" routerLink="/services" (click)="collapseNavbar()">
+          <span class="nav-icon">🛎️</span>
+          <span class="nav-label">Dịch vụ bổ trợ</span>
+        </a>
+      </li>
 
-            <li>
-              <a class="dropdown-item" (click)="collapseNavbar()"> 💡 Workshop </a>
-            </li>
+      <li routerLinkActive="active">
+        <a class="nav-item-link" routerLink="/loyalty" (click)="collapseNavbar()">
+          <span class="nav-icon">👑</span>
+          <span class="nav-label">Tích điểm và đổi ưu đãi</span>
+        </a>
+      </li>
 
-            <li>
-              <a class="dropdown-item" (click)="collapseNavbar()"> ⚽ Sport </a>
-            </li>
-          </ul>
-        </li>
-        @if (account()?.authorities?.includes('ROLE_ADMIN')) {
-        <li
-          ngbDropdown
-          class="nav-item dropdown pointer"
-          display="dynamic"
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          data-cy="entity"
-        >
-          } @if (!account()?.authorities?.includes('ROLE_ADMIN')) { } @if ( account() !== null &&
-          !account()?.authorities?.includes('ROLE_ADMIN') && !isOrganizerPage() ) {
-        </li>
+      <li routerLinkActive="active">
+        <a class="nav-item-link" routerLink="/support" (click)="collapseNavbar()">
+          <span class="nav-icon">❓</span>
+          <span class="nav-label">Liên hệ</span>
+        </a>
+      </li>
+    </ul>
+    }
 
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/organizer/register" (click)="collapseNavbar()">
-            <span>Become Organizer</span>
-          </a>
-        </li>
+    <div *jhiHasAnyAuthority="['ROLE_ADMIN', 'ROLE_STAFF']" class="staff-section">
+      <a class="nav-item-link" routerLink="/admin/check-in" routerLinkActive="active" (click)="collapseNavbar()">
+        <span class="nav-icon">🛫</span>
+        <span class="nav-label">Check-in</span>
+      </a>
+    </div>
 
-        } @if (isOrganizerPage()) {
-
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/" (click)="collapseNavbar()">
-            <fa-icon icon="arrow-left"></fa-icon>
-
-            <span>Trở về User</span>
-          </a>
-        </li>
-
-        }
-        <li
-          *jhiHasAnyAuthority="'ROLE_ADMIN'"
-          ngbDropdown
-          class="nav-item dropdown pointer"
-          display="dynamic"
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          data-cy="adminMenu"
-        >
-          <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="admin-menu">
-            <li>
-              <a
-                class="dropdown-item"
-                routerLink="/authority"
-                routerLinkActive="active"
-                [routerLinkActiveOptions]="{ exact: true }"
-                (click)="collapseNavbar()"
-              >
-                <fa-icon icon="asterisk" [fixedWidth]="true" />
-                <span jhiTranslate="global.menu.entities.adminAuthority">Authority</span>
-              </a>
-            </li>
-
-            <li>
-              <a
-                class="dropdown-item"
-                routerLink="/user-management"
-                routerLinkActive="active"
-                [routerLinkActiveOptions]="{ exact: true }"
-                (click)="collapseNavbar()"
-              >
-                <fa-icon icon="asterisk" [fixedWidth]="true" />
-                <span jhiTranslate="userManagement.home.title">User Management</span>
-              </a>
-            </li>
-            <!-- jhipster-needle-add-element-to-admin-menu - JHipster will add entities to the admin menu here -->
-            <li>
-              <a class="dropdown-item" routerLink="/admin/metrics" routerLinkActive="active" (click)="collapseNavbar()">
-                <fa-icon icon="tachometer-alt" [fixedWidth]="true" />
-                <span jhiTranslate="global.menu.admin.metrics">Metrics</span>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" routerLink="/admin/health" routerLinkActive="active" (click)="collapseNavbar()">
-                <fa-icon icon="heart" [fixedWidth]="true" />
-                <span jhiTranslate="global.menu.admin.health">Health</span>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" routerLink="/admin/configuration" routerLinkActive="active" (click)="collapseNavbar()">
-                <fa-icon icon="cogs" [fixedWidth]="true" />
-                <span jhiTranslate="global.menu.admin.configuration">Configuration</span>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" routerLink="/admin/logs" routerLinkActive="active" (click)="collapseNavbar()">
-                <fa-icon icon="tasks" [fixedWidth]="true" />
-                <span jhiTranslate="global.menu.admin.logs">Logs</span>
-              </a>
-            </li>
-            @if (openAPIEnabled()) {
-            <li>
-              <a class="dropdown-item" routerLink="/admin/docs" routerLinkActive="active" (click)="collapseNavbar()">
-                <fa-icon icon="book" [fixedWidth]="true" />
-                <span jhiTranslate="global.menu.admin.apidocs">API</span>
-              </a>
-            </li>
-            }
-          </ul>
-        </li>
-        @if (languages && languages.length > 1) {
-        <li ngbDropdown class="nav-item dropdown pointer" display="dynamic">
-          <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="languagesnavBarDropdown">
-            <span>
-              <fa-icon icon="flag" />
-              <span jhiTranslate="global.menu.language">Language</span>
-            </span>
-          </a>
-          <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="languagesnavBarDropdown">
-            @for (language of languages; track $index) {
-            <li>
-              <a
-                class="dropdown-item"
-                [jhiActiveMenu]="language"
-                href="javascript:void(0);"
-                (click)="changeLanguage(language);collapseNavbar();"
-                >{{ language | findLanguageFromKey }}</a
-              >
-            </li>
-            }
-          </ul>
-        </li>
-        }
-        <li
-          ngbDropdown
-          class="nav-item dropdown pointer"
-          display="dynamic"
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          data-cy="accountMenu"
-        >
-          @let accountRef = account();
-          <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="account-menu">
-            @if (!accountRef?.imageUrl) {
-            <span>
-              <fa-icon icon="user" />
-              <span jhiTranslate="global.menu.account.main">Account</span>
-            </span>
-            } @else {
-            <span>
-              <img [src]="accountRef!.imageUrl" class="profile-image rounded-circle" alt="Avatar" />
-            </span>
-            }
-          </a>
-          <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="account-menu">
-            @if (accountRef !== null) {
-            <li>
-              <a class="dropdown-item" routerLink="/my-tickets" routerLinkActive="active" (click)="collapseNavbar()" data-cy="myTickets">
-                <fa-icon icon="ticket" [fixedWidth]="true" />
-                <span>Vé của tôi</span>
-              </a>
-            </li>
-            <li>
-              <a
-                class="dropdown-item"
-                routerLink="/account/settings"
-                routerLinkActive="active"
-                (click)="collapseNavbar()"
-                data-cy="settings"
-              >
-                <fa-icon icon="wrench" [fixedWidth]="true" />
-                <span jhiTranslate="global.menu.account.settings">Settings</span>
-              </a>
-            </li>
-            <li>
-              <a
-                class="dropdown-item"
-                routerLink="/account/password"
-                routerLinkActive="active"
-                (click)="collapseNavbar()"
-                data-cy="passwordItem"
-              >
-                <fa-icon icon="lock" [fixedWidth]="true" />
-                <span jhiTranslate="global.menu.account.password">Password</span>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" (click)="logout()" id="logout" data-cy="logout">
-                <fa-icon icon="sign-out-alt" [fixedWidth]="true" />
-                <span jhiTranslate="global.menu.account.logout">Sign out</span>
-              </a>
-            </li>
-            } @else {
-            <li>
-              <a class="dropdown-item" (click)="login()" id="login" data-cy="login">
-                <fa-icon icon="sign-in-alt" [fixedWidth]="true" />
-                <span jhiTranslate="global.menu.account.login">Sign in</span>
-              </a>
-            </li>
-            <li>
-              <a
-                class="dropdown-item"
-                routerLink="/account/register"
-                routerLinkActive="active"
-                (click)="collapseNavbar()"
-                data-cy="register"
-              >
-                <fa-icon icon="user-plus" [fixedWidth]="true" />
-                <span jhiTranslate="global.menu.account.register">Register</span>
-              </a>
-            </li>
-            }
-          </ul>
-        </li>
-      </ul>
+    <div *jhiHasAnyAuthority="'ROLE_ADMIN'" class="admin-section">
+      <a class="nav-item-link" routerLink="/admin/dashboard" routerLinkActive="active" (click)="collapseNavbar()">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-label">Quản trị</span>
+      </a>
     </div>
   </div>
+
+  <div class="lotusmiles-card">
+    @let accountRef = account(); @if (accountRef === null) {
+    <div class="lm-title">👑 LOTUSMILES</div>
+    <p class="lm-sub">Tích điểm mỗi chuyến bay</p>
+    <div class="lm-actions">
+      <button type="button" class="btn-lm-primary" (click)="login()" id="login" data-cy="login">Đăng nhập</button>
+      <a class="btn-lm-secondary" routerLink="/account/register" (click)="collapseNavbar()" data-cy="register">Đăng ký</a>
+    </div>
+    } @else {
+    <button
+      type="button"
+      class="lm-account"
+      (click)="toggleAccountMenu()"
+      [attr.aria-expanded]="isAccountMenuOpen()"
+      data-cy="accountMenuToggle"
+    >
+      @if (accountRef.imageUrl) {
+      <img [src]="accountRef.imageUrl" class="lm-avatar" alt="Avatar" />
+      } @else {
+      <span class="lm-avatar lm-avatar-fallback"><fa-icon icon="user" /></span>
+      }
+      <div class="lm-account-info">
+        <div class="lm-account-name">{{ accountRef.login }}</div>
+        <div class="lm-account-sub">Thành viên Lotusmiles</div>
+      </div>
+      <span class="lm-account-chevron" [class.open]="isAccountMenuOpen()">▾</span>
+    </button>
+    <ul class="lm-links" [ngbCollapse]="!isAccountMenuOpen()">
+      @if (!accountRef.authorities?.includes('ROLE_ADMIN')) {
+      <li>
+        <a routerLink="/my-tickets" (click)="collapseNavbar()" data-cy="myTickets"
+          ><fa-icon icon="ticket" [fixedWidth]="true" /> Vé của tôi</a
+        >
+      </li>
+      <li>
+        <a routerLink="/favorites" (click)="collapseNavbar()" data-cy="myFavorites"
+          ><fa-icon icon="heart" [fixedWidth]="true" /> Chuyến bay đã lưu</a
+        >
+      </li>
+      }
+      <li>
+        <a routerLink="/account/settings" (click)="collapseNavbar()" data-cy="settings">
+          <fa-icon icon="wrench" [fixedWidth]="true" /> <span jhiTranslate="global.menu.account.settings">Settings</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/account/password" (click)="collapseNavbar()" data-cy="passwordItem">
+          <fa-icon icon="lock" [fixedWidth]="true" /> <span jhiTranslate="global.menu.account.password">Password</span>
+        </a>
+      </li>
+      <li>
+        <a (click)="logout()" id="logout" data-cy="logout">
+          <fa-icon icon="sign-out-alt" [fixedWidth]="true" /> <span jhiTranslate="global.menu.account.logout">Sign out</span>
+        </a>
+      </li>
+    </ul>
+    }
+  </div>
 </nav>
+
+<button type="button" class="neo-chat-btn" aria-label="Chat với NEO">💬 Chat với NEO</button>

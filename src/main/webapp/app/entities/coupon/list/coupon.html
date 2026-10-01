@@ -31,6 +31,13 @@
     <span jhiTranslate="dugxApp.coupon.home.notFound">No Coupons found</span>
   </div>
   } @else {
+  <div class="my-3">
+    <input type="text" class="form-control" placeholder="🔍 Tìm theo mã ưu đãi, chuyến bay áp dụng..." [(ngModel)]="keyword" />
+  </div>
+
+  @if (filteredCoupons.length === 0) {
+  <div class="alert alert-warning">Không tìm thấy ưu đãi phù hợp.</div>
+  } @else {
   <div class="table-responsive table-entities" id="entities">
     <table class="table table-striped" aria-describedby="page-heading">
       <thead>
@@ -79,7 +86,7 @@
           </th>
           <th scope="col" jhiSortBy="event.title">
             <div class="d-flex">
-              <span jhiTranslate="dugxApp.coupon.event">Event</span>
+              <span jhiTranslate="dugxApp.coupon.event">Chuyến bay</span>
               <fa-icon class="p-1" icon="sort" />
             </div>
           </th>
@@ -87,7 +94,7 @@
         </tr>
       </thead>
       <tbody>
-        @for (coupon of coupons(); track trackId(coupon)) {
+        @for (coupon of filteredCoupons; track trackId(coupon)) {
         <tr data-cy="entityTable">
           <td><a [routerLink]="['/coupon', coupon.id, 'view']">{{ coupon.id }}</a></td>
           <td>{{ coupon.code }}</td>
@@ -125,7 +132,7 @@
       </tbody>
     </table>
   </div>
-  } @if (coupons().length > 0) {
+  } } @if (coupons().length > 0) {
   <div>
     <div class="d-flex justify-content-center">
       <jhi-item-count [params]="{ page: page(), totalItems: totalItems(), itemsPerPage: itemsPerPage() }" />

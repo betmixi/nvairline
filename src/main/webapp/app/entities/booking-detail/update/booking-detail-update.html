@@ -21,11 +21,6 @@
         }
 
         <div class="mb-3">
-          <label class="form-label" for="field_quantity" jhiTranslate="dugxApp.bookingDetail.quantity">Quantity</label>
-          <input type="number" class="form-control" name="quantity" id="field_quantity" data-cy="quantity" formControlName="quantity" />
-        </div>
-
-        <div class="mb-3">
           <label class="form-label" for="field_price" jhiTranslate="dugxApp.bookingDetail.price">Price</label>
           <input type="number" class="form-control" name="price" id="field_price" data-cy="price" formControlName="price" />
         </div>
@@ -48,20 +43,16 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label" for="field_ticketType" jhiTranslate="dugxApp.bookingDetail.ticketType">Ticket Type</label>
-          <select
+          <label class="form-label" for="field_showtimeSeatId" jhiTranslate="dugxApp.bookingDetail.showtimeSeat">Showtime Seat</label>
+          <input
+            type="number"
             class="form-control"
-            id="field_ticketType"
-            data-cy="ticketType"
-            name="ticketType"
-            formControlName="ticketType"
-            [compareWith]="compareTicketType"
-          >
-            <option [ngValue]="null"></option>
-            @for (ticketTypeOption of ticketTypesSharedCollection(); track $index) {
-            <option [ngValue]="ticketTypeOption">{{ ticketTypeOption.name }}</option>
-            }
-          </select>
+            name="showtimeSeatId"
+            id="field_showtimeSeatId"
+            data-cy="showtimeSeatId"
+            formControlName="showtimeSeatId"
+            placeholder="ID của ShowtimeSeat"
+          />
         </div>
       </div>
 

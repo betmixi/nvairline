@@ -1,0 +1,94 @@
+<div class="container py-4">
+  <a class="btn-back-home" routerLink="/">← Trang chủ</a>
+
+  <div class="shop-header mt-3">
+    <h2>💺 Nâng hạng ghế</h2>
+    <p>Chọn một vé đã mua để nâng lên hạng ghế cao hơn cùng chuyến bay.</p>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-3">Đang tải vé...</p>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+  <div *ngIf="!isLoading && groups.length > 0" class="stat-row">
+    <div class="stat-card">
+      <div class="stat-title">Chuyến bay đã mua</div>
+      <div class="stat-value">{{ groups.length }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">Vé đủ điều kiện</div>
+      <div class="stat-value">{{ totalTicketsCount }}</div>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && groups.length === 0" class="empty-state text-center py-5">
+    <div class="empty-icon">💺</div>
+    <h5>Bạn chưa có vé nào</h5>
+    <p class="text-muted">Mua vé trước rồi quay lại đây để nâng hạng ghế.</p>
+    <a class="btn btn-primary" routerLink="/events">Tìm chuyến bay</a>
+  </div>
+
+  <div *ngFor="let group of groups; trackBy: trackGroup" class="event-group mb-4">
+    <div class="event-header">
+      <div class="event-meta">
+        <h5 class="mb-1">{{ group.eventTitle }}</h5>
+        <div class="text-muted small" *ngIf="group.eventStartTime">{{ group.eventStartTime.format('DD/MM/YYYY HH:mm') }}</div>
+      </div>
+    </div>
+
+    <div class="ticket-list">
+      <div *ngFor="let ticket of group.tickets; trackBy: trackTicket" class="ticket-card">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <strong>Ghế {{ ticket.seatLabel }}</strong>
+            <div class="text-muted small">{{ ticket.seatType }} · {{ ticket.price | number }} đ</div>
+          </div>
+          <span class="badge" [class.bg-success]="!ticket.checkedIn" [class.bg-secondary]="ticket.checkedIn">
+            {{ ticket.checkedIn ? 'Đã check-in' : ticket.status }}
+          </span>
+        </div>
+
+        <button type="button" class="btn btn-outline-primary btn-sm mt-3 w-100" (click)="toggleUpgradePanel(ticket)">
+          {{ isOpen(ticket.id) ? 'Đóng' : '💺 Nâng hạng ghế' }}
+        </button>
+
+        <div *ngIf="isOpen(ticket.id)" class="shop-panel">
+          <div *ngIf="isLoadingInfo(ticket.id)" class="text-center py-3">
+            <span class="spinner-border spinner-border-sm"></span>
+          </div>
+
+          <ng-container *ngIf="!isLoadingInfo(ticket.id) && upgradeInfoOf(ticket.id) as info">
+            <div class="current-tier small text-muted mb-2">
+              Hạng hiện tại: <strong>{{ info.currentSeatTypeLabel }}</strong> ({{ info.currentPrice | number }} đ)
+            </div>
+
+            <div *ngIf="!info.upgradable" class="alert alert-secondary py-2 mb-0 small">{{ info.reason }}</div>
+
+            <div *ngIf="info.upgradable" class="option-grid">
+              <button
+                *ngFor="let option of info.options"
+                type="button"
+                class="option-pill"
+                [disabled]="!option.available || submittingTicketId === ticket.id"
+                (click)="chooseUpgrade(ticket, option.seatType)"
+              >
+                <div class="option-pill-label">{{ option.seatTypeLabel }}</div>
+                <div class="option-pill-price">{{ option.price | number }} đ</div>
+                <div class="option-pill-diff" *ngIf="option.available">+{{ option.priceDifference | number }} đ</div>
+                <div class="option-pill-diff text-muted" *ngIf="!option.available">Hết ghế</div>
+              </button>
+            </div>
+
+            <div *ngIf="submittingTicketId === ticket.id" class="text-center small text-muted mt-2">
+              <span class="spinner-border spinner-border-sm me-2"></span>
+              Đang chuyển tới VNPay...
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

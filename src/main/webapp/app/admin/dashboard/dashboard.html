@@ -30,9 +30,9 @@
       </div>
 
       <div class="tile-body">
-        <span class="label">Total Events</span>
+        <span class="label">Tổng số chuyến bay</span>
         <h2>{{ dashboard?.totalEvents ?? 0 }}</h2>
-        <small>View events</small>
+        <small>Xem chuyến bay</small>
       </div>
     </div>
 
@@ -62,16 +62,16 @@
       </div>
     </div>
 
-    <!-- Pending Organizers -->
-    <div class="stat-tile accent-violet" (click)="goOrganizerRequests()">
+    <!-- Customer bookings -->
+    <div class="stat-tile accent-violet" routerLink="/admin/customer-bookings">
       <div class="icon-badge">
-        <fa-icon [icon]="faUserClock"></fa-icon>
+        <fa-icon [icon]="faCustomers"></fa-icon>
       </div>
 
       <div class="tile-body">
-        <span class="label">Pending Organizers</span>
-        <h2>{{ organizers.length }}</h2>
-        <small>Waiting approval</small>
+        <span class="label">Quản lý đặt vé và thống kê</span>
+        <h2>Xem</h2>
+        <small>Danh sách khách hàng & chuyến bay đã đặt</small>
       </div>
     </div>
 
@@ -87,49 +87,120 @@
         <small>Total income</small>
       </div>
     </div>
-  </div>
 
-  <!-- Top events ranking -->
-
-  <div class="chart-panel">
-    <div class="chart-panel-head">
-      <div>
-        <h3>Sự kiện bán chạy nhất</h3>
-        <p>Top 5 sự kiện, tính trên các đơn đã thanh toán</p>
+    <!-- Reviews -->
+    <div class="stat-tile accent-amber" routerLink="/admin/reviews">
+      <div class="icon-badge">
+        <fa-icon [icon]="faStar"></fa-icon>
       </div>
 
-      <div class="measure-switch" role="group" aria-label="Chọn tiêu chí xếp hạng">
-        <button type="button" [class.is-active]="measure === 'tickets'" (click)="setMeasure('tickets')">Số vé</button>
-
-        <button type="button" [class.is-active]="measure === 'revenue'" (click)="setMeasure('revenue')">Doanh thu</button>
+      <div class="tile-body">
+        <span class="label">Reviews</span>
+        <h2>Quản lý</h2>
+        <small>Xem & kiểm duyệt đánh giá</small>
       </div>
     </div>
 
-    @if (rankedEvents.length) {
+    <!-- Support requests -->
+    <div class="stat-tile accent-sky" routerLink="/admin/support-requests">
+      <div class="icon-badge">
+        <fa-icon [icon]="faSupport"></fa-icon>
+      </div>
 
-    <ol class="rank-chart">
-      @for (row of rankedEvents; track row.title; let i = $index) {
-      <li class="rank-row">
-        <div class="rank-badge" [style.background]="row.color">{{ i + 1 }}</div>
+      <div class="tile-body">
+        <span class="label">Support</span>
+        <h2>Quản lý</h2>
+        <small>Xem & phản hồi yêu cầu hỗ trợ</small>
+      </div>
+    </div>
+  </div>
 
-        <div class="rank-main">
-          <div class="rank-top">
-            <span class="rank-title">{{ row.title }}</span>
-            <span class="rank-value">{{ row.display }}</span>
-          </div>
+  <!-- Biểu đồ thống kê -->
 
-          <div class="rank-track">
-            <div class="rank-fill" [style.width.%]="row.percent" [style.background]="row.color"></div>
-          </div>
+  <div class="charts-row">
+    <div class="chart-panel">
+      <div class="chart-panel-head">
+        <div>
+          <h3>Sự kiện bán chạy nhất</h3>
+          <p>Top 5 sự kiện, tính trên các đơn đã thanh toán</p>
         </div>
-      </li>
+
+        <div class="measure-switch" role="group" aria-label="Chọn tiêu chí xếp hạng">
+          <button type="button" [class.is-active]="measure === 'tickets'" (click)="setMeasure('tickets')">Số vé</button>
+
+          <button type="button" [class.is-active]="measure === 'revenue'" (click)="setMeasure('revenue')">Doanh thu</button>
+        </div>
+      </div>
+
+      @if (rankedEvents.length) {
+
+      <div class="bar-chart">
+        @for (row of rankedEvents; track row.title) {
+        <div class="bar-col">
+          <span class="bar-value">{{ row.display }}</span>
+
+          <div class="bar-track">
+            <div class="bar-fill" [style.height.%]="row.percent" [style.background]="row.color"></div>
+          </div>
+
+          <span class="bar-label">{{ row.title }}</span>
+        </div>
+        }
+      </div>
+
+      } @else {
+
+      <p class="chart-empty">Chưa có dữ liệu bán vé.</p>
+
       }
-    </ol>
+    </div>
 
-    } @else {
+    <div class="chart-panel">
+      <div class="chart-panel-head">
+        <div>
+          <h3>Tỷ trọng doanh thu</h3>
+          <p>Top 5 sự kiện so với phần còn lại</p>
+        </div>
+      </div>
 
-    <p class="chart-empty">Chưa có dữ liệu bán vé.</p>
+      @if (revenueSlices.length) {
 
-    }
+      <div class="donut-chart">
+        <svg viewBox="0 0 160 160" class="donut-svg">
+          <circle cx="80" cy="80" r="60" fill="none" stroke="#f0f1f5" stroke-width="24" />
+
+          <g transform="rotate(-90 80 80)">
+            @for (slice of revenueSlices; track slice.label) {
+            <circle
+              cx="80"
+              cy="80"
+              r="60"
+              fill="none"
+              stroke-width="24"
+              [attr.stroke]="slice.color"
+              [attr.stroke-dasharray]="slice.dashArray"
+              [attr.stroke-dashoffset]="slice.dashOffset"
+            />
+            }
+          </g>
+        </svg>
+
+        <ul class="donut-legend">
+          @for (slice of revenueSlices; track slice.label) {
+          <li>
+            <span class="legend-dot" [style.background]="slice.color"></span>
+            <span class="legend-label">{{ slice.label }}</span>
+            <span class="legend-value">{{ slice.percent | number: '1.0-1' }}%</span>
+          </li>
+          }
+        </ul>
+      </div>
+
+      } @else {
+
+      <p class="chart-empty">Chưa có dữ liệu doanh thu.</p>
+
+      }
+    </div>
   </div>
 </div>

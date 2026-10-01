@@ -1,0 +1,86 @@
+<div class="support-page">
+  <a class="back-link" routerLink="/admin/dashboard">← Quay lại Dashboard</a>
+
+  <div class="page-header">
+    <h1>❓ Quản lý yêu cầu hỗ trợ</h1>
+    <p>Toàn bộ yêu cầu hỗ trợ của khách hàng trên hệ thống</p>
+  </div>
+
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="summary-title">Tổng số yêu cầu</div>
+      <div class="summary-value">{{ requests.length }}</div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-title">Đang chờ phản hồi</div>
+      <div class="summary-value pending">{{ pendingCount }}</div>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <input class="form-control search-input" type="text" placeholder="🔍 Tìm theo chủ đề, nội dung, người gửi..." [(ngModel)]="keyword" />
+
+    <div class="status-filter">
+      <button type="button" [class.active]="statusFilter === 'ALL'" (click)="statusFilter = 'ALL'">Tất cả</button>
+      <button type="button" [class.active]="statusFilter === 'PENDING'" (click)="statusFilter = 'PENDING'">Đang chờ</button>
+      <button type="button" [class.active]="statusFilter === 'REPLIED'" (click)="statusFilter = 'REPLIED'">Đã phản hồi</button>
+    </div>
+  </div>
+
+  <div class="card-box">
+    @if (isLoading) {
+
+    <div class="state-box">Đang tải...</div>
+
+    } @else if (filteredRequests.length === 0) {
+
+    <div class="state-box">
+      <div class="empty-icon">❓</div>
+      <h3>{{ requests.length === 0 ? 'Chưa có yêu cầu hỗ trợ nào' : 'Không tìm thấy yêu cầu phù hợp' }}</h3>
+    </div>
+
+    } @else {
+
+    <div class="request-list">
+      @for (request of filteredRequests; track request.id) {
+      <div class="request-item">
+        <div class="request-item-head">
+          <div>
+            <strong class="request-topic">{{ request.topic }}</strong>
+            <span class="text-muted"> · {{ requesterName(request) }}</span>
+          </div>
+          <span class="request-status" [class.is-replied]="request.status === 'REPLIED'">
+            {{ request.status === 'REPLIED' ? '✅ Đã phản hồi' : '⏳ Đang chờ' }}
+          </span>
+        </div>
+
+        <p class="request-content">{{ request.content }}</p>
+        <small class="text-muted">{{ request.createdDate | date: 'dd/MM/yyyy HH:mm' }}</small>
+
+        @if (replyingId === request.id) {
+        <div class="reply-form">
+          <textarea class="form-control" rows="2" [(ngModel)]="replyDraft" placeholder="Nhập phản hồi..."></textarea>
+          <div class="reply-actions">
+            <button class="reply-save-btn" [disabled]="isSavingReply" (click)="submitReply(request)">
+              {{ isSavingReply ? '...' : 'Gửi phản hồi' }}
+            </button>
+            <button class="reply-cancel-btn" [disabled]="isSavingReply" (click)="cancelReply()">Huỷ</button>
+          </div>
+        </div>
+        } @else if (request.reply) {
+        <div class="reply-existing">
+          <strong>Phản hồi:</strong>
+          <p>{{ request.reply }}</p>
+          <button class="reply-edit-btn" (click)="startReply(request)">Sửa phản hồi</button>
+        </div>
+        } @else {
+        <button class="reply-btn" (click)="startReply(request)">💬 Phản hồi yêu cầu</button>
+        }
+      </div>
+      }
+    </div>
+
+    }
+  </div>
+</div>

@@ -71,8 +71,16 @@ public class SecurityConfiguration {
                     .requestMatchers(HttpMethod.GET, "/api/payments/vnpay-ipn").permitAll()
                     // Cho khach chua dang nhap xem chi tiet su kien truoc khi mua ve
                     .requestMatchers(HttpMethod.GET, "/api/events/public/**").permitAll()
+                    // Cho khach chua dang nhap xem suat chieu va so do ghe truoc khi mua ve
+                    .requestMatchers(HttpMethod.GET, "/api/showtimes/event/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/showtimes/*/seats").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/showtimes/*").permitAll()
                     // Anh da tai len (banner su kien...) phai xem duoc cong khai, giong URL anh ngoai
                     .requestMatchers(HttpMethod.GET, "/api/uploads/images/**").permitAll()
+                    // Form tim chuyen bay can danh sach san bay di/den, xem cong khai
+                    .requestMatchers(HttpMethod.GET, "/api/airports", "/api/airports/*").permitAll()
+                    // Flyout "Kham Pha" o trang chu can danh sach uu dai, xem cong khai
+                    .requestMatchers(HttpMethod.GET, "/api/promotions", "/api/promotions/*").permitAll()
                     .requestMatchers("/api/admin/**").hasAuthority(AuthoritiesConstants.ADMIN)
                     .requestMatchers("/api/**").authenticated()
                     .requestMatchers("/v3/api-docs/**").hasAuthority(AuthoritiesConstants.ADMIN)

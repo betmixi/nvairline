@@ -1,6 +1,6 @@
 {
   "global": {
-    "title": "Dugx",
+    "title": "Vietnam Airlines",
     "browsehappy": "You are using an <strong>outdated</strong> browser. Please <a href=\"https://browsehappy.com/?locale=en\">upgrade your browser</a> to improve your experience.",
     "menu": {
       "home": "Home",
@@ -11,9 +11,10 @@
         "adminAuthority": "Authority",
         "event": "Event",
         "category": "Category",
-        "organizer": "Organizer",
         "venue": "Venue",
-        "ticketType": "Ticket Type",
+        "aircraft": "Aircraft",
+        "seat": "Seat",
+        "showtime": "Showtime",
         "booking": "Booking",
         "bookingDetail": "Booking Detail",
         "payment": "Payment",

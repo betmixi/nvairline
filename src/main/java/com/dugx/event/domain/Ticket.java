@@ -32,7 +32,7 @@ public class Ticket implements Serializable {
     private Boolean checkedIn;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "booking", "ticketType" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "booking", "showtimeSeat" }, allowSetters = true)
     private BookingDetail bookingDetail;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

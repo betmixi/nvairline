@@ -46,6 +46,15 @@ public class Event implements Serializable {
     @Column(name = "created_date")
     private Instant createdDate;
 
+    @Column(name = "supports_one_way")
+    private Boolean supportsOneWay;
+
+    @Column(name = "supports_round_trip")
+    private Boolean supportsRoundTrip;
+
+    @Column(name = "supports_multi_city")
+    private Boolean supportsMultiCity;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Category category;
 
@@ -53,8 +62,10 @@ public class Event implements Serializable {
     private Address address;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "user" }, allowSetters = true)
-    private Organizer organizer;
+    private Airport departureAirport;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Airport arrivalAirport;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -162,6 +173,45 @@ public class Event implements Serializable {
         this.createdDate = createdDate;
     }
 
+    public Boolean getSupportsOneWay() {
+        return this.supportsOneWay;
+    }
+
+    public Event supportsOneWay(Boolean supportsOneWay) {
+        this.setSupportsOneWay(supportsOneWay);
+        return this;
+    }
+
+    public void setSupportsOneWay(Boolean supportsOneWay) {
+        this.supportsOneWay = supportsOneWay;
+    }
+
+    public Boolean getSupportsRoundTrip() {
+        return this.supportsRoundTrip;
+    }
+
+    public Event supportsRoundTrip(Boolean supportsRoundTrip) {
+        this.setSupportsRoundTrip(supportsRoundTrip);
+        return this;
+    }
+
+    public void setSupportsRoundTrip(Boolean supportsRoundTrip) {
+        this.supportsRoundTrip = supportsRoundTrip;
+    }
+
+    public Boolean getSupportsMultiCity() {
+        return this.supportsMultiCity;
+    }
+
+    public Event supportsMultiCity(Boolean supportsMultiCity) {
+        this.setSupportsMultiCity(supportsMultiCity);
+        return this;
+    }
+
+    public void setSupportsMultiCity(Boolean supportsMultiCity) {
+        this.supportsMultiCity = supportsMultiCity;
+    }
+
     public Category getCategory() {
         return this.category;
     }
@@ -188,16 +238,29 @@ public class Event implements Serializable {
         return this;
     }
 
-    public Organizer getOrganizer() {
-        return this.organizer;
+    public Airport getDepartureAirport() {
+        return this.departureAirport;
     }
 
-    public void setOrganizer(Organizer organizer) {
-        this.organizer = organizer;
+    public void setDepartureAirport(Airport departureAirport) {
+        this.departureAirport = departureAirport;
     }
 
-    public Event organizer(Organizer organizer) {
-        this.setOrganizer(organizer);
+    public Event departureAirport(Airport departureAirport) {
+        this.setDepartureAirport(departureAirport);
+        return this;
+    }
+
+    public Airport getArrivalAirport() {
+        return this.arrivalAirport;
+    }
+
+    public void setArrivalAirport(Airport arrivalAirport) {
+        this.arrivalAirport = arrivalAirport;
+    }
+
+    public Event arrivalAirport(Airport arrivalAirport) {
+        this.setArrivalAirport(arrivalAirport);
         return this;
     }
 
@@ -232,6 +295,9 @@ public class Event implements Serializable {
             ", endTime='" + getEndTime() + "'" +
             ", status='" + getStatus() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +
+            ", supportsOneWay='" + getSupportsOneWay() + "'" +
+            ", supportsRoundTrip='" + getSupportsRoundTrip() + "'" +
+            ", supportsMultiCity='" + getSupportsMultiCity() + "'" +
             "}";
     }
 }

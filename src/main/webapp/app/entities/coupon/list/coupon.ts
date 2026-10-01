@@ -87,6 +87,21 @@ export class Coupon implements OnInit {
 
   trackId = (item: ICoupon): number => this.couponService.getCouponIdentifier(item);
 
+  /** Tim theo ma uu dai hoac ten chuyen bay ap dung. */
+  keyword = '';
+
+  get filteredCoupons(): ICoupon[] {
+    const kw = this.keyword.trim().toLowerCase();
+    if (!kw) {
+      return this.coupons();
+    }
+
+    return this.coupons().filter(coupon => {
+      const haystack = [coupon.code, coupon.event?.title].filter(Boolean).join(' ').toLowerCase();
+      return haystack.includes(kw);
+    });
+  }
+
   ngOnInit(): void {
     this.subscription = combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data])
       .pipe(

@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 
 import { ASC } from 'app/config/navigation.constants';
 import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
+import { Authority } from 'app/shared/jhipster/constants';
 
 import AddressResolve from './route/address-routing-resolve.service';
 
@@ -11,6 +12,7 @@ const addressRoute: Routes = [
     loadComponent: () => import('./list/address').then(m => m.Address),
     data: {
       defaultSort: `id,${ASC}`,
+      authorities: [Authority.ADMIN],
     },
     canActivate: [UserRouteAccessService],
   },
@@ -20,6 +22,7 @@ const addressRoute: Routes = [
     resolve: {
       address: AddressResolve,
     },
+    data: { authorities: [Authority.ADMIN] },
     canActivate: [UserRouteAccessService],
   },
   {
@@ -28,6 +31,7 @@ const addressRoute: Routes = [
     resolve: {
       address: AddressResolve,
     },
+    data: { authorities: [Authority.ADMIN] },
     canActivate: [UserRouteAccessService],
   },
   {
@@ -36,6 +40,7 @@ const addressRoute: Routes = [
     resolve: {
       address: AddressResolve,
     },
+    data: { authorities: [Authority.ADMIN] },
     canActivate: [UserRouteAccessService],
   },
 ];

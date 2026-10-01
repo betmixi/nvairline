@@ -27,6 +27,66 @@
   font-weight: bold;
 }
 
+.leg-block-title {
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: #2563eb;
+  margin-top: 18px;
+}
+
+.leg-block:first-child .leg-block-title {
+  margin-top: 0;
+}
+
 input[type='radio'] {
   margin-right: 8px;
+}
+
+.baggage-seat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.baggage-seat-label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #374151;
+  flex-shrink: 0;
+}
+
+.baggage-seat-options {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.baggage-pill {
+  padding: 6px 12px;
+  border: 1px solid #dbe4f3;
+  border-radius: 999px;
+  background: #f5f8ff;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  transition: 0.15s;
+
+  &:hover:not(:disabled) {
+    border-color: #2563eb;
+  }
+
+  &.active {
+    background: #2563eb;
+    border-color: #2563eb;
+    color: #fff;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 }

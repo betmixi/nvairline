@@ -80,6 +80,13 @@ export class BookingService extends BookingsService {
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
+  /** Lay 1 booking cua chinh nguoi dung dang dang nhap (khong yeu cau quyen ADMIN/STAFF). */
+  findMine(id: number): Observable<IBooking> {
+    return this.http
+      .get<RestBooking>(`${this.resourceUrl}/my-bookings/${encodeURIComponent(id)}`)
+      .pipe(map(res => this.convertResponseFromServer(res)));
+  }
+
   query(req?: any): Observable<HttpResponse<IBooking[]>> {
     const options = createRequestOption(req);
     return this.http

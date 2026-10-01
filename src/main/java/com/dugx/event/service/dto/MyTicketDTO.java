@@ -7,7 +7,7 @@ import java.time.Instant;
 /**
  * Mot ve trong "vi ve" cua nguoi dung.
  *
- * DTO nay lam phang du lieu tu Ticket -> BookingDetail -> TicketType -> Event
+ * DTO nay lam phang du lieu tu Ticket -> BookingDetail -> ShowtimeSeat -> Showtime -> Event
  * de man hinh Angular khong phai lan qua nhieu tang quan he.
  */
 public class MyTicketDTO implements Serializable {
@@ -25,13 +25,26 @@ public class MyTicketDTO implements Serializable {
 
     private Long bookingId;
 
+    /** Thu tu chang bay trong booking (0 = chang dau...), null neu booking khong co nhieu chang. Dung de hien thi tag "Khứ hồi - chặng x/y". */
+    private Integer legIndex;
+
     private String bookingStatus;
 
     private Instant bookingDate;
 
-    private Long ticketTypeId;
+    private Long showtimeId;
 
-    private String ticketTypeName;
+    private Instant showtimeStartTime;
+
+    /** So hieu/ten may bay khai thac chuyen bay, vi du "Airbus A321 - VN-A612". */
+    private String aircraftName;
+
+    /** Ho ten khach hang dat ve (chu tai khoan booking). */
+    private String passengerName;
+
+    private String seatLabel;
+
+    private String seatType;
 
     private BigDecimal price;
 
@@ -96,6 +109,14 @@ public class MyTicketDTO implements Serializable {
         this.bookingId = bookingId;
     }
 
+    public Integer getLegIndex() {
+        return legIndex;
+    }
+
+    public void setLegIndex(Integer legIndex) {
+        this.legIndex = legIndex;
+    }
+
     public String getBookingStatus() {
         return bookingStatus;
     }
@@ -112,20 +133,52 @@ public class MyTicketDTO implements Serializable {
         this.bookingDate = bookingDate;
     }
 
-    public Long getTicketTypeId() {
-        return ticketTypeId;
+    public Long getShowtimeId() {
+        return showtimeId;
     }
 
-    public void setTicketTypeId(Long ticketTypeId) {
-        this.ticketTypeId = ticketTypeId;
+    public void setShowtimeId(Long showtimeId) {
+        this.showtimeId = showtimeId;
     }
 
-    public String getTicketTypeName() {
-        return ticketTypeName;
+    public Instant getShowtimeStartTime() {
+        return showtimeStartTime;
     }
 
-    public void setTicketTypeName(String ticketTypeName) {
-        this.ticketTypeName = ticketTypeName;
+    public void setShowtimeStartTime(Instant showtimeStartTime) {
+        this.showtimeStartTime = showtimeStartTime;
+    }
+
+    public String getAircraftName() {
+        return aircraftName;
+    }
+
+    public void setAircraftName(String aircraftName) {
+        this.aircraftName = aircraftName;
+    }
+
+    public String getPassengerName() {
+        return passengerName;
+    }
+
+    public void setPassengerName(String passengerName) {
+        this.passengerName = passengerName;
+    }
+
+    public String getSeatLabel() {
+        return seatLabel;
+    }
+
+    public void setSeatLabel(String seatLabel) {
+        this.seatLabel = seatLabel;
+    }
+
+    public String getSeatType() {
+        return seatType;
+    }
+
+    public void setSeatType(String seatType) {
+        this.seatType = seatType;
     }
 
     public BigDecimal getPrice() {

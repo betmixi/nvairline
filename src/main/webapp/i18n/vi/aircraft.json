@@ -1,0 +1,27 @@
+{
+  "dugxApp": {
+    "aircraft": {
+      "home": {
+        "title": "Máy bay và ghế",
+        "refreshListLabel": "Tải lại danh sách",
+        "createLabel": "Thêm mới một máy bay",
+        "createOrEditLabel": "Thêm mới hoặc cập nhật máy bay",
+        "notFound": "Không tìm thấy máy bay nào"
+      },
+      "created": "Một máy bay mới được tạo với định danh {{ param }}",
+      "updated": "Một máy bay được cập nhật với định danh {{ param }}",
+      "deleted": "Một máy bay đã xóa với định danh {{ param }}",
+      "delete": {
+        "question": "Bạn có chắc là muốn xóa máy bay {{ id }}?"
+      },
+      "detail": {
+        "title": "Máy bay"
+      },
+      "id": "ID",
+      "name": "Tên máy bay",
+      "totalRows": "Số hàng ghế",
+      "totalColumns": "Số cột ghế",
+      "roomType": "Dòng máy bay"
+    }
+  }
+}

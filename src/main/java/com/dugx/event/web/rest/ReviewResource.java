@@ -8,6 +8,7 @@ import com.dugx.event.service.dto.CreateReviewRequest;
 import com.dugx.event.service.dto.ReviewDTO;
 import com.dugx.event.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -61,6 +63,7 @@ public class ReviewResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<ReviewDTO> createReview(@Valid @RequestBody ReviewDTO reviewDTO) throws URISyntaxException {
         LOG.debug("REST request to save Review : {}", reviewDTO);
         if (reviewDTO.getId() != null) {
@@ -83,6 +86,7 @@ public class ReviewResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<ReviewDTO> updateReview(
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody ReviewDTO reviewDTO
@@ -117,6 +121,7 @@ public class ReviewResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<ReviewDTO> partialUpdateReview(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody ReviewDTO reviewDTO
@@ -149,6 +154,7 @@ public class ReviewResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Reviews in body.
      */
     @GetMapping("")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<List<ReviewDTO>> getAllReviews(
         ReviewCriteria criteria,
         @org.springdoc.core.annotations.ParameterObject Pageable pageable
@@ -167,6 +173,7 @@ public class ReviewResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
      */
     @GetMapping("/count")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Long> countReviews(ReviewCriteria criteria) {
         LOG.debug("REST request to count Reviews by criteria: {}", criteria);
         return ResponseEntity.ok().body(reviewQueryService.countByCriteria(criteria));
@@ -179,6 +186,7 @@ public class ReviewResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the reviewDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<ReviewDTO> getReview(@PathVariable("id") Long id) {
         LOG.debug("REST request to get Review : {}", id);
         Optional<ReviewDTO> reviewDTO = reviewService.findOne(id);
@@ -192,6 +200,7 @@ public class ReviewResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteReview(@PathVariable("id") Long id) {
         LOG.debug("REST request to delete Review : {}", id);
         reviewService.delete(id);
@@ -216,4 +225,42 @@ public class ReviewResource {
     public ResponseEntity<Double> getAverageRating(@PathVariable Long eventId) {
         return ResponseEntity.ok(reviewService.getAverageRating(eventId));
     }
+
+    /** Toan bo danh gia trong he thong - trang quan tri cua admin. */
+    @GetMapping("/admin/all")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<List<ReviewDTO>> getAllForAdmin() {
+        return ResponseEntity.ok(reviewService.getAllForAdmin());
+    }
+
+    /** An/hien mot danh gia - chi admin (UC Quan ly danh gia). */
+    @PatchMapping("/{id}/hidden")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<ReviewDTO> setHidden(@PathVariable Long id, @RequestBody SetHiddenRequest request) {
+        return ResponseEntity.ok(reviewService.setHidden(id, Boolean.TRUE.equals(request.hidden())));
+    }
+
+    /** Phan hoi mot danh gia - chi admin (UC Quan ly danh gia). */
+    @PatchMapping("/{id}/reply")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<ReviewDTO> reply(@PathVariable Long id, @Valid @RequestBody ReplyRequest request) {
+        return ResponseEntity.ok(reviewService.reply(id, request.reply()));
+    }
+
+    /** Sua danh gia cua chinh minh (UC Danh gia chuyen bay). */
+    @PutMapping("/mine/{id}")
+    public ResponseEntity<ReviewDTO> updateMine(@PathVariable Long id, @Valid @RequestBody CreateReviewRequest request) {
+        return ResponseEntity.ok(reviewService.updateOwnReview(id, request));
+    }
+
+    /** Xoa danh gia cua chinh minh (UC Danh gia chuyen bay). */
+    @DeleteMapping("/mine/{id}")
+    public ResponseEntity<Void> deleteMine(@PathVariable Long id) {
+        reviewService.deleteOwnReview(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    public record SetHiddenRequest(Boolean hidden) {}
+
+    public record ReplyRequest(@NotBlank String reply) {}
 }

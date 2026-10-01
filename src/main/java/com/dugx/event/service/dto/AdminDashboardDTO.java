@@ -13,7 +13,6 @@ public class AdminDashboardDTO {
 
     private BigDecimal totalRevenue;
 
-    private long pendingOrganizer;
     private List<EventDTO> recentEvents;
 
     private List<TopEventDTO> topEventsByTickets;
@@ -50,14 +49,6 @@ public class AdminDashboardDTO {
 
     public void setTotalRevenue(BigDecimal totalRevenue) {
         this.totalRevenue = totalRevenue;
-    }
-
-    public long getPendingOrganizer() {
-        return pendingOrganizer;
-    }
-
-    public void setPendingOrganizer(long pendingOrganizer) {
-        this.pendingOrganizer = pendingOrganizer;
     }
 
     public List<EventDTO> getRecentEvents() {

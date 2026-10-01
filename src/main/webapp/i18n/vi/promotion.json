@@ -1,0 +1,29 @@
+{
+  "dugxApp": {
+    "promotion": {
+      "home": {
+        "title": "Ưu đãi",
+        "refreshListLabel": "Tải lại danh sách",
+        "createLabel": "Thêm mới một Ưu đãi",
+        "createOrEditLabel": "Thêm mới hoặc cập nhật Ưu đãi",
+        "notFound": "Không tìm thấy Ưu đãi nào"
+      },
+      "created": "Một Ưu đãi mới được tạo với định danh {{ param }}",
+      "updated": "Một Ưu đãi cập nhật với định danh {{ param }}",
+      "deleted": "Một Ưu đãi đã xóa với định danh {{ param }}",
+      "delete": {
+        "question": "Bạn có chắc là muốn xóa Ưu đãi {{ id }}?"
+      },
+      "detail": {
+        "title": "Ưu đãi"
+      },
+      "id": "ID",
+      "title": "Tiêu đề",
+      "description": "Mô tả",
+      "icon": "Icon (emoji)",
+      "targetUrl": "Đường dẫn đích",
+      "displayOrder": "Thứ tự hiển thị",
+      "active": "Đang hoạt động"
+    }
+  }
+}

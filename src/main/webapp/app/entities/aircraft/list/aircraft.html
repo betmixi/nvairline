@@ -1,0 +1,133 @@
+<div>
+  <h2 id="page-heading" data-cy="AircraftHeading">
+    <span jhiTranslate="dugxApp.aircraft.home.title">Aircraft</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span jhiTranslate="dugxApp.aircraft.home.refreshListLabel">Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-aircraft"
+        [routerLink]="['/aircraft/new']"
+      >
+        <fa-icon icon="plus" />
+        <span jhiTranslate="dugxApp.aircraft.home.createLabel">Create a new Aircraft</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  <jhi-filter [filters]="filters" />
+
+  @if (aircrafts().length === 0) {
+  <div class="alert alert-warning" id="no-result">
+    <span jhiTranslate="dugxApp.aircraft.home.notFound">No Aircraft found</span>
+  </div>
+  } @else {
+  <div class="my-3">
+    <input type="text" class="form-control" placeholder="🔍 Tìm theo tên máy bay, loại khoang..." [(ngModel)]="keyword" />
+  </div>
+
+  @if (filteredAircrafts.length === 0) {
+  <div class="alert alert-warning">Không tìm thấy máy bay phù hợp.</div>
+  } @else {
+  <div class="table-responsive table-entities" id="entities">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+          <th scope="col" jhiSortBy="id">
+            <div class="d-flex">
+              <span jhiTranslate="global.field.id">ID</span>
+
+              <fa-icon class="p-1" icon="sort" />
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="name">
+            <div class="d-flex">
+              <span jhiTranslate="dugxApp.aircraft.name">Name</span>
+
+              <fa-icon class="p-1" icon="sort" />
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="totalRows">
+            <div class="d-flex">
+              <span jhiTranslate="dugxApp.aircraft.totalRows">Total Rows</span>
+
+              <fa-icon class="p-1" icon="sort" />
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="totalColumns">
+            <div class="d-flex">
+              <span jhiTranslate="dugxApp.aircraft.totalColumns">Total Columns</span>
+
+              <fa-icon class="p-1" icon="sort" />
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="roomType">
+            <div class="d-flex">
+              <span jhiTranslate="dugxApp.aircraft.roomType">Room Type</span>
+
+              <fa-icon class="p-1" icon="sort" />
+            </div>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (aircraft of filteredAircrafts; track trackId(aircraft)) {
+        <tr data-cy="entityTable">
+          <td><a [routerLink]="['/admin/aircraft', aircraft.id, 'seats']">{{ aircraft.id }}</a></td>
+          <td>{{ aircraft.name }}</td>
+          <td>{{ aircraft.totalRows }}</td>
+          <td>{{ aircraft.totalColumns }}</td>
+          <td>{{ aircraft.roomType }}</td>
+          <td class="text-end">
+            <div class="btn-group">
+              <a [routerLink]="['/admin/aircraft', aircraft.id, 'seats']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                <fa-icon icon="chair" />
+                <span class="d-none d-md-inline">Xem ghế</span>
+              </a>
+
+              <a [routerLink]="['/aircraft', aircraft.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                <fa-icon icon="pencil-alt" />
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+              </a>
+
+              <button type="submit" (click)="delete(aircraft)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times" />
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  } } @if (aircrafts().length > 0) {
+  <div>
+    <div class="d-flex justify-content-center">
+      <jhi-item-count [params]="{ page: page(), totalItems: totalItems(), itemsPerPage: itemsPerPage() }" />
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems()"
+        [page]="page()"
+        [pageSize]="itemsPerPage()"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="navigateToPage($event)"
+      />
+    </div>
+  </div>
+  }
+</div>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <!--
+        Du lieu san bay mac dinh (dung cho bo loc Tu / Den tren thanh tim kiem).
+        Dung preConditions de bo qua neu du lieu da ton tai san (vi du DB dev hien tai
+        da co san 3 dong nay do nhap thu cong truoc do), tranh insert trung code.
+    -->
+    <changeSet id="20260819150001-1" author="jhipster">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM airport WHERE code = 'HAN'</sqlCheck>
+        </preConditions>
+        <insert tableName="airport">
+            <column name="id" valueNumeric="1301"/>
+            <column name="code" value="HAN"/>
+            <column name="name" value="Sân bay Nội Bài"/>
+            <column name="city" value="Hà Nội"/>
+        </insert>
+        <insert tableName="airport">
+            <column name="id" valueNumeric="1302"/>
+            <column name="code" value="SGN"/>
+            <column name="name" value="Sân bay Tân Sơn Nhất"/>
+            <column name="city" value="TP. Hồ Chí Minh"/>
+        </insert>
+        <insert tableName="airport">
+            <column name="id" valueNumeric="1303"/>
+            <column name="code" value="DAD"/>
+            <column name="name" value="Sân bay Đà Nẵng"/>
+            <column name="city" value="Đà Nẵng"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

@@ -23,19 +23,24 @@ public class BookingDetail implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "quantity")
-    private Integer quantity;
-
     @Column(name = "price", precision = 21, scale = 2)
     private BigDecimal price;
+
+    /** So kg hanh ly ky gui tra truoc da mua kem theo ghe nay luc dat ve (co the null/0). */
+    @Column(name = "extra_baggage_kg")
+    private Integer extraBaggageKg;
+
+    /** Thu tu chang bay trong booking (0 = chang dau, 1 = chang tiep theo...), dung cho khu hoi/nhieu chang. Null cho booking cu truoc khi co tinh nang nay. */
+    @Column(name = "leg_index")
+    private Integer legIndex;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = { "user" }, allowSetters = true)
     private Booking booking;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "event" }, allowSetters = true)
-    private TicketType ticketType;
+    @JsonIgnoreProperties(value = { "showtime", "seat" }, allowSetters = true)
+    private ShowtimeSeat showtimeSeat;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -52,19 +57,6 @@ public class BookingDetail implements Serializable {
         this.id = id;
     }
 
-    public Integer getQuantity() {
-        return this.quantity;
-    }
-
-    public BookingDetail quantity(Integer quantity) {
-        this.setQuantity(quantity);
-        return this;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
     public BigDecimal getPrice() {
         return this.price;
     }
@@ -76,6 +68,22 @@ public class BookingDetail implements Serializable {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public Integer getExtraBaggageKg() {
+        return this.extraBaggageKg;
+    }
+
+    public void setExtraBaggageKg(Integer extraBaggageKg) {
+        this.extraBaggageKg = extraBaggageKg;
+    }
+
+    public Integer getLegIndex() {
+        return this.legIndex;
+    }
+
+    public void setLegIndex(Integer legIndex) {
+        this.legIndex = legIndex;
     }
 
     public Booking getBooking() {
@@ -91,16 +99,16 @@ public class BookingDetail implements Serializable {
         return this;
     }
 
-    public TicketType getTicketType() {
-        return this.ticketType;
+    public ShowtimeSeat getShowtimeSeat() {
+        return this.showtimeSeat;
     }
 
-    public void setTicketType(TicketType ticketType) {
-        this.ticketType = ticketType;
+    public void setShowtimeSeat(ShowtimeSeat showtimeSeat) {
+        this.showtimeSeat = showtimeSeat;
     }
 
-    public BookingDetail ticketType(TicketType ticketType) {
-        this.setTicketType(ticketType);
+    public BookingDetail showtimeSeat(ShowtimeSeat showtimeSeat) {
+        this.setShowtimeSeat(showtimeSeat);
         return this;
     }
 
@@ -128,7 +136,6 @@ public class BookingDetail implements Serializable {
     public String toString() {
         return "BookingDetail{" +
             "id=" + getId() +
-            ", quantity=" + getQuantity() +
             ", price=" + getPrice() +
             "}";
     }

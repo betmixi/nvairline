@@ -1,41 +1,262 @@
 <div class="hero">
-  <div class="container">
-    <div class="row align-items-center">
-      <div class="col-lg-6">
-        <span class="badge bg-warning text-dark px-3 py-2 mb-3"> 🎉 Discover Amazing Events </span>
+  <div class="home-container hero-inner">
+    <h1>CHÀO THU - NGÀN<br />ƯU ĐÃI</h1>
+    <button type="button" class="btn-hero-cta" routerLink="/events">Khám phá ngay</button>
+  </div>
+</div>
 
-        <h1>
-          Find The Best
-          <span class="text-warning">Events</span>
-          Around You
-        </h1>
+<div class="home-container">
+  <div class="search-card">
+    <div class="search-tabs">
+      @for (tab of bookingTabs; track tab.id) {
+      <button type="button" class="search-tab" [class.active]="activeTab() === tab.id" (click)="selectTab(tab.id)">{{ tab.label }}</button>
+      }
+    </div>
 
-        <p class="mt-3">Explore concerts, conferences, workshops, exhibitions and thousands of exciting events happening every day.</p>
+    @if (activeTab() === 'mua-ve') {
+    <div class="search-panel">
+      <div class="trip-type-row">
+        <button type="button" class="trip-pill" [class.active]="tripType() === 'round-trip'" (click)="selectTripType('round-trip')">
+          Khứ hồi
+        </button>
+        <button type="button" class="trip-pill" [class.active]="tripType() === 'one-way'" (click)="selectTripType('one-way')">
+          Một chiều
+        </button>
+        <button type="button" class="trip-pill" [class.active]="tripType() === 'multi-city'" (click)="selectTripType('multi-city')">
+          Nhiều chặng
+        </button>
+      </div>
 
-        <div class="search-box mt-4">
-          <input class="form-control" placeholder="Search events..." />
+      <div class="search-fields-row">
+        <div
+          class="airport-field"
+          [class.active]="openAirportDropdown === 'departure'"
+          (click)="toggleAirportDropdown('departure', $event); $event.stopPropagation()"
+        >
+          <label>Từ</label>
+          <div class="airport-display">
+            @if (departureAirportPreview(); as airport) {
+            <span class="airport-code">{{ airport.code }}</span>
+            <span class="airport-city-pill">{{ airport.city }}, Việt Nam</span>
+            } @else {
+            <span class="airport-placeholder">Chọn điểm đi</span>
+            }
+          </div>
 
-          <button class="btn btn-warning">Search</button>
+          @if (departureAirportPreview()) {
+          <button type="button" class="field-clear-btn" title="Bỏ chọn điểm đi" (click)="clearDepartureAirport($event)">✕</button>
+          } @if (openAirportDropdown === 'departure') {
+          <div class="airport-dropdown" (click)="$event.stopPropagation()">
+            <div class="airport-dropdown-search">
+              <span class="search-icon">🔍</span>
+              <input type="text" placeholder="Tìm kiếm" [(ngModel)]="departureSearchText" (click)="$event.stopPropagation()" autofocus />
+            </div>
+            <div class="airport-dropdown-list">
+              @for (airport of filteredDepartureAirports(); track airport.id) {
+              <button
+                type="button"
+                class="airport-dropdown-item"
+                [class.active]="airport.id === searchDepartureAirportId"
+                (click)="selectDepartureAirport(airport.id)"
+              >
+                <div class="airport-dropdown-main">
+                  <span class="airport-dropdown-city">{{ airport.city }}</span>
+                  <span class="airport-dropdown-country">Việt Nam</span>
+                </div>
+                <div class="airport-dropdown-side">
+                  <span class="airport-dropdown-code-pill">{{ airport.code }}</span>
+                  <span class="airport-dropdown-sub">{{ airport.city }} ({{ airport.code }})</span>
+                </div>
+              </button>
+              } @empty {
+              <div class="airport-dropdown-empty">Không tìm thấy sân bay phù hợp</div>
+              }
+            </div>
+          </div>
+          }
         </div>
+
+        <button type="button" class="swap-btn" (click)="swapAirports()" title="Hoán đổi điểm đi / điểm đến">⇄</button>
+
+        <div
+          class="airport-field"
+          [class.active]="openAirportDropdown === 'arrival'"
+          (click)="toggleAirportDropdown('arrival', $event); $event.stopPropagation()"
+        >
+          <label>Đến</label>
+          <div class="airport-display">
+            @if (arrivalAirportPreview(); as airport) {
+            <span class="airport-code">{{ airport.code }}</span>
+            <span class="airport-city-pill">{{ airport.city }}, Việt Nam</span>
+            } @else {
+            <span class="airport-placeholder">Chọn điểm đến</span>
+            }
+          </div>
+
+          @if (arrivalAirportPreview()) {
+          <button type="button" class="field-clear-btn" title="Bỏ chọn điểm đến" (click)="clearArrivalAirport($event)">✕</button>
+          } @if (openAirportDropdown === 'arrival') {
+          <div class="airport-dropdown" (click)="$event.stopPropagation()">
+            <div class="airport-dropdown-search">
+              <span class="search-icon">🔍</span>
+              <input type="text" placeholder="Tìm kiếm" [(ngModel)]="arrivalSearchText" (click)="$event.stopPropagation()" autofocus />
+            </div>
+            <div class="airport-dropdown-list">
+              @for (airport of filteredArrivalAirports(); track airport.id) {
+              <button
+                type="button"
+                class="airport-dropdown-item"
+                [class.active]="airport.id === searchArrivalAirportId"
+                (click)="selectArrivalAirport(airport.id)"
+              >
+                <div class="airport-dropdown-main">
+                  <span class="airport-dropdown-city">{{ airport.city }}</span>
+                  <span class="airport-dropdown-country">Việt Nam</span>
+                </div>
+                <div class="airport-dropdown-side">
+                  <span class="airport-dropdown-code-pill">{{ airport.code }}</span>
+                  <span class="airport-dropdown-sub">{{ airport.city }} ({{ airport.code }})</span>
+                </div>
+              </button>
+              } @empty {
+              <div class="airport-dropdown-empty">Không tìm thấy sân bay phù hợp</div>
+              }
+            </div>
+          </div>
+          }
+        </div>
+
+        <div
+          class="date-field date-range-field"
+          [class.active]="showDatePicker"
+          (click)="toggleDatePicker($event); $event.stopPropagation()"
+        >
+          <label>📅 {{ tripType() === 'round-trip' ? 'Ngày đi - Ngày về' : 'Ngày đi' }}</label>
+          <div class="airport-display">
+            @if (dateRangeLabel()) {
+            <span class="airport-code date-range-value">{{ dateRangeLabel() }}</span>
+            } @else {
+            <span class="airport-placeholder">{{ tripType() === 'round-trip' ? 'dd/mm/yyyy - dd/mm/yyyy' : 'dd/mm/yyyy' }}</span>
+            }
+          </div>
+
+          @if (dateRangeLabel()) {
+          <button type="button" class="field-clear-btn" title="Bỏ chọn ngày" (click)="clearDates($event)">✕</button>
+          } @if (showDatePicker) {
+          <div class="date-range-dropdown" (click)="$event.stopPropagation()">
+            <ngb-datepicker [displayMonths]="2" [dayTemplate]="dayTpl" outsideDays="hidden" (dateSelect)="onDateSelect($event)" />
+            <ng-template #dayTpl let-date>
+              <span class="custom-day" [class.range]="isRange(date)" [class.inside]="isInside(date)"> {{ date.day }} </span>
+            </ng-template>
+          </div>
+          }
+        </div>
+
+        <button type="button" class="btn-search" (click)="searchFlights()">🔎 Tìm chuyến bay</button>
       </div>
 
-      <div class="col-lg-6 text-center">
-        <img class="hero-image" src="https://images.unsplash.com/photo-1511578314322-379afb476865?w=900" />
+      @if (searchErrorMessage) {
+      <div class="search-error-message">⚠️ {{ searchErrorMessage }}</div>
+      }
+    </div>
+    } @else if (activeTab() === 'quan-ly') {
+    <div class="search-panel">
+      @if (!accountService.isAuthenticated()) {
+      <div class="manage-booking-result manage-booking-not-found">🔒 Vui lòng <a routerLink="/login">đăng nhập</a> để xem vé đã đặt.</div>
+      } @else {
+      <div class="search-fields-row">
+        <div class="airport-field">
+          <label>Mã đặt chỗ/số vé điện tử</label>
+          <input
+            type="text"
+            class="airport-input"
+            placeholder="Nhập mã vé để lọc (bỏ trống để xem tất cả)"
+            [(ngModel)]="bookingSearchCode"
+          />
+        </div>
+        <a routerLink="/my-tickets" class="btn-search">🎫 Xem tất cả vé của tôi</a>
       </div>
+
+      @if (bookingLoading) {
+      <div class="manage-booking-result">Đang tải vé của bạn...</div>
+      } @else if (filteredBookingTickets.length === 0) {
+      <div class="manage-booking-result manage-booking-not-found">
+        {{ bookingSearchCode.trim() ? 'Không tìm thấy vé phù hợp với mã đã nhập.' : 'Bạn chưa có vé nào.' }}
+      </div>
+      } @else {
+      <div class="manage-booking-list">
+        @for (ticket of filteredBookingTickets; track ticket.id) {
+        <a routerLink="/my-tickets" class="manage-booking-item">
+          <div class="manage-booking-body">
+            <strong class="manage-booking-title">{{ ticket.eventTitle }}</strong>
+            <div class="manage-booking-meta">
+              <span class="manage-booking-seat">💺 Ghế {{ ticket.seatLabel }}</span>
+              <span class="manage-booking-code">{{ ticket.qrCode }}</span>
+            </div>
+          </div>
+          <span class="manage-booking-status" [class.is-used]="ticket.checkedIn" [class.is-cancelled]="ticket.status === 'CANCELLED'">
+            {{ ticket.checkedIn ? 'Đã check-in' : ticket.status }}
+          </span>
+          <span class="manage-booking-arrow">›</span>
+        </a>
+        }
+      </div>
+      } }
+    </div>
+    }
+  </div>
+
+  <div class="quick-services-row">
+    <a class="quick-service" routerLink="/baggage">
+      <span class="quick-service-icon">🧳</span>
+      <span class="quick-service-label">Hành lý trả trước</span>
+    </a>
+    <a class="quick-service" routerLink="/upgrade-seat">
+      <span class="quick-service-icon">💺</span>
+      <span class="quick-service-label">Nâng hạng ghế</span>
+    </a>
+    <a class="quick-service" routerLink="/shopping">
+      <span class="quick-service-icon">🛍️</span>
+      <span class="quick-service-label">Mua sắm</span>
+    </a>
+    <a class="quick-service" routerLink="/hotel-tour">
+      <span class="quick-service-icon">🏨</span>
+      <span class="quick-service-label">Khách sạn &amp; Tour</span>
+    </a>
+    <a class="quick-service" routerLink="/insurance">
+      <span class="quick-service-icon">🛡️</span>
+      <span class="quick-service-label">Bảo hiểm</span>
+    </a>
+    <a class="quick-service" routerLink="/other-services">
+      <span class="quick-service-icon">🧩</span>
+      <span class="quick-service-label">Các dịch vụ khác</span>
+    </a>
+  </div>
+</div>
+
+<div class="home-container">
+  <div class="flash-news">
+    <span class="flash-news-badge">⚡ Tin nhanh</span>
+    <span class="flash-news-headline">{{ currentNews().headline }}</span>
+    <span class="flash-news-date">{{ currentNews().date }}</span>
+    <div class="flash-news-nav">
+      <button type="button" class="flash-news-btn" (click)="prevNews()" title="Tin trước">‹</button>
+      <span class="flash-news-page">{{ currentNewsIndex() + 1 }} / {{ flashNews.length }}</span>
+      <button type="button" class="flash-news-btn" (click)="nextNews()" title="Tin sau">›</button>
     </div>
   </div>
 </div>
 
-<div class="container py-5">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>🔥 Popular Events</h2>
-
-    <button class="btn btn-outline-primary" routerLink="/events">View All</button>
-  </div>
-
-  <div class="row g-4">
-    <div class="col-lg-4 col-md-6" *ngFor="let event of events">
-      <jhi-event-card [event]="event" />
+<div class="home-container">
+  <div class="spread-banner">
+    <div class="spread-text">
+      <h2>Lan tỏa <span class="text-gold">bản sắc Việt</span></h2>
+      <p>
+        Mỗi hành trình, mỗi câu chuyện bạn kể có thể truyền cảm hứng cho hàng ngàn người yêu Việt Nam. Hãy tham gia chương trình bằng cách
+        đăng nhập vào tài khoản Lotusmiles.
+      </p>
+      <button type="button" class="btn-spread-cta" routerLink="/account/register">Đăng ký hội viên</button>
     </div>
+    <img src="/content/images/anhmaybay.jpg" alt="Vietnam Airlines" class="spread-image" />
   </div>
 </div>

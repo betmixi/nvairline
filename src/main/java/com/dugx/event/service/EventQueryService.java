@@ -3,12 +3,16 @@ package com.dugx.event.service;
 import com.dugx.event.domain.*; // for static metamodels
 import com.dugx.event.domain.Event;
 import com.dugx.event.repository.EventRepository;
-import com.dugx.event.repository.TicketTypeRepository;
+import com.dugx.event.repository.ShowtimeRepository;
 import com.dugx.event.service.criteria.EventCriteria;
 import com.dugx.event.service.dto.EventDTO;
+import com.dugx.event.service.dto.ShowtimeDTO;
 import com.dugx.event.service.mapper.EventMapper;
-import com.dugx.event.service.mapper.TicketTypeMapper;
+import com.dugx.event.service.mapper.ShowtimeMapper;
 import jakarta.persistence.criteria.JoinType;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -33,19 +37,19 @@ public class EventQueryService extends QueryService<Event> {
     private final EventRepository eventRepository;
 
     private final EventMapper eventMapper;
-    private final TicketTypeRepository ticketTypeRepository;
-    private final TicketTypeMapper ticketTypeMapper;
+    private final ShowtimeRepository showtimeRepository;
+    private final ShowtimeMapper showtimeMapper;
 
     public EventQueryService(
         EventRepository eventRepository,
         EventMapper eventMapper,
-        TicketTypeRepository ticketTypeRepository,
-        TicketTypeMapper ticketTypeMapper
+        ShowtimeRepository showtimeRepository,
+        ShowtimeMapper showtimeMapper
     ) {
         this.eventRepository = eventRepository;
         this.eventMapper = eventMapper;
-        this.ticketTypeRepository = ticketTypeRepository;
-        this.ticketTypeMapper = ticketTypeMapper;
+        this.showtimeRepository = showtimeRepository;
+        this.showtimeMapper = showtimeMapper;
     }
 
     /**
@@ -58,10 +62,18 @@ public class EventQueryService extends QueryService<Event> {
     public Page<EventDTO> findByCriteria(EventCriteria criteria, Pageable page) {
         LOG.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Event> specification = createSpecification(criteria);
-        return eventRepository.findAll(specification, page).map(event -> {
+        Page<Event> events = eventRepository.findAll(specification, page);
+
+        List<Long> eventIds = events.getContent().stream().map(Event::getId).toList();
+        Map<Long, List<ShowtimeDTO>> showtimesByEventId = showtimeRepository
+            .findByEvent_IdIn(eventIds)
+            .stream()
+            .collect(Collectors.groupingBy(s -> s.getEvent().getId(), Collectors.mapping(showtimeMapper::toDto, Collectors.toList())));
+
+        return events.map(event -> {
             EventDTO dto = eventMapper.toDto(event);
 
-            dto.setTicketTypes(ticketTypeRepository.findByEventId(event.getId()).stream().map(ticketTypeMapper::toDto).toList());
+            dto.setShowtimes(showtimesByEventId.getOrDefault(event.getId(), List.of()));
 
             return dto;
         });
@@ -86,14 +98,15 @@ public class EventQueryService extends QueryService<Event> {
      */
     protected Specification<Event> createSpecification(EventCriteria criteria) {
         Specification<Event> specification = Specification.unrestricted();
-        //        specification = specification.and((root, query, builder) -> {
-        //            if (Long.class != query.getResultType()) {
-        //                root.fetch(Event_.category, JoinType.LEFT);
-        //                root.fetch(Event_.address, JoinType.LEFT);
-        //                root.fetch(Event_.organizer, JoinType.LEFT);
-        //            }
-        //            return null;
-        //        });
+        specification = specification.and((root, query, builder) -> {
+            if (Long.class != query.getResultType()) {
+                root.fetch(Event_.category, JoinType.LEFT);
+                root.fetch(Event_.address, JoinType.LEFT);
+                root.fetch(Event_.departureAirport, JoinType.LEFT);
+                root.fetch(Event_.arrivalAirport, JoinType.LEFT);
+            }
+            return null;
+        });
         if (criteria != null) {
             // This has to be called first, because the distinct method returns null
             specification = specification.and(
@@ -106,9 +119,17 @@ public class EventQueryService extends QueryService<Event> {
                     buildRangeSpecification(criteria.getEndTime(), Event_.endTime),
                     buildSpecification(criteria.getStatus(), Event_.status),
                     buildRangeSpecification(criteria.getCreatedDate(), Event_.createdDate),
+                    buildSpecification(criteria.getSupportsOneWay(), Event_.supportsOneWay),
+                    buildSpecification(criteria.getSupportsRoundTrip(), Event_.supportsRoundTrip),
+                    buildSpecification(criteria.getSupportsMultiCity(), Event_.supportsMultiCity),
                     buildSpecification(criteria.getCategoryId(), root -> root.join(Event_.category, JoinType.LEFT).get(Category_.id)),
                     buildSpecification(criteria.getAddressId(), root -> root.join(Event_.address, JoinType.LEFT).get(Address_.id)),
-                    buildSpecification(criteria.getOrganizerId(), root -> root.join(Event_.organizer, JoinType.LEFT).get(Organizer_.id))
+                    buildSpecification(criteria.getDepartureAirportId(), root ->
+                        root.join(Event_.departureAirport, JoinType.LEFT).get(Airport_.id)
+                    ),
+                    buildSpecification(criteria.getArrivalAirportId(), root ->
+                        root.join(Event_.arrivalAirport, JoinType.LEFT).get(Airport_.id)
+                    )
                 )
             );
         }

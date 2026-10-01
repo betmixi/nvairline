@@ -28,7 +28,7 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label" for="field_event" jhiTranslate="dugxApp.eventImage.event">Event</label>
+          <label class="form-label" for="field_event" jhiTranslate="dugxApp.eventImage.event">Chuyến bay</label>
           <select class="form-control" id="field_event" data-cy="event" name="event" formControlName="event" [compareWith]="compareEvent">
             <option [ngValue]="null"></option>
             @for (eventOption of eventsSharedCollection(); track $index) {

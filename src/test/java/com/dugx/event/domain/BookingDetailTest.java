@@ -2,7 +2,7 @@ package com.dugx.event.domain;
 
 import static com.dugx.event.domain.BookingDetailTestSamples.*;
 import static com.dugx.event.domain.BookingTestSamples.*;
-import static com.dugx.event.domain.TicketTypeTestSamples.*;
+import static com.dugx.event.domain.ShowtimeSeatTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.dugx.event.web.rest.TestUtil;
@@ -37,14 +37,14 @@ class BookingDetailTest {
     }
 
     @Test
-    void ticketTypeTest() {
+    void showtimeSeatTest() {
         BookingDetail bookingDetail = getBookingDetailRandomSampleGenerator();
-        TicketType ticketTypeBack = getTicketTypeRandomSampleGenerator();
+        ShowtimeSeat showtimeSeatBack = getShowtimeSeatRandomSampleGenerator();
 
-        bookingDetail.setTicketType(ticketTypeBack);
-        assertThat(bookingDetail.getTicketType()).isEqualTo(ticketTypeBack);
+        bookingDetail.setShowtimeSeat(showtimeSeatBack);
+        assertThat(bookingDetail.getShowtimeSeat()).isEqualTo(showtimeSeatBack);
 
-        bookingDetail.ticketType(null);
-        assertThat(bookingDetail.getTicketType()).isNull();
+        bookingDetail.showtimeSeat(null);
+        assertThat(bookingDetail.getShowtimeSeat()).isNull();
     }
 }

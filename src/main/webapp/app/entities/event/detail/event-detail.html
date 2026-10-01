@@ -2,7 +2,7 @@
   <div class="col-8">
     @if (event(); as eventRef) {
     <div>
-      <h2 data-cy="eventDetailsHeading"><span jhiTranslate="dugxApp.event.detail.title">Event</span></h2>
+      <h2 data-cy="eventDetailsHeading"><span jhiTranslate="dugxApp.event.detail.title">Chuyến bay</span></h2>
 
       <hr />
 
@@ -56,14 +56,6 @@
           @if (event()!.address) {
           <div>
             <a [routerLink]="['/address', event()!.address?.id, 'view']">{{ eventRef.address?.location }}</a>
-          </div>
-          }
-        </dd>
-        <dt><span jhiTranslate="dugxApp.event.organizer">Organizer</span></dt>
-        <dd>
-          @if (event()!.organizer) {
-          <div>
-            <a [routerLink]="['/organizer', event()!.organizer?.id, 'view']">{{ eventRef.organizer?.companyName }}</a>
           </div>
           }
         </dd>

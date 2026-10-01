@@ -2,158 +2,384 @@
 @import 'bootstrap/scss/variables';
 
 /* ==========================================================================
-Navbar
+Sidebar (thay the top navbar CGV truoc day), phong theo bo cuc sidebar trai
+cua vietnamairlines.com: nen navy-teal dam, menu doc icon + nhan, khoi tai
+khoan/Lotusmiles co dinh o day sidebar.
 ========================================================================== */
 
-.navbar {
-  background: linear-gradient(90deg, #2563eb, #4f46e5);
-  padding: 12px 30px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+:host {
+  display: flex;
+  flex: 0 0 var(--sidebar-width);
+  min-width: 0;
+  --sidebar-width: 240px;
+  --sidebar-width-collapsed: 76px;
+  transition: flex-basis 0.25s;
+}
+
+.sidebar {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, #0f6b78 0%, #0a4f5c 100%);
+  color: #fff;
   position: sticky;
   top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
   z-index: 999;
 }
 
-.navbar-brand {
+:host(.is-collapsed) {
+  flex: 0 0 var(--sidebar-width-collapsed);
+}
+
+/* ================= HEADER / BRAND ================= */
+
+.sidebar-header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  color: white !important;
-  font-size: 24px;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 18px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff !important;
+  text-decoration: none;
   font-weight: 700;
+  font-size: 15.5px;
+  letter-spacing: -0.2px;
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
-.logo-img {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #ffd43b, #ff9800);
-  box-shadow: 0 8px 18px rgba(255, 212, 59, 0.35);
+.brand-icon {
+  font-size: 20px;
+  flex: 0 0 auto;
 }
 
-.navbar-title {
-  font-weight: 700;
+.brand-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.navbar-version {
+:host(.is-collapsed) .brand-text {
   display: none;
 }
 
-.navbar-nav {
+.collapse-toggle {
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-size: 15px;
+  line-height: 1;
+  flex: 0 0 auto;
   align-items: center;
+  justify-content: center;
+  transition: 0.2s;
 }
 
-.nav-link {
-  color: white !important;
-  padding: 10px 18px !important;
-  border-radius: 12px;
-  transition: 0.3s;
-  font-weight: 500;
+.collapse-toggle:hover {
+  background: #f9b000;
+  color: #1a1200;
+  border-color: #f9b000;
 }
 
-.nav-link:hover {
-  background: rgba(255, 255, 255, 0.18);
+.mobile-toggle {
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-size: 18px;
+}
+
+/* ================= NAV LIST ================= */
+
+.sidebar-body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0 20px;
+}
+
+.nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 20px;
+  color: rgba(255, 255, 255, 0.85) !important;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14.5px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: 0.2s;
+  border-left: 3px solid transparent;
+}
+
+.nav-item-link:hover {
+  background: rgba(249, 176, 0, 0.12);
+  color: #f9b000 !important;
+}
+
+li.active > .nav-item-link {
+  background: rgba(249, 176, 0, 0.16);
+  color: #f9b000 !important;
+  border-left-color: #f9b000;
+}
+
+.nav-icon {
+  font-size: 18px;
+  flex: 0 0 22px;
+  text-align: center;
+}
+
+.nav-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+:host(.is-collapsed) .nav-label {
+  display: none;
+}
+
+:host(.is-collapsed) .nav-item-link {
+  justify-content: center;
+  padding: 12px 0;
+}
+
+/* ================= STAFF / ADMIN SECTION ================= */
+
+.staff-section,
+.admin-section {
+  margin-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 8px;
+}
+
+/* ================= LOTUSMILES / ACCOUNT CARD ================= */
+
+.lotusmiles-card {
+  margin: 10px 14px 16px;
+  padding: 14px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(249, 176, 0, 0.16), rgba(249, 176, 0, 0.05));
+  border: 1px solid rgba(249, 176, 0, 0.3);
+}
+
+:host(.is-collapsed) .lotusmiles-card {
+  padding: 10px 6px;
+  margin: 10px 8px 16px;
+}
+
+.lm-title {
+  font-weight: 800;
+  color: #f9b000;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+:host(.is-collapsed) .lm-title,
+:host(.is-collapsed) .lm-sub,
+:host(.is-collapsed) .lm-actions,
+:host(.is-collapsed) .lm-account-info,
+:host(.is-collapsed) .lm-account-chevron,
+:host(.is-collapsed) .lm-links {
+  display: none;
+}
+
+.lm-sub {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  margin: 4px 0 10px;
+}
+
+.lm-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.btn-lm-primary,
+.btn-lm-secondary {
+  display: block;
+  text-align: center;
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-weight: 700;
+  font-size: 13px;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-lm-primary {
+  background: linear-gradient(135deg, #f9b000, #ffcb4d);
+  color: #1a1200 !important;
+}
+
+.btn-lm-secondary {
+  background: transparent;
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.lm-account {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.15s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+  }
+}
+
+.lm-account-chevron {
+  flex: 0 0 auto;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  transition: transform 0.2s;
+
+  &.open {
+    transform: rotate(180deg);
+  }
+}
+
+.lm-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex: 0 0 auto;
+}
+
+.lm-avatar-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.12);
+  color: #f9b000;
+}
+
+.lm-account-info {
+  min-width: 0;
+}
+
+.lm-account-name {
+  font-weight: 700;
+  color: #fff;
+  font-size: 13.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lm-account-sub {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.lm-links {
+  list-style: none;
+  margin: 12px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.lm-links li a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  font-size: 13px;
+  padding: 6px 2px;
+  cursor: pointer;
+}
+
+.lm-links li a:hover {
+  color: #f9b000;
+}
+
+/* ================= NEO CHAT BUTTON ================= */
+
+.neo-chat-btn {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  z-index: 998;
+  border: none;
+  border-radius: 30px;
+  padding: 12px 20px;
+  font-weight: 700;
+  font-size: 13.5px;
+  color: #1a1200;
+  background: linear-gradient(135deg, #f9b000, #ffcb4d);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+.neo-chat-btn:hover {
   transform: translateY(-2px);
 }
 
-.dropdown-menu {
-  border: none;
-  border-radius: 18px;
-  padding: 10px;
-  margin-top: 15px;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
-}
+/* ================= RESPONSIVE ================= */
 
-.dropdown-item {
-  border-radius: 10px;
-  padding: 12px 18px;
-  transition: 0.25s;
-}
-
-.dropdown-item:hover {
-  background: #2563eb;
-  color: white;
-}
-
-.dropdown-item fa-icon {
-  margin-right: 8px;
-}
-
-.profile-image {
-  width: 38px;
-  height: 38px;
-  object-fit: cover;
-  border: 2px solid white;
-}
-
-.navbar-toggler {
-  border: none;
-  color: white;
-}
-
-.navbar-toggler:focus {
-  box-shadow: none;
-}
-
-.active > .nav-link,
-.nav-link.active {
-  background: rgba(255, 255, 255, 0.18);
-}
-
-@media (max-width: 991px) {
-  .navbar {
-    padding: 15px;
+@media (max-width: 768px) {
+  .sidebar {
+    position: static;
+    height: auto;
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    flex-basis: auto;
   }
 
-  .dropdown-menu {
-    margin-top: 5px;
+  :host(.is-collapsed) .sidebar {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    flex-basis: auto;
   }
 
-  .nav-link {
-    margin: 5px 0;
+  .sidebar-header {
+    padding: 12px 16px;
   }
-}
-.small-arrow {
-  font-size: 10px;
-  margin-left: 6px;
-}
 
-.dropdown-toggle::after {
-  display: none !important;
-}
+  .collapse-toggle {
+    display: none !important;
+  }
 
-.modern-dropdown {
-  min-width: 230px;
-  border-radius: 16px;
-  padding: 10px;
-}
+  .sidebar-body {
+    padding: 4px 0 10px;
+  }
 
-.modern-dropdown .dropdown-item {
-  padding: 10px 14px;
-  border-radius: 10px;
-}
-
-.modern-dropdown .dropdown-item:hover {
-  background: #2563eb;
-  color: #fff;
-}
-.nav-link {
-  position: relative;
-}
-
-.nav-link::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  bottom: 6px;
-  transform: translateX(-50%);
-  width: 0;
-  height: 2px;
-  background: #fff;
-  transition: 0.3s;
-  pointer-events: none;
-}
-
-.nav-link:hover::after {
-  width: 70%;
+  .neo-chat-btn {
+    left: 10px;
+    bottom: 10px;
+    padding: 10px 14px;
+    font-size: 12px;
+  }
 }

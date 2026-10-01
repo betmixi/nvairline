@@ -1,6 +1,19 @@
 <div class="event-card">
-  <a [routerLink]="['/events', event.id]">
-    <img class="event-image" [src]="event.banner || 'content/images/logo-jhipster.png'" [alt]="event.title" />
+  <a [routerLink]="['/events', event.id]" class="card-media-link">
+    @if (hasRoute()) {
+    <div class="route-banner">
+      <div class="route-line">
+        <span class="airport-code">{{ getDepartureCode() }}</span>
+        <span class="route-arrow">✈</span>
+        <span class="airport-code">{{ getArrivalCode() }}</span>
+      </div>
+      <div class="route-cities">{{ getDepartureCity() }} → {{ getArrivalCity() }}</div>
+    </div>
+    } @if (event.banner) {
+    <img class="event-image" [src]="event.banner" [alt]="event.title" />
+    } @else {
+    <div class="event-image event-image-placeholder">✈️</div>
+    }
   </a>
 
   <div class="p-4">
@@ -10,11 +23,9 @@
       <a class="event-title-link" [routerLink]="['/events', event.id]"> {{ event.title }} </a>
     </h4>
 
-    <p class="organizer text-muted mb-1">👤 {{ event.organizer?.companyName || 'Organizer' }}</p>
-
     <p class="text-muted mb-1">📍 {{ getLocation() }}</p>
 
-    <p class="text-muted">🗓 {{ event.startTime?.format('DD/MM/YYYY HH:mm') }}</p>
+    <p class="text-muted">🛫 {{ event.startTime?.format('DD/MM/YYYY HH:mm') }}</p>
 
     <div class="price-row">
       <div class="price">{{ getPrice() }}</div>

@@ -18,15 +18,11 @@
 
   } @else {
 
-  <div class="banner-wrap">
-    <img class="banner" [src]="event.banner || 'content/images/logo-jhipster.png'" [alt]="event.title" />
-
-    <div class="banner-overlay">
-      @if (event.category) {
-      <span class="category-badge">{{ event.category.name }}</span>
-      }
-      <h1>{{ event.title }}</h1>
-    </div>
+  <div class="event-header-plain">
+    @if (event.category) {
+    <span class="category-badge">{{ event.category.name }}</span>
+    }
+    <h1>{{ event.title }}</h1>
   </div>
 
   <div class="detail-grid">
@@ -49,20 +45,110 @@
             <strong>{{ event.address.location }}</strong>
           </div>
         </div>
-        } @if (event.organizer) {
-        <div class="meta-item">
-          <span class="meta-icon">👤</span>
-          <div>
-            <strong>{{ event.organizer.companyName }}</strong>
-            <div class="text-muted small">Đơn vị tổ chức</div>
-          </div>
-        </div>
         }
       </div>
 
       <section class="description-section">
         <h4>Giới thiệu sự kiện</h4>
         <p class="description-text">{{ event.description || 'Chưa có mô tả cho sự kiện này.' }}</p>
+      </section>
+
+      <!-- ĐÁNH GIÁ -->
+      <section class="review-section">
+        <div class="review-head">
+          <h4>Đánh giá</h4>
+
+          @if (averageRating !== null) {
+          <div class="avg-rating">
+            <span class="avg-stars">★</span>
+            <strong>{{ averageRating | number: '1.1-1' }}</strong>
+            <span class="text-muted">/ 5 · {{ reviews.length }} đánh giá</span>
+          </div>
+          }
+        </div>
+
+        <!-- Form viết đánh giá -->
+        @if (isLoggedIn) {
+        <div class="review-form">
+          <div class="rating-picker">
+            <span class="rating-label">Chấm điểm:</span>
+            @for (star of [1, 2, 3, 4, 5]; track star) {
+            <button
+              type="button"
+              class="star-btn"
+              [class.active]="star <= newRating"
+              (click)="newRating = star"
+              [attr.aria-label]="star + ' sao'"
+            >
+              ★
+            </button>
+            }
+          </div>
+
+          <textarea
+            class="form-control review-input"
+            rows="3"
+            placeholder="Chia sẻ cảm nhận của bạn về sự kiện này..."
+            [(ngModel)]="newComment"
+            [disabled]="isSubmittingReview"
+          ></textarea>
+
+          @if (reviewError) {
+          <div class="alert alert-danger mt-2 mb-0">{{ reviewError }}</div>
+          } @if (reviewSuccess) {
+          <div class="alert alert-success mt-2 mb-0">Cảm ơn bạn đã đánh giá!</div>
+          }
+
+          <div class="review-form-actions">
+            <button class="btn btn-primary review-submit" [disabled]="isSubmittingReview" (click)="submitReview()">
+              {{ isSubmittingReview ? 'Đang gửi...' : editingReviewId ? 'Lưu thay đổi' : 'Gửi đánh giá' }}
+            </button>
+            @if (editingReviewId) {
+            <button class="btn btn-outline-secondary" [disabled]="isSubmittingReview" (click)="cancelEditReview()">Huỷ</button>
+            }
+          </div>
+        </div>
+        } @else {
+        <p class="text-muted login-hint"><a routerLink="/login">Đăng nhập</a> để đánh giá sự kiện này.</p>
+        }
+
+        <!-- Danh sách đánh giá -->
+        @if (reviews.length === 0) {
+        <p class="text-muted no-review">Chưa có đánh giá nào cho sự kiện này.</p>
+        } @else {
+        <div class="review-list">
+          @for (review of reviews; track review.id) {
+          <div class="review-item">
+            <div class="review-item-head">
+              <strong class="reviewer">{{ reviewerName(review) }}</strong>
+              <span class="review-stars">
+                @for (star of [1, 2, 3, 4, 5]; track star) {
+                <span [class.filled]="star <= review.rating">★</span>
+                }
+              </span>
+            </div>
+            <p class="review-comment">{{ review.comment }}</p>
+            <div class="review-item-foot">
+              <small class="text-muted">{{ review.createdDate | date: 'dd/MM/yyyy HH:mm' }}</small>
+
+              @if (isOwnReview(review)) {
+              <div class="review-own-actions">
+                <button type="button" class="review-edit-btn" (click)="startEditReview(review)">Sửa</button>
+                <button type="button" class="review-delete-btn" [disabled]="isDeletingReview" (click)="deleteReview(review)">Xoá</button>
+              </div>
+              }
+            </div>
+
+            @if (review.reply) {
+            <div class="review-reply">
+              <strong>Phản hồi từ Vietnam Airlines:</strong>
+              <p>{{ review.reply }}</p>
+            </div>
+            }
+          </div>
+          }
+        </div>
+        }
       </section>
     </div>
 
@@ -77,18 +163,29 @@
           {{ hasAvailableTickets ? 'Mua vé ngay' : 'Đã hết vé' }}
         </button>
 
-        @if (event.ticketTypes?.length) {
+        <button
+          class="favorite-btn"
+          [class.is-favorited]="isFavorited"
+          [disabled]="isTogglingFavorite"
+          (click)="toggleFavorite()"
+          [attr.aria-pressed]="isFavorited"
+        >
+          <span class="heart">{{ isFavorited ? '❤' : '🤍' }}</span>
+          {{ isFavorited ? 'Đã lưu' : 'Lưu sự kiện' }}
+        </button>
+
+        @if (upcomingShowtimes.length) {
 
         <div class="ticket-preview">
-          <div class="ticket-preview-title">Loại vé</div>
+          <div class="ticket-preview-title">Giờ bay</div>
 
-          @for (ticket of event.ticketTypes; track ticket.id) {
+          @for (showtime of upcomingShowtimes; track showtime.id) {
           <div class="ticket-preview-row">
             <div>
-              <div class="ticket-name">{{ ticket.name }}</div>
-              <div class="text-muted small">{{ (ticket.remaining ?? 0) > 0 ? (ticket.remaining) + ' vé còn lại' : 'Hết vé' }}</div>
+              <div class="ticket-name">{{ $any(showtime.startTime) | date: 'HH:mm dd/MM' }}</div>
+              <div class="text-muted small">{{ showtime.aircraft?.name }}</div>
             </div>
-            <strong>{{ ticket.price | number }} đ</strong>
+            <strong>{{ showtime.basePrice | number }} đ</strong>
           </div>
           }
         </div>

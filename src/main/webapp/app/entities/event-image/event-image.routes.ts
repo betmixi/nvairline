@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 
 import { ASC } from 'app/config/navigation.constants';
 import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
+import { Authority } from 'app/shared/jhipster/constants';
 
 import EventImageResolve from './route/event-image-routing-resolve.service';
 
@@ -11,6 +12,7 @@ const eventImageRoute: Routes = [
     loadComponent: () => import('./list/event-image').then(m => m.EventImage),
     data: {
       defaultSort: `id,${ASC}`,
+      authorities: [Authority.ADMIN],
     },
     canActivate: [UserRouteAccessService],
   },
@@ -20,6 +22,7 @@ const eventImageRoute: Routes = [
     resolve: {
       eventImage: EventImageResolve,
     },
+    data: { authorities: [Authority.ADMIN] },
     canActivate: [UserRouteAccessService],
   },
   {
@@ -28,6 +31,7 @@ const eventImageRoute: Routes = [
     resolve: {
       eventImage: EventImageResolve,
     },
+    data: { authorities: [Authority.ADMIN] },
     canActivate: [UserRouteAccessService],
   },
   {
@@ -36,6 +40,7 @@ const eventImageRoute: Routes = [
     resolve: {
       eventImage: EventImageResolve,
     },
+    data: { authorities: [Authority.ADMIN] },
     canActivate: [UserRouteAccessService],
   },
 ];

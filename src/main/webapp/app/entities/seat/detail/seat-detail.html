@@ -1,0 +1,50 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (seat(); as seatRef) {
+    <div>
+      <h2 data-cy="seatDetailsHeading"><span jhiTranslate="dugxApp.seat.detail.title">Seat</span></h2>
+
+      <hr />
+
+      <jhi-alert-error />
+
+      <jhi-alert />
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ seatRef.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.seat.rowLabel">Row Label</span></dt>
+        <dd>
+          <span>{{ seatRef.rowLabel }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.seat.seatNumber">Seat Number</span></dt>
+        <dd>
+          <span>{{ seatRef.seatNumber }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.seat.seatType">Seat Type</span></dt>
+        <dd>
+          <span>{{ seatRef.seatType }}</span>
+        </dd>
+        <dt><span jhiTranslate="dugxApp.seat.aircraft">Aircraft</span></dt>
+        <dd>
+          @if (seat()!.aircraft) {
+          <div>
+            <a [routerLink]="['/aircraft', seat()!.aircraft?.id, 'view']">{{ seatRef.aircraft?.name }}</a>
+          </div>
+          }
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/seat', seatRef.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+    }
+  </div>
+</div>

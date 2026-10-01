@@ -178,13 +178,12 @@ public class PaymentService {
             return booking;
         }
 
-        if (request.getTicketTypeId() == null || request.getQuantity() == null) {
+        if (request.getLegs() == null || request.getLegs().isEmpty()) {
             throw new BadRequestAlertException("Missing ticket information", ENTITY_NAME, "missingticket");
         }
 
         BookingRequest bookingRequest = new BookingRequest();
-        bookingRequest.setTicketTypeId(request.getTicketTypeId());
-        bookingRequest.setQuantity(request.getQuantity());
+        bookingRequest.setLegs(request.getLegs());
         bookingRequest.setCouponCode(request.getCouponCode());
 
         BookingDTO created = bookingService.book(bookingRequest);

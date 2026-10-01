@@ -1,0 +1,124 @@
+<div class="seat-page">
+  <div *ngIf="isLoading" class="state-box">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-3">Đang tải sơ đồ ghế...</p>
+  </div>
+
+  <div *ngIf="!isLoading && showtime" class="container py-4">
+    <a class="back-link" [routerLink]="['/event', showtime.event?.id, 'showtimes']">← Chọn giờ bay khác</a>
+
+    <div class="header-card">
+      <div class="header-info">
+        <h1>{{ showtime.event?.title }}</h1>
+        <div class="header-meta">
+          <span>✈️ {{ showtime.aircraft?.name }}</span>
+          <span>📅 {{ showtime.startTime?.format('dddd, DD/MM/YYYY') }}</span>
+          <span>⏰ {{ showtime.startTime?.format('HH:mm') }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="cabin">
+      <div class="cabin-nose">
+        <span class="cabin-nose-label">✈ ĐẦU MÁY BAY</span>
+      </div>
+
+      <div class="door-row">
+        <span class="door">🚪 Cửa trước</span>
+        <span class="door">Cửa trước 🚪</span>
+      </div>
+
+      <div class="seat-map">
+        <ng-container *ngFor="let section of sections">
+          <div class="section-header">
+            <span class="section-line"></span>
+            <span class="section-title">{{ section.title }}</span>
+            <span class="section-line"></span>
+          </div>
+
+          <div class="seat-row" *ngFor="let row of section.rows">
+            <div class="row-seats">
+              <button
+                *ngFor="let seat of row.left"
+                class="seat"
+                [class.seat-standard]="seat.seat?.seatType === 'STANDARD'"
+                [class.seat-vip]="seat.seat?.seatType === 'VIP'"
+                [class.seat-couple]="seat.seat?.seatType === 'COUPLE'"
+                [class.selected]="isSelected(seat)"
+                [class.unavailable]="!isAvailable(seat)"
+                [disabled]="!isAvailable(seat)"
+                [title]="seatLabel(seat) + ' - ' + (seat.price | number) + ' đ'"
+                (click)="toggleSeat(seat)"
+              >
+                {{ seatLabel(seat) }}
+              </button>
+            </div>
+
+            <div class="aisle"></div>
+
+            <div class="row-seats">
+              <button
+                *ngFor="let seat of row.right"
+                class="seat"
+                [class.seat-standard]="seat.seat?.seatType === 'STANDARD'"
+                [class.seat-vip]="seat.seat?.seatType === 'VIP'"
+                [class.seat-couple]="seat.seat?.seatType === 'COUPLE'"
+                [class.selected]="isSelected(seat)"
+                [class.unavailable]="!isAvailable(seat)"
+                [disabled]="!isAvailable(seat)"
+                [title]="seatLabel(seat) + ' - ' + (seat.price | number) + ' đ'"
+                (click)="toggleSeat(seat)"
+              >
+                {{ seatLabel(seat) }}
+              </button>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="door-row">
+        <span class="door">🚪 Cửa sau</span>
+        <span class="door">Cửa sau 🚪</span>
+      </div>
+
+      <div class="cabin-tail"></div>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><span class="dot seat-standard"></span> Phổ thông</div>
+      <div class="legend-item"><span class="dot seat-vip"></span> Thương gia</div>
+      <div class="legend-item"><span class="dot seat-couple"></span> Hạng nhất</div>
+      <div class="legend-item"><span class="dot selected"></span> Đang chọn</div>
+      <div class="legend-item"><span class="dot unavailable"></span> Đã đặt</div>
+    </div>
+
+    <div *ngIf="errorMessage" class="alert alert-warning mt-3">{{ errorMessage }}</div>
+  </div>
+
+  <div *ngIf="!isLoading && !showtime && departed" class="state-box">
+    <h3>Chuyến bay này đã khởi hành</h3>
+    <p class="text-muted">Vui lòng chọn một giờ bay khác còn khả dụng.</p>
+    <a class="btn btn-primary mt-3" routerLink="/events">Xem chuyến bay khác</a>
+  </div>
+
+  <div *ngIf="!isLoading && !showtime && !departed" class="state-box">
+    <h3>Không tìm thấy giờ bay</h3>
+    <a class="btn btn-primary mt-3" routerLink="/events">Xem chuyến bay khác</a>
+  </div>
+
+  <div class="summary-bar" *ngIf="!isLoading && showtime">
+    <div class="summary-seats">
+      <span class="text-muted" *ngIf="selectedIds.size === 0">Chưa chọn ghế</span>
+      <span *ngIf="selectedIds.size > 0">Ghế đã chọn: <strong>{{ selectedLabels }}</strong></span>
+    </div>
+
+    <div class="summary-total">
+      <span class="text-muted">Tổng tiền</span>
+      <strong>{{ total | number }} đ</strong>
+    </div>
+
+    <button class="btn btn-primary continue-btn" [disabled]="selectedIds.size === 0" (click)="continueToPayment()">
+      Tiếp tục thanh toán
+    </button>
+  </div>
+</div>

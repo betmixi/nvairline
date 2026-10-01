@@ -1,0 +1,72 @@
+<div class="showtime-page">
+  <div *ngIf="isLoading" class="state-box">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-3">Đang tải giờ bay...</p>
+  </div>
+
+  <div *ngIf="!isLoading && event" class="container py-4">
+    <a class="back-link" [routerLink]="['/events', event.id]">← Quay lại chi tiết chuyến bay</a>
+
+    <div class="event-header-plain">
+      <span class="category-badge" *ngIf="event.category">{{ event.category.name }}</span>
+      <h1>{{ event.title }}</h1>
+    </div>
+
+    <h4 class="section-title">Chọn giờ bay</h4>
+
+    <div *ngIf="groups.length === 0" class="alert alert-warning">Chuyến bay hiện chưa có giờ bay nào sắp khởi hành.</div>
+
+    <div class="date-group" *ngFor="let group of groups">
+      <div class="date-label">{{ group.dateLabel }}</div>
+
+      <div class="flight-card" *ngFor="let showtime of group.showtimes">
+        <div class="flight-card-route">
+          <div class="flight-time-block">
+            <span class="flight-time">{{ showtime.startTime?.format('HH:mm') }}</span>
+            <span class="flight-airport-code">{{ event.departureAirport?.code || '---' }}</span>
+            <span class="flight-terminal">{{ event.departureAirport?.city || event.address?.location }}</span>
+          </div>
+
+          <div class="flight-route-line">
+            <span class="flight-route-label">Bay thẳng</span>
+            <div class="flight-route-track"><span class="flight-route-dot"></span><span class="flight-route-dot"></span></div>
+          </div>
+
+          <div class="flight-time-block">
+            <span class="flight-time">{{ showtime.endTime?.format('HH:mm') }}</span>
+            <span class="flight-airport-code">{{ event.arrivalAirport?.code || '---' }}</span>
+            <span class="flight-terminal">{{ event.arrivalAirport?.city }}</span>
+          </div>
+
+          <div class="flight-card-meta">
+            <span class="flight-duration" *ngIf="duration(showtime)">⏱ Thời gian bay {{ duration(showtime) }}</span>
+            <span class="flight-room">✈ {{ event.title }} · {{ showtime.aircraft?.name }}</span>
+          </div>
+        </div>
+
+        <div class="flight-fare-columns">
+          <button type="button" class="fare-col fare-economy" (click)="selectShowtime(showtime)">
+            <span class="fare-label">Phổ thông</span>
+            <span class="fare-from">từ</span>
+            <span class="fare-price">{{ showtime.basePrice | number }}<small>VND</small></span>
+          </button>
+          <button type="button" class="fare-col fare-premium" (click)="selectShowtime(showtime)" *ngIf="showtime.couplePrice">
+            <span class="fare-label">Phổ thông đặc biệt</span>
+            <span class="fare-from">từ</span>
+            <span class="fare-price">{{ showtime.couplePrice | number }}<small>VND</small></span>
+          </button>
+          <button type="button" class="fare-col fare-business" (click)="selectShowtime(showtime)" *ngIf="showtime.vipPrice">
+            <span class="fare-label">Thương gia</span>
+            <span class="fare-from">từ</span>
+            <span class="fare-price">{{ showtime.vipPrice | number }}<small>VND</small></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && !event" class="state-box">
+    <h3>Không tìm thấy chuyến bay</h3>
+    <a class="btn btn-primary mt-3" routerLink="/events">Xem chuyến bay khác</a>
+  </div>
+</div>

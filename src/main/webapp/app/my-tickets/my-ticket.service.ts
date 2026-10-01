@@ -23,17 +23,13 @@ export class MyTicketService {
       .pipe(map(response => response.clone({ body: (response.body ?? []).map(ticket => this.convertFromServer(ticket)) })));
   }
 
-  /** Lấy ảnh QR của một vé dưới dạng data URI. */
-  qrImage(ticketId: number): Observable<string> {
-    return this.http.get<{ dataUri: string }>(`${this.resourceUrl}/${ticketId}/qr-image`).pipe(map(response => response.dataUri));
-  }
-
   private convertFromServer(ticket: RestMyTicket): IMyTicket {
     return {
       ...ticket,
       bookingDate: ticket.bookingDate ? dayjs(ticket.bookingDate) : null,
       eventStartTime: ticket.eventStartTime ? dayjs(ticket.eventStartTime) : null,
       eventEndTime: ticket.eventEndTime ? dayjs(ticket.eventEndTime) : null,
+      showtimeStartTime: ticket.showtimeStartTime ? dayjs(ticket.showtimeStartTime) : null,
     };
   }
 }

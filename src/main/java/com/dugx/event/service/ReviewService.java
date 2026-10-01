@@ -162,12 +162,62 @@ public class ReviewService {
 
     @Transactional(readOnly = true)
     public List<ReviewDTO> getReviewsByEvent(Long eventId) {
-        return reviewRepository.findByEventId(eventId).stream().map(reviewMapper::toDto).toList();
+        return reviewRepository.findVisibleByEventId(eventId).stream().map(reviewMapper::toDto).toList();
     }
 
     @Transactional(readOnly = true)
     public Double getAverageRating(Long eventId) {
         Double avg = reviewRepository.getAverageRating(eventId);
         return avg == null ? 0.0 : avg;
+    }
+
+    /** Toan bo danh gia trong he thong - chi danh cho admin. */
+    @Transactional(readOnly = true)
+    public List<ReviewDTO> getAllForAdmin() {
+        return reviewRepository.findAllForAdmin().stream().map(reviewMapper::toDto).toList();
+    }
+
+    /** An/hien mot danh gia - chi danh cho admin (UC Quan ly danh gia). */
+    public ReviewDTO setHidden(Long id, boolean hidden) {
+        Review review = reviewRepository.findById(id).orElseThrow(() -> new RuntimeException("Review not found"));
+        review.setHidden(hidden);
+        review = reviewRepository.save(review);
+        return reviewMapper.toDto(review);
+    }
+
+    /** Phan hoi mot danh gia - chi danh cho admin (UC Quan ly danh gia). */
+    public ReviewDTO reply(Long id, String replyText) {
+        Review review = reviewRepository.findById(id).orElseThrow(() -> new RuntimeException("Review not found"));
+        review.setReply(replyText);
+        review.setRepliedDate(Instant.now());
+        review = reviewRepository.save(review);
+        return reviewMapper.toDto(review);
+    }
+
+    /** Sua danh gia cua chinh minh (UC Danh gia chuyen bay - Sua danh gia). */
+    public ReviewDTO updateOwnReview(Long id, CreateReviewRequest request) {
+        String login = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new RuntimeException("User not found"));
+        Review review = reviewRepository.findById(id).orElseThrow(() -> new RuntimeException("Review not found"));
+
+        if (review.getUser() == null || !login.equals(review.getUser().getLogin())) {
+            throw new RuntimeException("You can only edit your own review.");
+        }
+
+        review.setRating(request.getRating());
+        review.setComment(request.getComment());
+        review = reviewRepository.save(review);
+        return reviewMapper.toDto(review);
+    }
+
+    /** Xoa danh gia cua chinh minh (UC Danh gia chuyen bay - Xoa danh gia). */
+    public void deleteOwnReview(Long id) {
+        String login = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new RuntimeException("User not found"));
+        Review review = reviewRepository.findById(id).orElseThrow(() -> new RuntimeException("Review not found"));
+
+        if (review.getUser() == null || !login.equals(review.getUser().getLogin())) {
+            throw new RuntimeException("You can only delete your own review.");
+        }
+
+        reviewRepository.deleteById(id);
     }
 }

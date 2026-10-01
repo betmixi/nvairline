@@ -9,8 +9,6 @@ import { Subject, from, of } from 'rxjs';
 
 import { IBooking } from 'app/entities/booking/booking.model';
 import { BookingService } from 'app/entities/booking/service/booking.service';
-import { TicketTypeService } from 'app/entities/ticket-type/service/ticket-type.service';
-import { ITicketType } from 'app/entities/ticket-type/ticket-type.model';
 import { IBookingDetail } from '../booking-detail.model';
 import { BookingDetailService } from '../service/booking-detail.service';
 
@@ -24,7 +22,6 @@ describe('BookingDetail Management Update Component', () => {
   let bookingDetailFormService: BookingDetailFormService;
   let bookingDetailService: BookingDetailService;
   let bookingService: BookingService;
-  let ticketTypeService: TicketTypeService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -45,7 +42,6 @@ describe('BookingDetail Management Update Component', () => {
     bookingDetailFormService = TestBed.inject(BookingDetailFormService);
     bookingDetailService = TestBed.inject(BookingDetailService);
     bookingService = TestBed.inject(BookingService);
-    ticketTypeService = TestBed.inject(TicketTypeService);
 
     comp = fixture.componentInstance;
   });
@@ -73,40 +69,16 @@ describe('BookingDetail Management Update Component', () => {
       expect(comp.bookingsSharedCollection()).toEqual(expectedCollection);
     });
 
-    it('should call TicketType query and add missing value', () => {
-      const bookingDetail: IBookingDetail = { id: 6599 };
-      const ticketType: ITicketType = { id: 23701 };
-      bookingDetail.ticketType = ticketType;
-
-      const ticketTypeCollection: ITicketType[] = [{ id: 23701 }];
-      vitest.spyOn(ticketTypeService, 'query').mockReturnValue(of(new HttpResponse({ body: ticketTypeCollection })));
-      const additionalTicketTypes = [ticketType];
-      const expectedCollection: ITicketType[] = [...additionalTicketTypes, ...ticketTypeCollection];
-      vitest.spyOn(ticketTypeService, 'addTicketTypeToCollectionIfMissing').mockReturnValue(expectedCollection);
-
-      activatedRoute.data = of({ bookingDetail });
-      comp.ngOnInit();
-
-      expect(ticketTypeService.query).toHaveBeenCalled();
-      expect(ticketTypeService.addTicketTypeToCollectionIfMissing).toHaveBeenCalledWith(
-        ticketTypeCollection,
-        ...additionalTicketTypes.map(i => expect.objectContaining(i) as typeof i),
-      );
-      expect(comp.ticketTypesSharedCollection()).toEqual(expectedCollection);
-    });
-
     it('should update editForm', () => {
       const bookingDetail: IBookingDetail = { id: 6599 };
       const booking: IBooking = { id: 1408 };
       bookingDetail.booking = booking;
-      const ticketType: ITicketType = { id: 23701 };
-      bookingDetail.ticketType = ticketType;
+      bookingDetail.showtimeSeat = { id: 23701 };
 
       activatedRoute.data = of({ bookingDetail });
       comp.ngOnInit();
 
       expect(comp.bookingsSharedCollection()).toContainEqual(booking);
-      expect(comp.ticketTypesSharedCollection()).toContainEqual(ticketType);
       expect(comp.bookingDetail).toEqual(bookingDetail);
     });
   });
@@ -187,16 +159,6 @@ describe('BookingDetail Management Update Component', () => {
         vitest.spyOn(bookingService, 'compareBooking');
         comp.compareBooking(entity, entity2);
         expect(bookingService.compareBooking).toHaveBeenCalledWith(entity, entity2);
-      });
-    });
-
-    describe('compareTicketType', () => {
-      it('should forward to ticketTypeService', () => {
-        const entity = { id: 23701 };
-        const entity2 = { id: 26385 };
-        vitest.spyOn(ticketTypeService, 'compareTicketType');
-        comp.compareTicketType(entity, entity2);
-        expect(ticketTypeService.compareTicketType).toHaveBeenCalledWith(entity, entity2);
       });
     });
   });

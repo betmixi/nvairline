@@ -4,8 +4,11 @@ import com.dugx.event.domain.Address;
 import com.dugx.event.domain.Booking;
 import com.dugx.event.domain.BookingDetail;
 import com.dugx.event.domain.Event;
+import com.dugx.event.domain.Seat;
+import com.dugx.event.domain.Showtime;
+import com.dugx.event.domain.ShowtimeSeat;
 import com.dugx.event.domain.Ticket;
-import com.dugx.event.domain.TicketType;
+import com.dugx.event.domain.User;
 import com.dugx.event.repository.BookingRepository;
 import com.dugx.event.repository.TicketRepository;
 import com.dugx.event.security.SecurityUtils;
@@ -84,7 +87,7 @@ public class TicketService {
         return qrCodeService.generatePngDataUri(ticket.getQrCode());
     }
 
-    /** Lam phang Ticket -> BookingDetail -> TicketType -> Event -> Address. */
+    /** Lam phang Ticket -> BookingDetail -> ShowtimeSeat -> Showtime -> Event -> Address. */
     private MyTicketDTO toMyTicketDto(Ticket ticket) {
         MyTicketDTO dto = new MyTicketDTO();
 
@@ -105,18 +108,40 @@ public class TicketService {
             dto.setBookingId(detail.getBooking().getId());
             dto.setBookingStatus(detail.getBooking().getStatus());
             dto.setBookingDate(detail.getBooking().getBookingDate());
+            dto.setPassengerName(passengerNameOf(detail.getBooking().getUser()));
         }
 
-        TicketType ticketType = detail.getTicketType();
+        dto.setLegIndex(detail.getLegIndex());
 
-        if (ticketType == null) {
+        ShowtimeSeat showtimeSeat = detail.getShowtimeSeat();
+
+        if (showtimeSeat == null) {
             return dto;
         }
 
-        dto.setTicketTypeId(ticketType.getId());
-        dto.setTicketTypeName(ticketType.getName());
+        Seat seat = showtimeSeat.getSeat();
 
-        Event event = ticketType.getEvent();
+        if (seat != null) {
+            dto.setSeatLabel(
+                (seat.getRowLabel() == null ? "" : seat.getRowLabel()) + (seat.getSeatNumber() == null ? "" : seat.getSeatNumber())
+            );
+            dto.setSeatType(seat.getSeatType() == null ? null : seat.getSeatType().name());
+        }
+
+        Showtime showtime = showtimeSeat.getShowtime();
+
+        if (showtime == null) {
+            return dto;
+        }
+
+        dto.setShowtimeId(showtime.getId());
+        dto.setShowtimeStartTime(showtime.getStartTime());
+
+        if (showtime.getAircraft() != null) {
+            dto.setAircraftName(showtime.getAircraft().getName());
+        }
+
+        Event event = showtime.getEvent();
 
         if (event == null) {
             return dto;
@@ -137,6 +162,17 @@ public class TicketService {
         }
 
         return dto;
+    }
+
+    /** Ho ten khach hang de in tren ve, uu tien ho ten day du, fallback ve username. */
+    private String passengerNameOf(User user) {
+        if (user == null) {
+            return null;
+        }
+        String firstName = user.getFirstName() == null ? "" : user.getFirstName().trim();
+        String lastName = user.getLastName() == null ? "" : user.getLastName().trim();
+        String fullName = (firstName + " " + lastName).trim();
+        return fullName.isEmpty() ? user.getLogin() : fullName;
     }
 
     private String currentLogin() {
@@ -215,7 +251,7 @@ public class TicketService {
     @Transactional(readOnly = true)
     public Optional<TicketDTO> findOne(Long id) {
         LOG.debug("Request to get Ticket : {}", id);
-        return ticketRepository.findById(id).map(ticketMapper::toDto);
+        return ticketRepository.findByIdWithFullDetails(id).map(ticketMapper::toDto);
     }
 
     /**
@@ -239,7 +275,7 @@ public class TicketService {
     @Transactional(readOnly = true)
     public TicketDTO getTicket(Long id) {
         Ticket ticket = ticketRepository
-            .findById(id)
+            .findByIdWithFullDetails(id)
             .orElseThrow(() -> new BadRequestAlertException("Ticket not found", "ticket", "ticketnotfound"));
         String login = SecurityUtils.getCurrentUserLogin().orElseThrow(() ->
             new BadRequestAlertException("User not found", "ticket", "usernotfound")
@@ -270,9 +306,14 @@ public class TicketService {
     @Transactional(readOnly = true)
     public TicketDTO getTicketByQr(String qrCode) {
         Ticket ticket = ticketRepository
-            .findByQrCode(qrCode)
+            .findByQrCodeWithFullDetails(qrCode)
             .orElseThrow(() -> new BadRequestAlertException("Ticket not found", "ticket", "ticketnotfound"));
 
         return ticketMapper.toDto(ticket);
+    }
+
+    @Transactional(readOnly = true)
+    public List<TicketDTO> getByShowtime(Long showtimeId) {
+        return ticketRepository.findByShowtime(showtimeId).stream().map(ticketMapper::toDto).toList();
     }
 }

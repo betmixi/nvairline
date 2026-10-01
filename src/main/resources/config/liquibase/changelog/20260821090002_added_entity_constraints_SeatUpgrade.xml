@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <!--
+        Added the constraints for entity SeatUpgrade.
+    -->
+    <changeSet id="20260821090002-1" author="dugx">
+
+        <addForeignKeyConstraint baseColumnNames="ticket_id"
+                                 baseTableName="seat_upgrade"
+                                 constraintName="fk_seat_upgrade__ticket_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="ticket"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="old_showtime_seat_id"
+                                 baseTableName="seat_upgrade"
+                                 constraintName="fk_seat_upgrade__old_showtime_seat_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="showtime_seat"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="new_showtime_seat_id"
+                                 baseTableName="seat_upgrade"
+                                 constraintName="fk_seat_upgrade__new_showtime_seat_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="showtime_seat"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="booking_id"
+                                 baseTableName="seat_upgrade"
+                                 constraintName="fk_seat_upgrade__booking_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="booking"
+                                 />
+    </changeSet>
+</databaseChangeLog>

@@ -48,7 +48,6 @@ public class BookingDetailAsserts {
     public static void assertBookingDetailUpdatableFieldsEquals(BookingDetail expected, BookingDetail actual) {
         assertThat(actual)
             .as("Verify BookingDetail relevant properties")
-            .satisfies(a -> assertThat(a.getQuantity()).as("check quantity").isEqualTo(expected.getQuantity()))
             .satisfies(a -> assertThat(a.getPrice()).as("check price").usingComparator(bigDecimalCompareTo).isEqualTo(expected.getPrice()));
     }
 
@@ -62,6 +61,6 @@ public class BookingDetailAsserts {
         assertThat(actual)
             .as("Verify BookingDetail relationships")
             .satisfies(a -> assertThat(a.getBooking()).as("check booking").isEqualTo(expected.getBooking()))
-            .satisfies(a -> assertThat(a.getTicketType()).as("check ticketType").isEqualTo(expected.getTicketType()));
+            .satisfies(a -> assertThat(a.getShowtimeSeat()).as("check showtimeSeat").isEqualTo(expected.getShowtimeSeat()));
     }
 }

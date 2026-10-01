@@ -1,0 +1,148 @@
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2>✈️ Quản lý giờ bay</h2>
+
+      @if(event()){
+
+      <p class="text-muted mb-0">
+        Chuyến bay :
+        <strong>{{event()?.title}}</strong>
+      </p>
+
+      }
+    </div>
+
+    <button class="btn btn-success" (click)="finish()">Xong</button>
+  </div>
+
+  <!-- Create Showtime -->
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-header">Thêm giờ bay</div>
+
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-4">
+          <label class="form-label"> Máy bay </label>
+
+          <select class="form-select" [(ngModel)]="newShowtime.aircraftId">
+            <option [ngValue]="null">-- Chọn máy bay --</option>
+            @for (aircraft of aircrafts(); track aircraft.id) {
+            <option [ngValue]="aircraft.id">{{ aircraft.name }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label"> Giờ bắt đầu </label>
+
+          <input type="datetime-local" class="form-control" [(ngModel)]="newShowtime.startTime" />
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label"> Giờ kết thúc </label>
+
+          <input type="datetime-local" class="form-control" [(ngModel)]="newShowtime.endTime" />
+        </div>
+      </div>
+
+      <div class="row mt-3">
+        <div class="col-md-4">
+          <label class="form-label"> Giá vé phổ thông </label>
+
+          <input type="number" class="form-control" [(ngModel)]="newShowtime.basePrice" />
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label"> Giá vé thương gia </label>
+
+          <input type="number" class="form-control" [(ngModel)]="newShowtime.vipPrice" />
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label"> Giá vé phổ thông đặc biệt </label>
+
+          <input type="number" class="form-control" [(ngModel)]="newShowtime.couplePrice" />
+        </div>
+      </div>
+
+      @if (errorMessage) {
+      <div class="alert alert-danger mt-3 mb-0">{{ errorMessage }}</div>
+      }
+
+      <div class="mt-4">
+        <button class="btn btn-primary" [disabled]="isSaving" (click)="saveShowtime()">➕ Thêm giờ bay</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Showtime List -->
+
+  <div class="card shadow-sm">
+    <div class="card-header">Danh sách giờ bay</div>
+
+    @if (showtimes().length > 0) {
+    <div class="search-bar">
+      <input
+        type="text"
+        class="form-control search-input"
+        placeholder="🔍 Tìm theo tên máy bay, ngày giờ bay (VD: A321, 14/09)..."
+        [(ngModel)]="keyword"
+      />
+    </div>
+    }
+
+    <div class="card-body p-0">
+      @if (showtimes().length === 0) {
+      <div class="alert alert-warning m-3 mb-0">Chuyến bay này chưa có giờ bay nào.</div>
+      } @else if (filteredShowtimes.length === 0) {
+      <div class="alert alert-warning m-3 mb-0">Không tìm thấy giờ bay phù hợp.</div>
+      } @else {
+      <table class="table table-hover mb-0">
+        <thead>
+          <tr>
+            <th>Máy bay</th>
+
+            <th>Bắt đầu</th>
+
+            <th>Kết thúc</th>
+
+            <th>Giá phổ thông</th>
+
+            <th>Giá thương gia</th>
+
+            <th>Giá phổ thông đặc biệt</th>
+
+            <th width="120">Hành động</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for(showtime of filteredShowtimes;track showtime.id){
+
+          <tr>
+            <td>{{showtime.aircraft?.name}}</td>
+
+            <td>{{showtime.startTime?.format('DD/MM/YYYY HH:mm')}}</td>
+
+            <td>{{showtime.endTime?.format('DD/MM/YYYY HH:mm')}}</td>
+
+            <td>{{showtime.basePrice | number}}</td>
+
+            <td>{{showtime.vipPrice | number}}</td>
+
+            <td>{{showtime.couplePrice | number}}</td>
+
+            <td>
+              <button class="btn btn-sm btn-danger" (click)="delete(showtime)">Xoá</button>
+            </td>
+          </tr>
+
+          }
+        </tbody>
+      </table>
+      }
+    </div>
+  </div>
+</div>

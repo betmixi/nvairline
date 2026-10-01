@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <!--
+        Added the constraints for entity ShowtimeSeat.
+    -->
+    <changeSet id="20260817120004-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="showtime_id"
+                                 baseTableName="showtime_seat"
+                                 constraintName="fk_showtime_seat__showtime_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="showtime"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="seat_id"
+                                 baseTableName="showtime_seat"
+                                 constraintName="fk_showtime_seat__seat_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="seat"
+                                 />
+
+        <addUniqueConstraint columnNames="showtime_id, seat_id"
+                             constraintName="ux_showtime_seat__showtime_id_seat_id"
+                             tableName="showtime_seat"
+                             />
+    </changeSet>
+</databaseChangeLog>

@@ -9,8 +9,6 @@ import { Observable, finalize, map } from 'rxjs';
 
 import { IBooking } from 'app/entities/booking/booking.model';
 import { BookingService } from 'app/entities/booking/service/booking.service';
-import { TicketTypeService } from 'app/entities/ticket-type/service/ticket-type.service';
-import { ITicketType } from 'app/entities/ticket-type/ticket-type.model';
 import { AlertError } from 'app/shared/alert/alert-error';
 import { TranslateDirective } from 'app/shared/language';
 import { IBookingDetail } from '../booking-detail.model';
@@ -29,20 +27,16 @@ export class BookingDetailUpdate implements OnInit {
   bookingDetail: IBookingDetail | null = null;
 
   bookingsSharedCollection = signal<IBooking[]>([]);
-  ticketTypesSharedCollection = signal<ITicketType[]>([]);
 
   protected bookingDetailService = inject(BookingDetailService);
   protected bookingDetailFormService = inject(BookingDetailFormService);
   protected bookingService = inject(BookingService);
-  protected ticketTypeService = inject(TicketTypeService);
   protected activatedRoute = inject(ActivatedRoute);
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
   editForm: BookingDetailFormGroup = this.bookingDetailFormService.createBookingDetailFormGroup();
 
   compareBooking = (o1: IBooking | null, o2: IBooking | null): boolean => this.bookingService.compareBooking(o1, o2);
-
-  compareTicketType = (o1: ITicketType | null, o2: ITicketType | null): boolean => this.ticketTypeService.compareTicketType(o1, o2);
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ bookingDetail }) => {
@@ -95,9 +89,6 @@ export class BookingDetailUpdate implements OnInit {
     this.bookingsSharedCollection.update(bookings =>
       this.bookingService.addBookingToCollectionIfMissing<IBooking>(bookings, bookingDetail.booking),
     );
-    this.ticketTypesSharedCollection.update(ticketTypes =>
-      this.ticketTypeService.addTicketTypeToCollectionIfMissing<ITicketType>(ticketTypes, bookingDetail.ticketType),
-    );
   }
 
   protected loadRelationshipsOptions(): void {
@@ -108,15 +99,5 @@ export class BookingDetailUpdate implements OnInit {
         map((bookings: IBooking[]) => this.bookingService.addBookingToCollectionIfMissing<IBooking>(bookings, this.bookingDetail?.booking)),
       )
       .subscribe((bookings: IBooking[]) => this.bookingsSharedCollection.set(bookings));
-
-    this.ticketTypeService
-      .query()
-      .pipe(map((res: HttpResponse<ITicketType[]>) => res.body ?? []))
-      .pipe(
-        map((ticketTypes: ITicketType[]) =>
-          this.ticketTypeService.addTicketTypeToCollectionIfMissing<ITicketType>(ticketTypes, this.bookingDetail?.ticketType),
-        ),
-      )
-      .subscribe((ticketTypes: ITicketType[]) => this.ticketTypesSharedCollection.set(ticketTypes));
   }
 }

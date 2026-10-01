@@ -38,21 +38,15 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, JpaSpec
 
     Page<Booking> findByUser_Login(String login, Pageable pageable);
 
+    @Query(
+        value = "select booking from Booking booking left join fetch booking.user where booking.user.login = :login",
+        countQuery = "select count(booking) from Booking booking where booking.user.login = :login"
+    )
+    Page<Booking> findByUserLoginWithToOneRelationships(@Param("login") String login, Pageable pageable);
+
     @Query("select booking from Booking booking left join fetch booking.user")
     List<Booking> findAllWithToOneRelationships();
 
     @Query("select booking from Booking booking left join fetch booking.user where booking.id =:id")
     Optional<Booking> findOneWithToOneRelationships(@Param("id") Long id);
-
-    @Query(
-        """
-        select count(distinct b.id)
-        from Booking b
-        join BookingDetail bd on bd.booking = b
-        join TicketType tt on bd.ticketType = tt
-        join Event e on tt.event = e
-        where e.organizer.user.login = :login
-        """
-    )
-    Long countBookingByOrganizer(@Param("login") String login);
 }

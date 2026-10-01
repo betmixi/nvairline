@@ -1,0 +1,120 @@
+<div class="reviews-page">
+  <a class="back-link" routerLink="/admin/dashboard">← Quay lại Dashboard</a>
+
+  <div class="page-header">
+    <h1>⭐ Quản lý đánh giá</h1>
+    <p>Toàn bộ đánh giá của người dùng trên hệ thống</p>
+  </div>
+
+  <!-- Tổng quan -->
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="summary-title">Tổng số đánh giá</div>
+      <div class="summary-value">{{ reviews.length }}</div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-title">Điểm trung bình</div>
+      <div class="summary-value">{{ averageRating | number: '1.1-1' }} ★</div>
+    </div>
+  </div>
+
+  <!-- Bộ lọc -->
+  <div class="filter-bar">
+    <input
+      class="form-control search-input"
+      type="text"
+      placeholder="🔍 Tìm theo sự kiện, người đánh giá, nội dung..."
+      [(ngModel)]="keyword"
+    />
+
+    <div class="rating-filter">
+      <button type="button" [class.active]="ratingFilter === 0" (click)="ratingFilter = 0">Tất cả</button>
+      @for (star of [5, 4, 3, 2, 1]; track star) {
+      <button type="button" [class.active]="ratingFilter === star" (click)="ratingFilter = star">{{ star }} ★</button>
+      }
+    </div>
+  </div>
+
+  <!-- Danh sách -->
+  <div class="card-box">
+    @if (isLoading) {
+
+    <div class="state-box">Đang tải...</div>
+
+    } @else if (filteredReviews.length === 0) {
+
+    <div class="state-box">
+      <div class="empty-icon">⭐</div>
+      <h3>{{ reviews.length === 0 ? 'Chưa có đánh giá nào' : 'Không tìm thấy đánh giá phù hợp' }}</h3>
+    </div>
+
+    } @else {
+
+    <div class="table-scroll">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Sự kiện</th>
+            <th>Người đánh giá</th>
+            <th>Điểm</th>
+            <th>Nhận xét</th>
+            <th>Phản hồi</th>
+            <th>Ngày</th>
+            <th>Trạng thái</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (review of filteredReviews; track review.id) {
+          <tr>
+            <td class="event-cell">{{ review.event?.title || '—' }}</td>
+            <td>{{ reviewerName(review) }}</td>
+            <td class="rating-cell">
+              <span class="stars">
+                @for (star of [1, 2, 3, 4, 5]; track star) {
+                <span [class.filled]="star <= review.rating">★</span>
+                }
+              </span>
+            </td>
+            <td class="comment-cell">{{ review.comment }}</td>
+            <td class="reply-cell">
+              @if (replyingId === review.id) {
+              <div class="reply-form">
+                <textarea class="form-control" rows="2" [(ngModel)]="replyDraft" placeholder="Nhập phản hồi..."></textarea>
+                <div class="reply-actions">
+                  <button class="reply-save-btn" [disabled]="isSavingReply" (click)="submitReply(review)">
+                    {{ isSavingReply ? '...' : 'Gửi' }}
+                  </button>
+                  <button class="reply-cancel-btn" [disabled]="isSavingReply" (click)="cancelReply()">Huỷ</button>
+                </div>
+              </div>
+              } @else if (review.reply) {
+              <div class="reply-existing">
+                <p>{{ review.reply }}</p>
+                <button class="reply-edit-btn" (click)="startReply(review)">Sửa phản hồi</button>
+              </div>
+              } @else {
+              <button class="reply-btn" (click)="startReply(review)">💬 Trả lời</button>
+              }
+            </td>
+            <td>{{ review.createdDate | date: 'dd/MM/yyyy HH:mm' }}</td>
+            <td>
+              <button
+                class="visibility-btn"
+                [class.is-hidden]="review.hidden"
+                [disabled]="togglingId === review.id"
+                (click)="toggleHidden(review)"
+              >
+                {{ togglingId === review.id ? '...' : review.hidden ? '🙈 Đang ẩn' : '👁 Đang hiện' }}
+              </button>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    }
+  </div>
+</div>

@@ -1,0 +1,321 @@
+@import '../../app/shared/styles/tokens';
+
+/*
+ * Tao kieu lai cac thanh phan Bootstrap mac dinh (bang, nut, form, modal, phan trang...)
+ * dung chung boi toan bo trang CRUD sinh tu JHipster (coupon, report, booking, ticket...)
+ * de dong bo voi ngon ngu thiet ke da dung o trang khach hang (xem _tokens.scss).
+ *
+ * Duoc gioi han trong pham vi `body.admin-theme-active` - class nay duoc AdminShellComponent
+ * gan/go tren <body> khi vao/roi khu vuc quan tri, nen khong anh huong trang khach hang.
+ * Dung selector tren <body> (khong phai mot div bao ngoai) vi cac modal cua ng-bootstrap
+ * duoc gan thang vao cuoi <body>, nam ngoai cay component cua trang.
+ */
+
+body.admin-theme-active {
+  /* ============= TYPOGRAPHY / HEADINGS ============= */
+
+  h2,
+  h3,
+  h4 {
+    color: $text-dark;
+  }
+
+  #page-heading,
+  h2[id$='-page-heading'],
+  h2[id^='jhi-'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    margin-bottom: 24px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+
+    .btn-group,
+    > div.d-flex {
+      font-size: 14px;
+      font-weight: 600;
+    }
+  }
+
+  /* ============= BUTTONS ============= */
+
+  .btn {
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 13.5px;
+    padding: 9px 18px;
+    border: 1px solid transparent;
+    transition: 0.15s ease;
+    box-shadow: none;
+  }
+
+  .btn-sm {
+    padding: 6px 13px;
+    font-size: 12.5px;
+  }
+
+  .btn-primary {
+    background: $brand-blue;
+    border-color: $brand-blue;
+
+    &:hover,
+    &:focus {
+      background: darken(#01319f, 6%);
+      border-color: darken(#01319f, 6%);
+    }
+  }
+
+  .btn-info {
+    background: #eef2ff;
+    border-color: #eef2ff;
+    color: $accent-blue;
+
+    &:hover,
+    &:focus {
+      background: $accent-blue;
+      border-color: $accent-blue;
+      color: #fff;
+    }
+  }
+
+  .btn-secondary {
+    background: #f1f3f7;
+    border-color: #f1f3f7;
+    color: $text-muted;
+
+    &:hover,
+    &:focus {
+      background: #e5e8f0;
+      border-color: #e5e8f0;
+      color: $text-dark;
+    }
+  }
+
+  .btn-danger {
+    background: #fef2f2;
+    border-color: #fef2f2;
+    color: #dc2626;
+
+    &:hover,
+    &:focus {
+      background: #dc2626;
+      border-color: #dc2626;
+      color: #fff;
+    }
+  }
+
+  .btn-group {
+    gap: 8px;
+    display: inline-flex;
+  }
+
+  /* ============= FORM CONTROLS ============= */
+
+  .form-control,
+  .form-select,
+  select.form-control {
+    border-radius: 12px;
+    border: 1px solid #dbe3ef;
+    padding: 10px 14px;
+    font-size: 14.5px;
+
+    &:focus {
+      border-color: $accent-blue;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+    }
+  }
+
+  .form-label {
+    font-weight: 700;
+    font-size: 13.5px;
+    color: $text-dark;
+    margin-bottom: 6px;
+  }
+
+  /* Cot giua form/detail cua moi trang tao-sua/xem-chi-tiet sinh tu JHipster */
+  .col-8 {
+    background: #fff;
+    border-radius: $card-radius;
+    box-shadow: $card-shadow;
+    padding: 32px 36px;
+  }
+
+  /* ============= TABLE ============= */
+
+  .table-responsive {
+    background: #fff;
+    border-radius: $card-radius;
+    box-shadow: $card-shadow;
+    padding: 8px;
+  }
+
+  .table {
+    margin-bottom: 0;
+
+    thead th {
+      position: sticky;
+      top: 0;
+      background: #f8fafc;
+      font-size: 13px;
+      font-weight: 700;
+      color: $text-muted;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      border-bottom: 2px solid #eef1f6 !important;
+      padding: 14px 16px;
+    }
+
+    tbody td {
+      padding: 13px 16px;
+      font-size: 14px;
+      color: $text-dark;
+      border-bottom: 1px solid #f1f5f9;
+      vertical-align: middle;
+    }
+
+    tbody tr:hover {
+      background: #f8fafc;
+    }
+
+    &.table-striped > tbody > tr:nth-of-type(odd) > * {
+      background: transparent;
+    }
+  }
+
+  /* ============= ALERTS ============= */
+
+  .alert {
+    border-radius: 14px;
+    border: none;
+    font-size: 14px;
+    padding: 14px 18px;
+  }
+
+  .alert-warning {
+    background: #fffbeb;
+    color: #b45309;
+  }
+
+  .alert-danger {
+    background: #fef2f2;
+    color: #dc2626;
+  }
+
+  .alert-success {
+    background: #f0fdf4;
+    color: #16a34a;
+  }
+
+  .alert-info {
+    background: #eff6ff;
+    color: $accent-blue;
+  }
+
+  /* ============= BADGES ============= */
+
+  .badge {
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 11.5px;
+    padding: 5px 11px;
+    letter-spacing: 0.2px;
+  }
+
+  /* ============= PAGINATION ============= */
+
+  .pagination {
+    gap: 4px;
+  }
+
+  .page-link {
+    border: none;
+    border-radius: 10px !important;
+    color: $text-muted;
+    font-weight: 700;
+    font-size: 13.5px;
+    margin: 0;
+
+    &:hover {
+      background: rgba(1, 49, 159, 0.08);
+      color: $brand-blue;
+    }
+  }
+
+  .page-item.active .page-link {
+    background: $brand-blue;
+    color: #fff;
+  }
+
+  .page-item.disabled .page-link {
+    background: transparent;
+    color: #c3c9d5;
+  }
+
+  /* ============= ENTITY DETAIL (dl.jh-entity-details) ============= */
+
+  .jh-entity-details {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    row-gap: 14px;
+    column-gap: 16px;
+    margin: 0 0 24px;
+
+    dt {
+      font-size: 12.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: $text-muted;
+      padding-top: 2px;
+    }
+
+    dd {
+      margin: 0;
+      font-size: 15px;
+      color: $text-dark;
+      font-weight: 600;
+    }
+  }
+
+  /* ============= CARDS (generic bootstrap .card usage) ============= */
+
+  .card:not(.jh-card) {
+    border: none;
+    border-radius: $card-radius;
+    box-shadow: $card-shadow;
+  }
+
+  /* ============= MODALS (ng-bootstrap mounts these directly on <body>) ============= */
+
+  .modal-content {
+    border: none;
+    border-radius: 18px;
+    overflow: hidden;
+  }
+
+  .modal-header {
+    border-bottom: 1px solid #f1f5f9;
+    padding: 20px 24px;
+  }
+
+  .modal-title {
+    font-weight: 800;
+    font-size: 18px;
+  }
+
+  .modal-body {
+    padding: 20px 24px;
+    font-size: 14.5px;
+    color: $text-dark;
+  }
+
+  .modal-footer {
+    border-top: 1px solid #f1f5f9;
+    padding: 16px 24px;
+  }
+}

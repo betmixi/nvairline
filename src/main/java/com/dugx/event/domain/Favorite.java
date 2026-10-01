@@ -26,7 +26,7 @@ public class Favorite implements Serializable {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "category", "address", "organizer" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "category", "address" }, allowSetters = true)
     private Event event;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

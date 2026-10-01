@@ -1,0 +1,71 @@
+<div class="loyalty-page">
+  <a class="back-link" routerLink="/">← Trang chủ</a>
+
+  <div class="page-header">
+    <h1>👑 Tích điểm Lotusmiles</h1>
+    <p>Tích điểm mỗi chuyến bay, đổi điểm lấy ưu đãi hoặc vé máy bay</p>
+  </div>
+
+  <div class="balance-card">
+    <div class="balance-label">Điểm hiện có</div>
+    <div class="balance-value">{{ points | number }}</div>
+  </div>
+
+  <div class="card-box mb-offers">
+    <h2 class="section-title">🎁 Đổi ưu đãi</h2>
+
+    @if (redeemSuccessMessage) {
+    <div class="redeem-alert is-success">{{ redeemSuccessMessage }}</div>
+    } @if (redeemError) {
+    <div class="redeem-alert is-error">{{ redeemError }}</div>
+    } @if (offers.length === 0) {
+    <div class="state-box">
+      <div class="empty-icon">🎁</div>
+      <h3>Chưa có ưu đãi nào</h3>
+    </div>
+    } @else {
+    <div class="offer-grid">
+      @for (offer of offers; track offer.id) {
+      <div class="offer-card">
+        <div class="offer-body">
+          <div class="offer-label">{{ offer.label }}</div>
+          <div class="offer-description">{{ offer.description }}</div>
+        </div>
+        <div class="offer-footer">
+          <span class="offer-cost">{{ offer.pointCost | number }} điểm</span>
+          <button type="button" class="offer-redeem-btn" [disabled]="!!redeemingId || points < offer.pointCost" (click)="redeem(offer)">
+            {{ redeemingId === offer.id ? 'Đang đổi...' : 'Đổi ngay' }}
+          </button>
+        </div>
+      </div>
+      }
+    </div>
+    }
+  </div>
+
+  <div class="card-box">
+    <h2 class="section-title">Lịch sử điểm</h2>
+
+    @if (isLoading) {
+    <div class="state-box">Đang tải...</div>
+    } @else if (history.length === 0) {
+    <div class="state-box">
+      <div class="empty-icon">⭐</div>
+      <h3>Chưa có lịch sử điểm</h3>
+      <p>Điểm sẽ được cộng tự động sau khi bạn thanh toán vé thành công.</p>
+    </div>
+    } @else {
+    <div class="history-list">
+      @for (item of history; track item.id) {
+      <div class="history-row">
+        <div class="history-info">
+          <span class="history-reason">{{ item.reason }}</span>
+          <span class="history-date">{{ item.createdDate | date: 'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+        <span class="history-points" [class.is-negative]="item.points < 0"> {{ item.points > 0 ? '+' : '' }}{{ item.points }} </span>
+      </div>
+      }
+    </div>
+    }
+  </div>
+</div>

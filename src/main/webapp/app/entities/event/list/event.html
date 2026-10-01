@@ -3,24 +3,24 @@
 
   <div class="page-header">
     <div class="header-info">
-      <span class="page-badge"> EVENT MANAGEMENT </span>
+      <span class="page-badge"> QUẢN LÝ CHUYẾN BAY </span>
 
-      <h2>Manage Events</h2>
+      <h2>Quản lý chuyến bay</h2>
 
-      <p>Create, edit and manage all events in your system.</p>
+      <p>Tạo, chỉnh sửa và quản lý toàn bộ chuyến bay trong hệ thống.</p>
     </div>
 
     <div class="header-action">
       <button class="btn btn-refresh" (click)="load()" [disabled]="isLoading()">
         <span class="icon">🔄</span>
 
-        Refresh
+        Làm mới
       </button>
 
       <button class="btn btn-create" [routerLink]="['/event/new']">
         <span class="icon">➕</span>
 
-        New Event
+        Thêm chuyến bay
       </button>
     </div>
   </div>
@@ -35,6 +35,14 @@
 
   <jhi-filter [filters]="filters"> </jhi-filter>
 
+  <!-- ================= SEARCH ================= -->
+
+  @if (events().length > 0) {
+  <div class="search-bar">
+    <input type="text" class="form-control" placeholder="🔍 Tìm theo tên chuyến bay, mã/thành phố sân bay..." [(ngModel)]="keyword" />
+  </div>
+  }
+
   <!-- ================= EMPTY ================= -->
 
   @if(events().length === 0){
@@ -42,9 +50,17 @@
   <div class="empty-box">
     <div class="empty-icon">🎫</div>
 
-    <h3>No Events Found</h3>
+    <h3>Không tìm thấy chuyến bay nào</h3>
 
-    <p>There are currently no events available.</p>
+    <p>Hiện chưa có chuyến bay nào trong hệ thống.</p>
+  </div>
+
+  } @else if (filteredEvents.length === 0) {
+
+  <div class="empty-box">
+    <div class="empty-icon">🎫</div>
+
+    <h3>Không tìm thấy chuyến bay phù hợp</h3>
   </div>
 
   } @else{
@@ -52,35 +68,9 @@
   <!-- ================= GRID ================= -->
 
   <div class="event-grid">
-    @for(event of events(); track trackId(event)){
+    @for(event of filteredEvents; track trackId(event)){
 
     <div class="event-card">
-      <!-- Banner -->
-
-      <div class="event-banner">
-        @if(event.banner){
-
-        <img [src]="event.banner" alt="Event Banner" />
-
-        } @else{
-
-        <div class="no-banner">No Image</div>
-
-        }
-
-        <div class="banner-overlay"></div>
-
-        @if(event.status){
-
-        <span class="status-badge public"> Public </span>
-
-        } @else{
-
-        <span class="status-badge private"> Private </span>
-
-        }
-      </div>
-
       <!-- ================= CONTENT ================= -->
 
       <div class="event-content">
@@ -89,28 +79,55 @@
         <div class="event-top">
           <h3 class="event-title">{{ event.title }}</h3>
 
-          <span class="event-id"> #{{ event.id }} </span>
+          @if(event.status){
+
+          <span class="status-badge public"> Public </span>
+
+          } @else{
+
+          <span class="status-badge private"> Private </span>
+
+          }
         </div>
 
-        <!-- ================= ORGANIZER ================= -->
+        <!-- ================= ROUTE ================= -->
 
-        <div class="organizer">
-          <span class="organizer-icon">👤</span>
+        @if(event.departureAirport && event.arrivalAirport){
 
-          <div class="organizer-info">
-            <span class="label"> Organizer </span>
-
-            <span class="value"> @if(event.organizer){ {{ event.organizer.companyName }} }@else{ No Organizer } </span>
-          </div>
+        <div class="event-route">
+          <span class="route-code">{{ event.departureAirport.code }}</span>
+          <span class="route-arrow">→</span>
+          <span class="route-code">{{ event.arrivalAirport.code }}</span>
+          <span class="route-cities">{{ event.departureAirport.city }} – {{ event.arrivalAirport.city }}</span>
         </div>
+
+        }
+
+        <!-- ================= SHOWTIME CHIPS ================= -->
+
+        @if(event.showtimes && event.showtimes.length > 0){
+
+        <div class="showtime-chips">
+          @for(showtime of event.showtimes; track showtime.id){
+          <span class="showtime-chip">{{ $any(showtime.startTime) | date: 'HH:mm dd/MM' }}</span>
+          }
+        </div>
+
+        } @else {
+
+        <div class="showtime-chips">
+          <span class="showtime-chip empty">Chưa có khung giờ bay</span>
+        </div>
+
+        }
 
         <!-- ================= QUICK INFO ================= -->
 
         <div class="event-info">
           <div class="info-row">
-            <span>📅</span>
+            <span>🎫</span>
 
-            <span> {{ event.startTime | formatMediumDatetime }} </span>
+            <span> #{{ event.id }} </span>
           </div>
 
           @if(event.address){
@@ -130,7 +147,7 @@
           <a [routerLink]="['/event', event.id, 'view']" class="btn btn-view">
             <span>👁️</span>
 
-            <span>View</span>
+            <span>Xem</span>
           </a>
 
           <div class="right-action">

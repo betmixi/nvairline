@@ -1,15 +1,11 @@
 package com.dugx.event.service;
 
 import com.dugx.event.domain.Event;
-import com.dugx.event.domain.Organizer;
-import com.dugx.event.domain.OrganizerStatus;
 import com.dugx.event.repository.EventRepository;
-import com.dugx.event.repository.OrganizerRepository;
-import com.dugx.event.repository.TicketTypeRepository;
-import com.dugx.event.security.SecurityUtils;
+import com.dugx.event.repository.ShowtimeRepository;
 import com.dugx.event.service.dto.EventDTO;
 import com.dugx.event.service.mapper.EventMapper;
-import com.dugx.event.service.mapper.TicketTypeMapper;
+import com.dugx.event.service.mapper.ShowtimeMapper;
 import com.dugx.event.web.rest.errors.BadRequestAlertException;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -31,22 +27,19 @@ public class EventService {
     private final EventRepository eventRepository;
 
     private final EventMapper eventMapper;
-    private final OrganizerRepository organizerRepository;
-    private final TicketTypeRepository ticketTypeRepository;
-    private final TicketTypeMapper ticketTypeMapper;
+    private final ShowtimeRepository showtimeRepository;
+    private final ShowtimeMapper showtimeMapper;
 
     public EventService(
         EventRepository eventRepository,
         EventMapper eventMapper,
-        OrganizerRepository organizerRepository,
-        TicketTypeRepository ticketTypeRepository,
-        TicketTypeMapper ticketTypeMapper
+        ShowtimeRepository showtimeRepository,
+        ShowtimeMapper showtimeMapper
     ) {
         this.eventRepository = eventRepository;
         this.eventMapper = eventMapper;
-        this.organizerRepository = organizerRepository;
-        this.ticketTypeRepository = ticketTypeRepository;
-        this.ticketTypeMapper = ticketTypeMapper;
+        this.showtimeRepository = showtimeRepository;
+        this.showtimeMapper = showtimeMapper;
     }
 
     /**
@@ -58,16 +51,18 @@ public class EventService {
     public EventDTO save(EventDTO eventDTO) {
         LOG.debug("Request to save Event : {}", eventDTO);
 
-        Event event = eventMapper.toEntity(eventDTO);
-
-        Organizer organizer = getCurrentOrganizer();
-
-        if (organizer.getStatus() != OrganizerStatus.APPROVED) {
-            throw new BadRequestAlertException("Organizer chưa được phê duyệt", "event", "organizerNotApproved");
+        // Cot NOT NULL trong DB - mac dinh ho tro ca 3 loai hanh trinh neu form tao khong chi dinh gi.
+        if (eventDTO.getSupportsOneWay() == null) {
+            eventDTO.setSupportsOneWay(true);
+        }
+        if (eventDTO.getSupportsRoundTrip() == null) {
+            eventDTO.setSupportsRoundTrip(true);
+        }
+        if (eventDTO.getSupportsMultiCity() == null) {
+            eventDTO.setSupportsMultiCity(true);
         }
 
-        event.setOrganizer(organizer);
-
+        Event event = eventMapper.toEntity(eventDTO);
         event = eventRepository.save(event);
 
         return eventMapper.toDto(event);
@@ -82,12 +77,18 @@ public class EventService {
     public EventDTO update(EventDTO eventDTO) {
         LOG.debug("Request to update Event : {}", eventDTO);
 
-        Event existingEvent = eventRepository
-            .findById(eventDTO.getId())
-            .orElseThrow(() -> new BadRequestAlertException("Event không tồn tại", "event", "eventNotFound"));
+        // Cot NOT NULL trong DB - giu mac dinh true neu client PUT khong gui (vd form cu chua co truong nay).
+        if (eventDTO.getSupportsOneWay() == null) {
+            eventDTO.setSupportsOneWay(true);
+        }
+        if (eventDTO.getSupportsRoundTrip() == null) {
+            eventDTO.setSupportsRoundTrip(true);
+        }
+        if (eventDTO.getSupportsMultiCity() == null) {
+            eventDTO.setSupportsMultiCity(true);
+        }
 
         Event event = eventMapper.toEntity(eventDTO);
-        event.setOrganizer(existingEvent.getOrganizer());
         event = eventRepository.save(event);
         return eventMapper.toDto(event);
     }
@@ -100,8 +101,6 @@ public class EventService {
      */
     public Optional<EventDTO> partialUpdate(EventDTO eventDTO) {
         LOG.debug("Request to partially update Event : {}", eventDTO);
-
-        //checkOwnership(eventDTO.getId());
 
         return eventRepository
             .findById(eventDTO.getId())
@@ -122,20 +121,6 @@ public class EventService {
         return eventRepository.findAllWithEagerRelationships(pageable).map(eventMapper::toDto);
     }
 
-    @Transactional(readOnly = true)
-    public Page<EventDTO> findMyEvents(Pageable pageable) {
-        String login = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new RuntimeException("User not found"));
-
-        return eventRepository.findMyEvents(login, pageable).map(event -> {
-            EventDTO dto = eventMapper.toDto(event);
-
-            dto.setPrice(eventRepository.findMinPrice(event.getId()));
-
-            dto.setTicketTypes(ticketTypeRepository.findByEventId(event.getId()).stream().map(ticketTypeMapper::toDto).toList());
-            return dto;
-        });
-    }
-
     /**
      * Get one event by id.
      *
@@ -150,20 +135,10 @@ public class EventService {
 
             dto.setPrice(eventRepository.findMinPrice(event.getId()));
 
-            dto.setTicketTypes(ticketTypeRepository.findByEventId(event.getId()).stream().map(ticketTypeMapper::toDto).toList());
+            dto.setShowtimes(showtimeRepository.findByEvent_Id(event.getId()).stream().map(showtimeMapper::toDto).toList());
 
             return dto;
         });
-    }
-
-    private Organizer getCurrentOrganizer() {
-        String login = SecurityUtils.getCurrentUserLogin().orElseThrow(() ->
-            new BadRequestAlertException("Chưa đăng nhập", "event", "unauthorized")
-        );
-
-        return organizerRepository
-            .findByUserLogin(login)
-            .orElseThrow(() -> new BadRequestAlertException("Bạn chưa đăng ký Organizer", "event", "organizerNotFound"));
     }
 
     /**
@@ -174,15 +149,10 @@ public class EventService {
     public void delete(Long id) {
         LOG.debug("Request to delete Event : {}", id);
 
-        String login = SecurityUtils.getCurrentUserLogin().orElseThrow(() ->
-            new BadRequestAlertException("Chưa đăng nhập", "event", "unauthorized")
-        );
-
         Event event = eventRepository
-            .findMyEventById(id, login)
-            .orElseThrow(() -> new BadRequestAlertException("Bạn không có quyền xóa Event này", "event", "forbidden"));
+            .findById(id)
+            .orElseThrow(() -> new BadRequestAlertException("Event không tồn tại", "event", "eventnotfound"));
 
-        ticketTypeRepository.deleteAllByEventId(id);
         eventRepository.delete(event);
     }
 }

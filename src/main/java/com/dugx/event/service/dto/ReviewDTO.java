@@ -28,6 +28,13 @@ public class ReviewDTO implements Serializable {
 
     private EventDTO event;
 
+    private Boolean hidden;
+
+    @Lob
+    private String reply;
+
+    private Instant repliedDate;
+
     public Long getId() {
         return id;
     }
@@ -74,6 +81,30 @@ public class ReviewDTO implements Serializable {
 
     public void setEvent(EventDTO event) {
         this.event = event;
+    }
+
+    public Boolean getHidden() {
+        return hidden;
+    }
+
+    public void setHidden(Boolean hidden) {
+        this.hidden = hidden;
+    }
+
+    public String getReply() {
+        return reply;
+    }
+
+    public void setReply(String reply) {
+        this.reply = reply;
+    }
+
+    public Instant getRepliedDate() {
+        return repliedDate;
+    }
+
+    public void setRepliedDate(Instant repliedDate) {
+        this.repliedDate = repliedDate;
     }
 
     @Override

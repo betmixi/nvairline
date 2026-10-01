@@ -8,7 +8,7 @@
 
       <div class="header-title">
         <h2>User Management</h2>
-        <p>Manage users, roles and organizer accounts</p>
+        <p>Manage users and roles</p>
       </div>
     </div>
 
@@ -159,10 +159,6 @@
               @if (userManagement.authorities?.includes('ROLE_ADMIN')) {
 
               <span class="account admin"> 👑 Admin </span>
-
-              } @else if (userManagement.authorities?.includes('ROLE_ORGANIZER')) {
-
-              <span class="account organizer"> 🏪 Organizer </span>
 
               } @else {
 

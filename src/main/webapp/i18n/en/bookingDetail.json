@@ -18,10 +18,9 @@
         "title": "Booking Detail"
       },
       "id": "ID",
-      "quantity": "Quantity",
       "price": "Price",
       "booking": "Booking",
-      "ticketType": "Ticket Type"
+      "showtimeSeat": "Showtime Seat"
     }
   }
 }

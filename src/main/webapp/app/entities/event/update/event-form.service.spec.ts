@@ -29,7 +29,6 @@ describe('Event Form Service', () => {
             createdDate: expect.any(Object),
             category: expect.any(Object),
             address: expect.any(Object),
-            organizer: expect.any(Object),
           }),
         );
       });
@@ -49,7 +48,6 @@ describe('Event Form Service', () => {
             createdDate: expect.any(Object),
             category: expect.any(Object),
             address: expect.any(Object),
-            organizer: expect.any(Object),
           }),
         );
       });

@@ -1,0 +1,29 @@
+{
+  "dugxApp": {
+    "promotion": {
+      "home": {
+        "title": "Promotions",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Promotion",
+        "createOrEditLabel": "Create or edit a Promotion",
+        "notFound": "No Promotions found"
+      },
+      "created": "A new Promotion is created with identifier {{ param }}",
+      "updated": "A Promotion is updated with identifier {{ param }}",
+      "deleted": "A Promotion is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Promotion {{ id }}?"
+      },
+      "detail": {
+        "title": "Promotion"
+      },
+      "id": "ID",
+      "title": "Title",
+      "description": "Description",
+      "icon": "Icon (emoji)",
+      "targetUrl": "Target URL",
+      "displayOrder": "Display order",
+      "active": "Active"
+    }
+  }
+}

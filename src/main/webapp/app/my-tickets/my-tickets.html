@@ -11,13 +11,11 @@
   <div *ngIf="!isLoading && groups.length === 0" class="empty-state text-center py-5">
     <h5>Bạn chưa có vé nào</h5>
     <p class="text-muted">Vé sẽ xuất hiện ở đây ngay sau khi bạn thanh toán thành công.</p>
-    <a class="btn btn-primary" routerLink="/">Khám phá sự kiện</a>
+    <a class="btn btn-primary" routerLink="/">Khám phá chuyến bay</a>
   </div>
 
   <div *ngFor="let group of groups; trackBy: trackGroup" class="event-group mb-4">
     <div class="event-header">
-      <img *ngIf="group.eventBanner" class="event-thumb" [src]="group.eventBanner" [alt]="group.eventTitle" />
-
       <div class="event-meta">
         <h5 class="mb-1">{{ group.eventTitle }}</h5>
 
@@ -33,36 +31,98 @@
 
     <div class="ticket-list">
       <div *ngFor="let ticket of group.tickets; trackBy: trackTicket" class="ticket-card" [class.is-used]="ticket.checkedIn">
-        <div class="ticket-info">
-          <div class="d-flex justify-content-between align-items-start">
-            <strong>{{ ticket.ticketTypeName }}</strong>
-
-            <span class="badge" [class.bg-success]="isUsable(ticket)" [class.bg-secondary]="!isUsable(ticket)">
-              {{ ticket.checkedIn ? 'Đã check-in' : ticket.status }}
-            </span>
+        <div class="d-flex justify-content-between align-items-start">
+          <div class="ticket-code">
+            <span class="ticket-code-label">Số vé</span>
+            <span class="ticket-code-value">{{ ticket.qrCode }}</span>
+            <span class="badge bg-info-subtle text-info-emphasis ms-2" *ngIf="isMultiLeg(ticket)"
+              >✈ Khứ hồi/nhiều chặng · {{ legLabel(ticket) }}</span
+            >
           </div>
 
-          <div class="text-muted small mt-2">Đơn hàng #{{ ticket.bookingId }}</div>
+          <span class="badge" [class.bg-success]="isUsable(ticket)" [class.bg-secondary]="!isUsable(ticket)">
+            {{ ticket.checkedIn ? 'Đã check-in' : ticket.status }}
+          </span>
+        </div>
 
-          <div class="ticket-code small">{{ ticket.qrCode }}</div>
+        <dl class="ticket-fields">
+          <div class="ticket-field">
+            <dt>Khách hàng</dt>
+            <dd>{{ ticket.passengerName || '—' }}</dd>
+          </div>
+          <div class="ticket-field">
+            <dt>Số hiệu máy bay</dt>
+            <dd>{{ ticket.aircraftName || '—' }}</dd>
+          </div>
+          <div class="ticket-field">
+            <dt>Mã ghế</dt>
+            <dd>{{ ticket.seatLabel }} ({{ ticket.seatType }})</dd>
+          </div>
+          <div class="ticket-field" *ngIf="ticket.showtimeStartTime">
+            <dt>Giờ bay</dt>
+            <dd>{{ ticket.showtimeStartTime.format('DD/MM/YYYY HH:mm') }}</dd>
+          </div>
+        </dl>
 
-          <button
-            *ngIf="!qrImageOf(ticket.id)"
-            class="btn btn-outline-primary btn-sm mt-3"
-            [disabled]="isQrLoading(ticket.id)"
-            (click)="showQr(ticket)"
-          >
-            <span *ngIf="!isQrLoading(ticket.id)">Hiện mã QR</span>
-            <span *ngIf="isQrLoading(ticket.id)">
-              <span class="spinner-border spinner-border-sm me-2"></span>
-              Đang tạo...
+        <div class="text-muted small">Đơn hàng #{{ ticket.bookingId }}</div>
+      </div>
+    </div>
+
+    <!-- ĐÁNH GIÁ CHUYẾN BAY -->
+    <div class="review-block" *ngIf="group.eventId != null">
+      <div *ngIf="!group.reviewFormOpen" class="review-summary">
+        <ng-container *ngIf="group.myReview; else noReviewYet">
+          <div class="review-summary-head">
+            <span class="review-stars">
+              <span *ngFor="let star of [1, 2, 3, 4, 5]" [class.filled]="star <= group.myReview!.rating">★</span>
             </span>
+            <span class="text-muted small">Bạn đã đánh giá chuyến bay này</span>
+          </div>
+          <p class="review-comment mb-1">{{ group.myReview.comment }}</p>
+          <div class="review-summary-actions">
+            <button type="button" class="review-link-btn" (click)="toggleReviewForm(group)">Sửa đánh giá</button>
+            <button type="button" class="review-link-btn text-danger" [disabled]="!!group.isDeletingReview" (click)="deleteMyReview(group)">
+              Xoá
+            </button>
+          </div>
+        </ng-container>
+        <ng-template #noReviewYet>
+          <button type="button" class="btn btn-outline-primary btn-sm" (click)="toggleReviewForm(group)">⭐ Đánh giá chuyến bay</button>
+        </ng-template>
+      </div>
+
+      <div *ngIf="group.reviewFormOpen" class="review-form">
+        <div class="rating-picker">
+          <span class="rating-label">Chấm điểm:</span>
+          <button
+            type="button"
+            *ngFor="let star of [1, 2, 3, 4, 5]"
+            class="star-btn"
+            [class.active]="star <= (group.reviewRating ?? 0)"
+            (click)="setRating(group, star)"
+            [attr.aria-label]="star + ' sao'"
+          >
+            ★
           </button>
         </div>
 
-        <div *ngIf="qrImageOf(ticket.id)" class="ticket-qr">
-          <img [src]="qrImageOf(ticket.id)" alt="Mã QR của vé" />
-          <div class="small text-muted mt-1 text-center">Đưa mã này cho nhân viên soát vé</div>
+        <textarea
+          class="form-control review-input"
+          rows="2"
+          placeholder="Chia sẻ cảm nhận của bạn về chuyến bay này..."
+          [(ngModel)]="group.reviewComment"
+          [disabled]="!!group.isSubmittingReview"
+        ></textarea>
+
+        <div *ngIf="group.reviewError" class="alert alert-danger mt-2 mb-0 py-2">{{ group.reviewError }}</div>
+
+        <div class="review-form-actions">
+          <button class="btn btn-primary btn-sm" [disabled]="!!group.isSubmittingReview" (click)="submitReview(group)">
+            {{ group.isSubmittingReview ? 'Đang gửi...' : group.myReview ? 'Lưu thay đổi' : 'Gửi đánh giá' }}
+          </button>
+          <button class="btn btn-outline-secondary btn-sm" [disabled]="!!group.isSubmittingReview" (click)="cancelReviewForm(group)">
+            Huỷ
+          </button>
         </div>
       </div>
     </div>

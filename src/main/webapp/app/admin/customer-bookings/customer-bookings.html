@@ -1,0 +1,98 @@
+<div class="bookings-page">
+  <a class="back-link" routerLink="/admin/dashboard">← Quay lại Dashboard</a>
+
+  <div class="page-header">
+    <h1>🧑‍💼 Quản lý đặt vé và thống kê</h1>
+    <p>Toàn bộ khách hàng đã đặt vé hoặc mua thêm dịch vụ, kèm chi tiết và trạng thái đơn</p>
+  </div>
+
+  <!-- Tổng quan -->
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="summary-title">Thống kê số đơn</div>
+      <div class="summary-value">{{ bookings.length }}</div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-title">Tổng doanh thu</div>
+      <div class="summary-value">{{ totalRevenue | number: '1.0-0' }} ₫</div>
+    </div>
+  </div>
+
+  <!-- Bộ lọc -->
+  <div class="filter-bar">
+    <input class="form-control search-input" type="text" placeholder="🔍 Tìm theo tên khách, email, chuyến bay..." [(ngModel)]="keyword" />
+
+    <div class="status-filter">
+      <button type="button" [class.active]="statusFilter === 'all'" (click)="statusFilter = 'all'">Tất cả trạng thái</button>
+      @for (s of statuses; track s) {
+      <button type="button" [class.active]="statusFilter === s" (click)="statusFilter = s">{{ s }}</button>
+      }
+    </div>
+
+    <div class="status-filter">
+      <button type="button" [class.active]="typeFilter === 'all'" (click)="typeFilter = 'all'">Tất cả loại đơn</button>
+      @for (t of types; track t) {
+      <button type="button" [class.active]="typeFilter === t" (click)="typeFilter = t">{{ bookingTypeLabelFor(t) }}</button>
+      }
+    </div>
+  </div>
+
+  <!-- Danh sách -->
+  <div class="card-box">
+    @if (isLoading) {
+
+    <div class="state-box">Đang tải...</div>
+
+    } @else if (filteredBookings.length === 0) {
+
+    <div class="state-box">
+      <div class="empty-icon">🧑‍💼</div>
+      <h3>{{ bookings.length === 0 ? 'Chưa có khách nào đặt vé' : 'Không tìm thấy đơn phù hợp' }}</h3>
+    </div>
+
+    } @else {
+
+    <div class="table-scroll">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Khách hàng</th>
+            <th>Email</th>
+            <th>Loại đơn</th>
+            <th>Chuyến bay</th>
+            <th>Tuyến / Mô tả</th>
+            <th>Thời gian mua</th>
+            <th>Số vé</th>
+            <th>Tổng tiền</th>
+            <th>Trạng thái</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (booking of filteredBookings; track booking.bookingId + '-' + booking.bookingType) {
+          <tr>
+            <td class="customer-cell">{{ customerName(booking) }}</td>
+            <td>{{ booking.customerEmail || '—' }}</td>
+            <td>
+              <span class="type-badge" [class]="'type-' + booking.bookingType.toLowerCase()">{{ bookingTypeLabel(booking) }}</span>
+            </td>
+            <td class="flight-cell">{{ booking.flightTitle || '—' }}</td>
+            <td class="route-cell">{{ route(booking) }}</td>
+            <td>{{ purchaseTime(booking) | date: 'dd/MM/yyyy HH:mm' }}</td>
+            <td class="ticket-count-cell">{{ booking.ticketCount }}</td>
+            <td>{{ booking.totalAmount | number: '1.0-0' }} ₫</td>
+            <td>
+              <span class="status-badge" [class.is-paid]="booking.status === 'PAID'" [class.is-cancelled]="booking.status === 'CANCELLED'">
+                {{ booking.status }}
+              </span>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    }
+  </div>
+</div>

@@ -1,0 +1,29 @@
+<div class="favorites-page">
+  <div class="page-header">
+    <h2>❤ Sự kiện đã lưu</h2>
+    <p>Những sự kiện bạn quan tâm</p>
+  </div>
+
+  @if (isLoading) {
+
+  <div class="state-box">Đang tải...</div>
+
+  } @else if (events.length === 0) {
+
+  <div class="state-box">
+    <div class="empty-icon">🤍</div>
+    <h3>Chưa lưu sự kiện nào</h3>
+    <p class="text-muted">Bấm "Lưu sự kiện" ở trang chi tiết để thêm vào đây.</p>
+    <a class="btn btn-primary mt-3" routerLink="/events">Khám phá sự kiện</a>
+  </div>
+
+  } @else {
+
+  <div class="event-grid">
+    @for (event of events; track event.id) {
+    <jhi-event-card [event]="event" />
+    }
+  </div>
+
+  }
+</div>

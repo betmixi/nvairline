@@ -1,21 +1,19 @@
 import { HttpResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AccountService } from 'app/core/auth/account.service';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Observable, finalize, map } from 'rxjs';
-import { forkJoin } from 'rxjs';
 import { DataUtils, FileLoadError } from 'app/core/util/data-util.service';
 import { UploadService } from 'app/core/util/upload.service';
 import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
 import { IAddress } from 'app/entities/address/address.model';
 import { AddressService } from 'app/entities/address/service/address.service';
+import { IAirport } from 'app/entities/airport/airport.model';
+import { AirportService } from 'app/entities/airport/service/airport.service';
 import { ICategory } from 'app/entities/category/category.model';
 import { CategoryService } from 'app/entities/category/service/category.service';
-import { IOrganizer } from 'app/entities/organizer/organizer.model';
-import { OrganizerService } from 'app/entities/organizer/service/organizer.service';
 import { AlertError } from 'app/shared/alert/alert-error';
 import { AlertErrorModel } from 'app/shared/alert/alert-error.model';
 import { TranslateDirective } from 'app/shared/language';
@@ -23,23 +21,19 @@ import { IEvent } from '../event.model';
 import { EventService } from '../service/event.service';
 import { FormsModule } from '@angular/forms';
 import { EventFormGroup, EventFormService } from './event-form.service';
-import { TicketTypeService } from 'app/entities/ticket-type/service/ticket-type.service';
-import { NewTicketType } from 'app/entities/ticket-type/ticket-type.model';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'jhi-event-update',
   templateUrl: './event-update.html',
-  imports: [TranslateDirective, TranslatePipe, FontAwesomeModule, AlertError, ReactiveFormsModule, FormsModule],
+  imports: [TranslateDirective, TranslatePipe, FontAwesomeModule, AlertError, ReactiveFormsModule, FormsModule, RouterLink],
 })
 export class EventUpdate implements OnInit {
   readonly isSaving = signal(false);
   event: IEvent | null = null;
-  tickets: any[] = [];
-  private originalTicketIds: number[] = [];
 
   categoriesSharedCollection = signal<ICategory[]>([]);
   addressesSharedCollection = signal<IAddress[]>([]);
-  organizersSharedCollection = signal<IOrganizer[]>([]);
+  airportsSharedCollection = signal<IAirport[]>([]);
 
   readonly isUploadingBanner = signal(false);
   readonly bannerUploadError = signal<string | null>(null);
@@ -51,11 +45,9 @@ export class EventUpdate implements OnInit {
   protected eventFormService = inject(EventFormService);
   protected categoryService = inject(CategoryService);
   protected addressService = inject(AddressService);
-  protected organizerService = inject(OrganizerService);
+  protected airportService = inject(AirportService);
   protected activatedRoute = inject(ActivatedRoute);
   protected router = inject(Router);
-  protected accountService = inject(AccountService);
-  protected ticketTypeService = inject(TicketTypeService);
   // eslint-disable-next-line @typescript-eslint/member-ordering
   editForm: EventFormGroup = this.eventFormService.createEventFormGroup();
 
@@ -63,7 +55,7 @@ export class EventUpdate implements OnInit {
 
   compareAddress = (o1: IAddress | null, o2: IAddress | null): boolean => this.addressService.compareAddress(o1, o2);
 
-  compareOrganizer = (o1: IOrganizer | null, o2: IOrganizer | null): boolean => this.organizerService.compareOrganizer(o1, o2);
+  compareAirport = (o1: IAirport | null, o2: IAirport | null): boolean => this.airportService.compareAirport(o1, o2);
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ event }) => {
@@ -71,40 +63,9 @@ export class EventUpdate implements OnInit {
 
       if (event) {
         this.updateForm(event);
-
-        if (event.id) {
-          this.loadTickets(event.id);
-        }
       }
 
       this.loadRelationshipsOptions();
-    });
-  }
-  protected loadTickets(eventId: number): void {
-    this.ticketTypeService.findByEvent(eventId).subscribe({
-      next: res => {
-        const data = res.body ?? [];
-
-        this.originalTicketIds = data.filter(t => t.id != null).map(t => t.id!);
-
-        this.tickets = data.map(ticket => ({
-          id: ticket.id,
-
-          name: ticket.name ?? '',
-
-          price: ticket.price ?? 0,
-
-          quantity: ticket.quantity ?? 0,
-
-          remaining: ticket.remaining ?? ticket.quantity ?? 0,
-        }));
-
-        if (this.tickets.length === 0) {
-          this.addTicket();
-        }
-      },
-
-      error: err => console.error(err),
     });
   }
   byteSize(base64String: string): string {
@@ -160,23 +121,6 @@ export class EventUpdate implements OnInit {
     });
   }
 
-  addTicket(): void {
-    this.tickets.push({
-      id: null,
-      name: '',
-      price: 0,
-      quantity: 0,
-      remaining: 0,
-    });
-  }
-
-  removeTicket(index: number): void {
-    this.tickets.splice(index, 1);
-    if (this.tickets.length === 0) {
-      this.addTicket();
-    }
-  }
-
   save(): void {
     this.isSaving.set(true);
     const event = this.eventFormService.getEvent(this.editForm);
@@ -191,65 +135,14 @@ export class EventUpdate implements OnInit {
   }
 
   private navigateAfterSave(): void {
-    if (this.accountService.hasAnyAuthority('ROLE_ADMIN')) {
-      this.router.navigate(['/event']);
-    } else {
-      this.router.navigate(['/organizer/events']);
-    }
+    this.router.navigate(['/event']);
   }
   protected subscribeToSaveResponse(result: Observable<IEvent>): void {
     result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
-      next: event => {
-        this.saveTickets(event.id);
-      },
-      error: () => this.onSaveError(),
-    });
-  }
-  protected saveTickets(eventId: number): void {
-    const requests: Observable<any>[] = [];
-    const currentIds = this.tickets.filter(ticket => ticket.id != null).map(ticket => ticket.id);
-
-    const deletedIds = this.originalTicketIds.filter(id => !currentIds.includes(id));
-
-    deletedIds.forEach(id => {
-      requests.push(this.ticketTypeService.delete(id));
-    });
-    this.tickets.forEach(ticket => {
-      const dto = {
-        id: ticket.id,
-        name: ticket.name,
-        price: ticket.price,
-        quantity: ticket.quantity,
-        remaining: ticket.id ? ticket.remaining : ticket.quantity,
-        saleStart: null,
-        saleEnd: null,
-        event: {
-          id: eventId,
-          title: '',
-        },
-      };
-      if (ticket.id) {
-        requests.push(this.ticketTypeService.update(dto as any));
-      } else {
-        requests.push(
-          this.ticketTypeService.create({
-            ...dto,
-            id: null,
-          }),
-        );
-      }
-    });
-    if (requests.length === 0) {
-      this.navigateAfterSave();
-      return;
-    }
-    forkJoin(requests).subscribe({
       next: () => {
         this.navigateAfterSave();
       },
-      error: err => {
-        console.error(err);
-      },
+      error: () => this.onSaveError(),
     });
   }
 
@@ -271,8 +164,8 @@ export class EventUpdate implements OnInit {
     this.addressesSharedCollection.update(addresses =>
       this.addressService.addAddressToCollectionIfMissing<IAddress>(addresses, event.address),
     );
-    this.organizersSharedCollection.update(organizers =>
-      this.organizerService.addOrganizerToCollectionIfMissing<IOrganizer>(organizers, event.organizer),
+    this.airportsSharedCollection.update(airports =>
+      this.airportService.addAirportToCollectionIfMissing<IAirport>(airports, event.departureAirport, event.arrivalAirport),
     );
   }
 
@@ -293,14 +186,14 @@ export class EventUpdate implements OnInit {
       .pipe(map((addresses: IAddress[]) => this.addressService.addAddressToCollectionIfMissing<IAddress>(addresses, this.event?.address)))
       .subscribe((addresses: IAddress[]) => this.addressesSharedCollection.set(addresses));
 
-    this.organizerService
+    this.airportService
       .query()
-      .pipe(map((res: HttpResponse<IOrganizer[]>) => res.body ?? []))
+      .pipe(map((res: HttpResponse<IAirport[]>) => res.body ?? []))
       .pipe(
-        map((organizers: IOrganizer[]) =>
-          this.organizerService.addOrganizerToCollectionIfMissing<IOrganizer>(organizers, this.event?.organizer),
+        map((airports: IAirport[]) =>
+          this.airportService.addAirportToCollectionIfMissing<IAirport>(airports, this.event?.departureAirport, this.event?.arrivalAirport),
         ),
       )
-      .subscribe((organizers: IOrganizer[]) => this.organizersSharedCollection.set(organizers));
+      .subscribe((airports: IAirport[]) => this.airportsSharedCollection.set(airports));
   }
 }

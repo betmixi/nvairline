@@ -12,13 +12,11 @@ public class BookingDetailDTO implements Serializable {
 
     private Long id;
 
-    private Integer quantity;
-
     private BigDecimal price;
 
     private BookingDTO booking;
 
-    private TicketTypeDTO ticketType;
+    private ShowtimeSeatDTO showtimeSeat;
 
     public Long getId() {
         return id;
@@ -26,14 +24,6 @@ public class BookingDetailDTO implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
     }
 
     public BigDecimal getPrice() {
@@ -52,12 +42,12 @@ public class BookingDetailDTO implements Serializable {
         this.booking = booking;
     }
 
-    public TicketTypeDTO getTicketType() {
-        return ticketType;
+    public ShowtimeSeatDTO getShowtimeSeat() {
+        return showtimeSeat;
     }
 
-    public void setTicketType(TicketTypeDTO ticketType) {
-        this.ticketType = ticketType;
+    public void setShowtimeSeat(ShowtimeSeatDTO showtimeSeat) {
+        this.showtimeSeat = showtimeSeat;
     }
 
     @Override
@@ -86,10 +76,9 @@ public class BookingDetailDTO implements Serializable {
     public String toString() {
         return "BookingDetailDTO{" +
             "id=" + getId() +
-            ", quantity=" + getQuantity() +
             ", price=" + getPrice() +
             ", booking=" + getBooking() +
-            ", ticketType=" + getTicketType() +
+            ", showtimeSeat=" + getShowtimeSeat() +
             "}";
     }
 }

@@ -1,11 +1,14 @@
-<div>
+<div class="app-shell" [class.hide-navbar]="isAuthRoute()">
   <router-outlet name="navbar" />
-</div>
 
-<div class="container-fluid">
-  <div class="card jh-card">
-    <router-outlet />
+  <div class="app-content">
+    @if (isAdminRoute()) {
+    <jhi-admin-shell />
+    }
+    <div class="container-fluid" [class.full-bleed]="isFullBleedRoute() || isAuthRoute()" [class.admin-page-container]="isAdminRoute()">
+      <div class="card jh-card" [class.full-bleed]="isFullBleedRoute() || isAuthRoute()">
+        <router-outlet />
+      </div>
+    </div>
   </div>
-
-  <jhi-footer />
 </div>

@@ -66,7 +66,6 @@ public class EventAsserts {
         assertThat(actual)
             .as("Verify Event relationships")
             .satisfies(a -> assertThat(a.getCategory()).as("check category").isEqualTo(expected.getCategory()))
-            .satisfies(a -> assertThat(a.getAddress()).as("check address").isEqualTo(expected.getAddress()))
-            .satisfies(a -> assertThat(a.getOrganizer()).as("check organizer").isEqualTo(expected.getOrganizer()));
+            .satisfies(a -> assertThat(a.getAddress()).as("check address").isEqualTo(expected.getAddress()));
     }
 }

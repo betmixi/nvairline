@@ -42,13 +42,6 @@
               <fa-icon class="p-1" icon="sort" />
             </div>
           </th>
-          <th scope="col" jhiSortBy="quantity">
-            <div class="d-flex">
-              <span jhiTranslate="dugxApp.bookingDetail.quantity">Quantity</span>
-
-              <fa-icon class="p-1" icon="sort" />
-            </div>
-          </th>
           <th scope="col" jhiSortBy="price">
             <div class="d-flex">
               <span jhiTranslate="dugxApp.bookingDetail.price">Price</span>
@@ -62,10 +55,9 @@
               <fa-icon class="p-1" icon="sort" />
             </div>
           </th>
-          <th scope="col" jhiSortBy="ticketType.name">
+          <th scope="col">
             <div class="d-flex">
-              <span jhiTranslate="dugxApp.bookingDetail.ticketType">Ticket Type</span>
-              <fa-icon class="p-1" icon="sort" />
+              <span jhiTranslate="dugxApp.bookingDetail.showtimeSeat">Showtime Seat</span>
             </div>
           </th>
           <th scope="col"></th>
@@ -75,7 +67,6 @@
         @for (bookingDetail of bookingDetails(); track trackId(bookingDetail)) {
         <tr data-cy="entityTable">
           <td><a [routerLink]="['/booking-detail', bookingDetail.id, 'view']">{{ bookingDetail.id }}</a></td>
-          <td>{{ bookingDetail.quantity }}</td>
           <td>{{ bookingDetail.price }}</td>
           <td>
             @if (bookingDetail.booking) {
@@ -85,10 +76,8 @@
             }
           </td>
           <td>
-            @if (bookingDetail.ticketType) {
-            <div>
-              <a [routerLink]="['/ticket-type', bookingDetail.ticketType.id, 'view']">{{ bookingDetail.ticketType.name }}</a>
-            </div>
+            @if (bookingDetail.showtimeSeat?.seat) {
+            <span>{{ bookingDetail.showtimeSeat?.seat?.rowLabel }}{{ bookingDetail.showtimeSeat?.seat?.seatNumber }}</span>
             }
           </td>
           <td class="text-end">

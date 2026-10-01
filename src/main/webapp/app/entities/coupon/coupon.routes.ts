@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 
 import { ASC } from 'app/config/navigation.constants';
 import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
+import { Authority } from 'app/shared/jhipster/constants';
 
 import CouponResolve from './route/coupon-routing-resolve.service';
 
@@ -11,6 +12,7 @@ const couponRoute: Routes = [
     loadComponent: () => import('./list/coupon').then(m => m.Coupon),
     data: {
       defaultSort: `id,${ASC}`,
+      authorities: [Authority.ADMIN],
     },
     canActivate: [UserRouteAccessService],
   },
@@ -20,6 +22,7 @@ const couponRoute: Routes = [
     resolve: {
       coupon: CouponResolve,
     },
+    data: { authorities: [Authority.ADMIN] },
     canActivate: [UserRouteAccessService],
   },
   {
@@ -28,6 +31,7 @@ const couponRoute: Routes = [
     resolve: {
       coupon: CouponResolve,
     },
+    data: { authorities: [Authority.ADMIN] },
     canActivate: [UserRouteAccessService],
   },
   {
@@ -36,6 +40,7 @@ const couponRoute: Routes = [
     resolve: {
       coupon: CouponResolve,
     },
+    data: { authorities: [Authority.ADMIN] },
     canActivate: [UserRouteAccessService],
   },
 ];

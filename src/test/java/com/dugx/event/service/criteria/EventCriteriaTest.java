@@ -80,7 +80,6 @@ class EventCriteriaTest {
         eventCriteria.createdDate();
         eventCriteria.categoryId();
         eventCriteria.addressId();
-        eventCriteria.organizerId();
         eventCriteria.distinct();
     }
 
@@ -96,7 +95,6 @@ class EventCriteriaTest {
                 condition.apply(criteria.getCreatedDate()) &&
                 condition.apply(criteria.getCategoryId()) &&
                 condition.apply(criteria.getAddressId()) &&
-                condition.apply(criteria.getOrganizerId()) &&
                 condition.apply(criteria.getDistinct()),
             "every filter matches"
         );
@@ -114,7 +112,6 @@ class EventCriteriaTest {
                 condition.apply(criteria.getCreatedDate(), copy.getCreatedDate()) &&
                 condition.apply(criteria.getCategoryId(), copy.getCategoryId()) &&
                 condition.apply(criteria.getAddressId(), copy.getAddressId()) &&
-                condition.apply(criteria.getOrganizerId(), copy.getOrganizerId()) &&
                 condition.apply(criteria.getDistinct(), copy.getDistinct()),
             "every filter matches"
         );

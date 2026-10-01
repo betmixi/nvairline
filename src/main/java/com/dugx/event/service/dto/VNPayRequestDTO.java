@@ -1,20 +1,20 @@
 package com.dugx.event.service.dto;
 
+import java.util.List;
+
 /**
  * Yeu cau tao link thanh toan VNPay.
  *
  * Co hai cach dung:
  * - Truyen {@code bookingId} cho mot booking PENDING da tao truoc do.
- * - Hoac truyen {@code ticketTypeId} + {@code quantity} (+ {@code couponCode})
- *   de he thong tu tao booking roi sinh link thanh toan trong cung mot lan goi.
+ * - Hoac truyen {@code legs} (+ {@code couponCode}) de he thong tu tao booking (mot chieu
+ *   chi co 1 leg, khu hoi/nhieu chang co nhieu leg) roi sinh link thanh toan trong cung mot lan goi.
  */
 public class VNPayRequestDTO {
 
     private Long bookingId;
 
-    private Long ticketTypeId;
-
-    private Integer quantity;
+    private List<LegRequest> legs;
 
     private String couponCode;
 
@@ -26,20 +26,12 @@ public class VNPayRequestDTO {
         this.bookingId = bookingId;
     }
 
-    public Long getTicketTypeId() {
-        return ticketTypeId;
+    public List<LegRequest> getLegs() {
+        return legs;
     }
 
-    public void setTicketTypeId(Long ticketTypeId) {
-        this.ticketTypeId = ticketTypeId;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
+    public void setLegs(List<LegRequest> legs) {
+        this.legs = legs;
     }
 
     public String getCouponCode() {

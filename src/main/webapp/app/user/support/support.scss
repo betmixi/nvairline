@@ -1,0 +1,187 @@
+.btn-back-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #01319f;
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.btn-back-home:hover {
+  transform: translateX(-3px);
+  text-decoration: underline;
+}
+
+.support-grid {
+  display: grid;
+  grid-template-columns: minmax(220px, 320px) 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .support-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.contact-card,
+.request-form-card,
+.my-requests-section {
+  background: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.contact-card h5,
+.request-form-card h5,
+.my-requests-section h5 {
+  margin-bottom: 1rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.contact-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: #4b5563;
+  font-size: 14px;
+}
+
+.topic-picker {
+  margin-bottom: 14px;
+}
+
+.topic-label {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #4b5563;
+  margin-bottom: 8px;
+}
+
+.topic-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.topic-pill {
+  border: 1px solid #dbe4f3;
+  background: #f5f8ff;
+  color: #374151;
+  border-radius: 999px;
+  padding: 7px 16px;
+  font-size: 13.5px;
+  font-weight: 600;
+  transition: 0.15s;
+
+  &:hover {
+    border-color: #2563eb;
+  }
+
+  &.active {
+    background: #01319f;
+    border-color: #01319f;
+    color: #fff;
+  }
+}
+
+.request-input {
+  border-radius: 12px;
+  border: 1px solid #e5e9f0;
+  padding: 12px 14px;
+  resize: vertical;
+
+  &:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  }
+}
+
+.request-submit {
+  margin-top: 12px;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 22px;
+  font-weight: 700;
+  background: linear-gradient(90deg, #2563eb, #01319f);
+
+  &:disabled {
+    background: #cbd5e1;
+  }
+}
+
+.my-requests-section {
+  margin-top: 1.25rem;
+}
+
+.request-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.request-item {
+  border: 1px dashed #ced4da;
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+.request-item-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.request-topic {
+  font-weight: 700;
+  color: #1f2937;
+  font-size: 14px;
+}
+
+.request-status {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #b45309;
+  white-space: nowrap;
+
+  &.is-replied {
+    color: #16a34a;
+  }
+}
+
+.request-content {
+  color: #4b5563;
+  margin: 0 0 6px;
+  white-space: pre-line;
+}
+
+.request-reply {
+  margin-top: 10px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #eff6ff;
+  border-left: 3px solid #2563eb;
+
+  strong {
+    font-size: 13px;
+    color: #1d4ed8;
+  }
+
+  p {
+    margin: 4px 0 0;
+    color: #374151;
+    font-size: 14px;
+    white-space: pre-line;
+  }
+}

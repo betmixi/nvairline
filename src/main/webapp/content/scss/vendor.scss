@@ -1,9 +1,10 @@
 /* after changing this file run 'npm run webapp:build' */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 /***************************
 put Sass variables here:
 eg $input-color: red;
 ****************************/
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap');
+
 // Override Bootstrap variables
 @import 'bootstrap-variables';
 // Import Bootstrap source files from node_modules

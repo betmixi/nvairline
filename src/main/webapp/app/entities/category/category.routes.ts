@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 
 import { ASC } from 'app/config/navigation.constants';
 import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
+import { Authority } from 'app/shared/jhipster/constants';
 
 import CategoryResolve from './route/category-routing-resolve.service';
 
@@ -11,6 +12,7 @@ const categoryRoute: Routes = [
     loadComponent: () => import('./list/category').then(m => m.Category),
     data: {
       defaultSort: `id,${ASC}`,
+      authorities: [Authority.ADMIN],
     },
     canActivate: [UserRouteAccessService],
   },
@@ -20,6 +22,7 @@ const categoryRoute: Routes = [
     resolve: {
       category: CategoryResolve,
     },
+    data: { authorities: [Authority.ADMIN] },
     canActivate: [UserRouteAccessService],
   },
   {
@@ -28,6 +31,7 @@ const categoryRoute: Routes = [
     resolve: {
       category: CategoryResolve,
     },
+    data: { authorities: [Authority.ADMIN] },
     canActivate: [UserRouteAccessService],
   },
   {
@@ -36,6 +40,7 @@ const categoryRoute: Routes = [
     resolve: {
       category: CategoryResolve,
     },
+    data: { authorities: [Authority.ADMIN] },
     canActivate: [UserRouteAccessService],
   },
 ];

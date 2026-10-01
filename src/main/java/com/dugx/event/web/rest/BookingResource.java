@@ -7,6 +7,7 @@ import com.dugx.event.service.criteria.BookingCriteria;
 import com.dugx.event.service.dto.BookingDTO;
 import com.dugx.event.service.dto.BookingDetailDTO;
 import com.dugx.event.service.dto.BookingRequest;
+import com.dugx.event.service.dto.CustomerBookingDTO;
 import com.dugx.event.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -59,6 +61,7 @@ public class BookingResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_STAFF')")
     public ResponseEntity<BookingDTO> createBooking(@RequestBody BookingDTO bookingDTO) throws URISyntaxException {
         LOG.debug("REST request to save Booking : {}", bookingDTO);
         if (bookingDTO.getId() != null) {
@@ -86,6 +89,24 @@ public class BookingResource {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
+    /** Lay 1 booking cua chinh nguoi dung dang dang nhap (vi du: trang ket qua thanh toan). */
+    @GetMapping("/my-bookings/{id}")
+    public ResponseEntity<BookingDTO> getMyBooking(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(bookingService.findOwnedBookingDto(id));
+    }
+
+    /**
+     * {@code GET  /bookings/customer-list} : danh sach khach hang da dat ve (chi admin).
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of customer bookings in body.
+     */
+    @GetMapping("/customer-list")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<List<CustomerBookingDTO>> getCustomerBookings() {
+        LOG.debug("REST request to get customer booking list");
+        return ResponseEntity.ok(bookingService.getCustomerBookings());
+    }
+
     /**
      * {@code PUT  /bookings/:id} : Updates an existing booking.
      *
@@ -97,6 +118,7 @@ public class BookingResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_STAFF')")
     public ResponseEntity<BookingDTO> updateBooking(
         @PathVariable(value = "id", required = false) final Long id,
         @RequestBody BookingDTO bookingDTO
@@ -131,6 +153,7 @@ public class BookingResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_STAFF')")
     public ResponseEntity<BookingDTO> partialUpdateBooking(
         @PathVariable(value = "id", required = false) final Long id,
         @RequestBody BookingDTO bookingDTO
@@ -163,6 +186,7 @@ public class BookingResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Bookings in body.
      */
     @GetMapping("")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_STAFF')")
     public ResponseEntity<List<BookingDTO>> getAllBookings(
         BookingCriteria criteria,
         @org.springdoc.core.annotations.ParameterObject Pageable pageable
@@ -181,6 +205,7 @@ public class BookingResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
      */
     @GetMapping("/count")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_STAFF')")
     public ResponseEntity<Long> countBookings(BookingCriteria criteria) {
         LOG.debug("REST request to count Bookings by criteria: {}", criteria);
         return ResponseEntity.ok().body(bookingQueryService.countByCriteria(criteria));
@@ -193,6 +218,7 @@ public class BookingResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the bookingDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_STAFF')")
     public ResponseEntity<BookingDTO> getBooking(@PathVariable("id") Long id) {
         LOG.debug("REST request to get Booking : {}", id);
         Optional<BookingDTO> bookingDTO = bookingService.findOne(id);
@@ -206,6 +232,7 @@ public class BookingResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_STAFF')")
     public ResponseEntity<Void> deleteBooking(@PathVariable("id") Long id) {
         LOG.debug("REST request to delete Booking : {}", id);
         bookingService.delete(id);

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <!--
+        Added the entity SeatUpgrade: theo doi yeu cau nang hang ghe cho mot ve
+        da mua (doi tu ghe hang thap sang ghe hang cao hon cung suat bay, thu
+        them phan chenh lech gia qua VNPay).
+    -->
+    <changeSet id="20260821090001-1" author="dugx">
+        <createTable tableName="seat_upgrade">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="price_difference" type="decimal(21,2)">
+                <constraints nullable="false" />
+            </column>
+            <column name="status" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="created_date" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+            <column name="ticket_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="old_showtime_seat_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="new_showtime_seat_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="booking_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

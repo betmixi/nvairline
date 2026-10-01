@@ -17,19 +17,29 @@ const routes: Routes = [
     loadChildren: () => import('./category/category.routes'),
   },
   {
-    path: 'organizer',
-    data: { pageTitle: 'dugxApp.organizer.home.title' },
-    loadChildren: () => import('./organizer/organizer.routes'),
-  },
-  {
     path: 'venue',
     data: { pageTitle: 'dugxApp.venue.home.title' },
     loadChildren: () => import('./venue/venue.routes'),
   },
   {
-    path: 'ticket-type',
-    data: { pageTitle: 'dugxApp.ticketType.home.title' },
-    loadChildren: () => import('./ticket-type/ticket-type.routes'),
+    path: 'aircraft',
+    data: { pageTitle: 'dugxApp.aircraft.home.title' },
+    loadChildren: () => import('./aircraft/aircraft.routes'),
+  },
+  {
+    path: 'airport',
+    data: { pageTitle: 'dugxApp.airport.home.title' },
+    loadChildren: () => import('./airport/airport.routes'),
+  },
+  {
+    path: 'promotion',
+    data: { pageTitle: 'dugxApp.promotion.home.title' },
+    loadChildren: () => import('./promotion/promotion.routes'),
+  },
+  {
+    path: 'seat',
+    data: { pageTitle: 'dugxApp.seat.home.title' },
+    loadChildren: () => import('./seat/seat.routes'),
   },
   {
     path: 'booking',

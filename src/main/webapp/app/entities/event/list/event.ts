@@ -15,7 +15,6 @@ import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from 'app/co
 import { DataUtils } from 'app/core/util/data-util.service';
 import { Alert } from 'app/shared/alert/alert';
 import { AlertError } from 'app/shared/alert/alert-error';
-import { FormatMediumDatetimePipe } from 'app/shared/date';
 import { Filter, FilterOptions, IFilterOption, IFilterOptions } from 'app/shared/filter';
 import { TranslateDirective } from 'app/shared/language';
 import { ItemCount } from 'app/shared/pagination';
@@ -40,7 +39,6 @@ import { EventService } from '../service/event.service';
     SortByDirective,
     TranslateDirective,
     TranslatePipe,
-    FormatMediumDatetimePipe,
     Filter,
     NgbPagination,
     ItemCount,
@@ -91,6 +89,30 @@ export class Event implements OnInit {
   }
 
   trackId = (item: IEvent): number => this.eventService.getEventIdentifier(item);
+
+  /** Tim theo ten chuyen bay, ma/thanh pho san bay di hoac den. */
+  keyword = '';
+
+  get filteredEvents(): IEvent[] {
+    const kw = this.keyword.trim().toLowerCase();
+    if (!kw) {
+      return this.events();
+    }
+
+    return this.events().filter(event => {
+      const haystack = [
+        event.title,
+        event.departureAirport?.code,
+        event.departureAirport?.city,
+        event.arrivalAirport?.code,
+        event.arrivalAirport?.city,
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase();
+      return haystack.includes(kw);
+    });
+  }
 
   ngOnInit(): void {
     this.subscription = combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data])

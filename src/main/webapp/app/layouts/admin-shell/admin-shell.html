@@ -1,0 +1,16 @@
+<nav class="admin-nav">
+  <div class="admin-nav-scroll">
+    @for (link of navLinks; track link.path) {
+    <a
+      *jhiHasAnyAuthority="link.visibility === 'staff' ? ['ROLE_ADMIN', 'ROLE_STAFF'] : 'ROLE_ADMIN'"
+      class="admin-nav-link"
+      [routerLink]="link.path"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: false }"
+    >
+      <span class="admin-nav-icon">{{ link.icon }}</span>
+      <span class="admin-nav-label">{{ link.label }}</span>
+    </a>
+    }
+  </div>
+</nav>

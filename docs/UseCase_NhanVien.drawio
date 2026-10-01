@@ -1,0 +1,59 @@
+<mxfile host="app.diagrams.net" agent="claude-code" version="24.7.5" type="device">
+  <diagram id="page1" name="UC Làm thủ tục check-in">
+    <mxGraphModel dx="900" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="700" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="actor1" value="Nhân viên" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#ffffff;strokeColor=#000000;fontSize=14;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="60" y="330" width="40" height="70" as="geometry" /></mxCell>
+        <mxCell id="uc2" value="Làm thủ tục check-in" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=14;" vertex="1" parent="1"><mxGeometry x="460" y="320" width="220" height="80" as="geometry" /></mxCell>
+        <mxCell id="e3" value="" style="endArrow=none;html=1;strokeColor=#000000;" edge="1" parent="1" source="actor1" target="uc2"><mxGeometry relative="1" as="geometry"></mxGeometry></mxCell>
+        <mxCell id="sat4" value="Tra cứu vé theo số vé" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=14;" vertex="1" parent="1"><mxGeometry x="210" y="60" width="200" height="70" as="geometry" /></mxCell>
+        <mxCell id="e5" value="«extend»" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;fontColor=#2E5AAC;fontStyle=2;fontSize=12;dashPattern=6 4;" edge="1" parent="1" source="sat4" target="uc2"><mxGeometry relative="1" as="geometry"></mxGeometry></mxCell>
+        <mxCell id="sat6" value="Xem thông tin hành khách" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=14;" vertex="1" parent="1"><mxGeometry x="470" y="60" width="200" height="70" as="geometry" /></mxCell>
+        <mxCell id="e7" value="«extend»" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;fontColor=#2E5AAC;fontStyle=2;fontSize=12;dashPattern=6 4;" edge="1" parent="1" source="sat6" target="uc2"><mxGeometry relative="1" as="geometry"></mxGeometry></mxCell>
+        <mxCell id="sat8" value="Xác nhận check-in" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=14;" vertex="1" parent="1"><mxGeometry x="730" y="60" width="200" height="70" as="geometry" /></mxCell>
+        <mxCell id="e9" value="«extend»" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;fontColor=#2E5AAC;fontStyle=2;fontSize=12;dashPattern=6 4;" edge="1" parent="1" source="sat8" target="uc2"><mxGeometry relative="1" as="geometry"></mxGeometry></mxCell>
+        <mxCell id="login10" value="Đăng nhập" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=14;" vertex="1" parent="1"><mxGeometry x="470" y="550" width="200" height="70" as="geometry" /></mxCell>
+        <mxCell id="e11" value="«include»" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;fontColor=#B33A3A;fontStyle=2;fontSize=12;dashPattern=6 4;" edge="1" parent="1" source="uc2" target="login10"><mxGeometry relative="1" as="geometry"></mxGeometry></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="page2" name="UC Quản lý đặt chỗ">
+    <mxGraphModel dx="900" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="700" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="actor1" value="Nhân viên" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#ffffff;strokeColor=#000000;fontSize=14;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="60" y="330" width="40" height="70" as="geometry" /></mxCell>
+        <mxCell id="uc2" value="Quản lý đặt chỗ" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=14;" vertex="1" parent="1"><mxGeometry x="460" y="320" width="220" height="80" as="geometry" /></mxCell>
+        <mxCell id="e3" value="" style="endArrow=none;html=1;strokeColor=#000000;" edge="1" parent="1" source="actor1" target="uc2"><mxGeometry relative="1" as="geometry"></mxGeometry></mxCell>
+        <mxCell id="sat4" value="Xem danh sách đặt chỗ" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=14;" vertex="1" parent="1"><mxGeometry x="210" y="60" width="200" height="70" as="geometry" /></mxCell>
+        <mxCell id="e5" value="«extend»" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;fontColor=#2E5AAC;fontStyle=2;fontSize=12;dashPattern=6 4;" edge="1" parent="1" source="sat4" target="uc2"><mxGeometry relative="1" as="geometry"></mxGeometry></mxCell>
+        <mxCell id="sat6" value="Xem chi tiết đặt chỗ" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=14;" vertex="1" parent="1"><mxGeometry x="470" y="60" width="200" height="70" as="geometry" /></mxCell>
+        <mxCell id="e7" value="«extend»" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;fontColor=#2E5AAC;fontStyle=2;fontSize=12;dashPattern=6 4;" edge="1" parent="1" source="sat6" target="uc2"><mxGeometry relative="1" as="geometry"></mxGeometry></mxCell>
+        <mxCell id="sat8" value="Cập nhật đặt chỗ" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=14;" vertex="1" parent="1"><mxGeometry x="730" y="60" width="200" height="70" as="geometry" /></mxCell>
+        <mxCell id="e9" value="«extend»" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;fontColor=#2E5AAC;fontStyle=2;fontSize=12;dashPattern=6 4;" edge="1" parent="1" source="sat8" target="uc2"><mxGeometry relative="1" as="geometry"></mxGeometry></mxCell>
+        <mxCell id="login10" value="Đăng nhập" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=14;" vertex="1" parent="1"><mxGeometry x="470" y="550" width="200" height="70" as="geometry" /></mxCell>
+        <mxCell id="e11" value="«include»" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;fontColor=#B33A3A;fontStyle=2;fontSize=12;dashPattern=6 4;" edge="1" parent="1" source="uc2" target="login10"><mxGeometry relative="1" as="geometry"></mxGeometry></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="page3" name="UC Quản lý vé">
+    <mxGraphModel dx="900" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="700" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="actor1" value="Nhân viên" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#ffffff;strokeColor=#000000;fontSize=14;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="60" y="330" width="40" height="70" as="geometry" /></mxCell>
+        <mxCell id="uc2" value="Quản lý vé" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=14;" vertex="1" parent="1"><mxGeometry x="460" y="320" width="220" height="80" as="geometry" /></mxCell>
+        <mxCell id="e3" value="" style="endArrow=none;html=1;strokeColor=#000000;" edge="1" parent="1" source="actor1" target="uc2"><mxGeometry relative="1" as="geometry"></mxGeometry></mxCell>
+        <mxCell id="sat4" value="Xem danh sách vé" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=14;" vertex="1" parent="1"><mxGeometry x="210" y="60" width="200" height="70" as="geometry" /></mxCell>
+        <mxCell id="e5" value="«extend»" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;fontColor=#2E5AAC;fontStyle=2;fontSize=12;dashPattern=6 4;" edge="1" parent="1" source="sat4" target="uc2"><mxGeometry relative="1" as="geometry"></mxGeometry></mxCell>
+        <mxCell id="sat6" value="Xem chi tiết vé" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=14;" vertex="1" parent="1"><mxGeometry x="470" y="60" width="200" height="70" as="geometry" /></mxCell>
+        <mxCell id="e7" value="«extend»" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;fontColor=#2E5AAC;fontStyle=2;fontSize=12;dashPattern=6 4;" edge="1" parent="1" source="sat6" target="uc2"><mxGeometry relative="1" as="geometry"></mxGeometry></mxCell>
+        <mxCell id="sat8" value="Cập nhật vé" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=14;" vertex="1" parent="1"><mxGeometry x="730" y="60" width="200" height="70" as="geometry" /></mxCell>
+        <mxCell id="e9" value="«extend»" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;fontColor=#2E5AAC;fontStyle=2;fontSize=12;dashPattern=6 4;" edge="1" parent="1" source="sat8" target="uc2"><mxGeometry relative="1" as="geometry"></mxGeometry></mxCell>
+        <mxCell id="login10" value="Đăng nhập" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=14;" vertex="1" parent="1"><mxGeometry x="470" y="550" width="200" height="70" as="geometry" /></mxCell>
+        <mxCell id="e11" value="«include»" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;fontColor=#B33A3A;fontStyle=2;fontSize=12;dashPattern=6 4;" edge="1" parent="1" source="uc2" target="login10"><mxGeometry relative="1" as="geometry"></mxGeometry></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,70 @@
+<div class="checkin-page">
+  <a class="back-link" routerLink="/admin/dashboard">← Quay lại Dashboard</a>
+
+  <div class="page-header">
+    <h1>🛫 Check-in</h1>
+    <p>Nhập số vé của khách để xem thông tin và xác nhận làm thủ tục</p>
+  </div>
+
+  <div class="card-box">
+    <div class="search-bar">
+      <input
+        class="form-control search-input"
+        type="text"
+        placeholder="Nhập số vé..."
+        [(ngModel)]="ticketNumber"
+        (keyup.enter)="search()"
+      />
+      <button type="button" class="btn-search" [disabled]="isSearching" (click)="search()">
+        {{ isSearching ? 'Đang tìm...' : 'Tìm vé' }}
+      </button>
+    </div>
+
+    @if (errorMessage) {
+    <div class="alert-box alert-error">{{ errorMessage }}</div>
+    } @if (successMessage) {
+    <div class="alert-box alert-success">{{ successMessage }}</div>
+    } @if (ticket) {
+    <div class="ticket-card">
+      <div class="ticket-row">
+        <span class="ticket-label">Hành khách</span>
+        <span class="ticket-value">{{ passengerName() }}</span>
+      </div>
+      <div class="ticket-row">
+        <span class="ticket-label">Chuyến bay</span>
+        <span class="ticket-value">{{ flightTitle() }}</span>
+      </div>
+      <div class="ticket-row">
+        <span class="ticket-label">Giờ bay</span>
+        <span class="ticket-value"
+          >{{ ticket.bookingDetail?.showtimeSeat?.showtime?.startTime ? (ticket.bookingDetail!.showtimeSeat!.showtime!.startTime | date:
+          'dd/MM/yyyy HH:mm') : '—' }}</span
+        >
+      </div>
+      <div class="ticket-row">
+        <span class="ticket-label">Ghế</span>
+        <span class="ticket-value">{{ seatLabel() }}</span>
+      </div>
+      <div class="ticket-row">
+        <span class="ticket-label">Số vé</span>
+        <span class="ticket-value ticket-number">{{ ticket.qrCode }}</span>
+      </div>
+      <div class="ticket-row">
+        <span class="ticket-label">Trạng thái</span>
+        <span class="status-badge" [class.is-checked-in]="ticket.checkedIn">
+          {{ ticket.checkedIn ? 'Đã làm thủ tục' : 'Chưa làm thủ tục' }}
+        </span>
+      </div>
+
+      <div class="ticket-actions">
+        @if (!ticket.checkedIn) {
+        <button type="button" class="btn-confirm" [disabled]="isConfirming" (click)="confirmCheckIn()">
+          {{ isConfirming ? 'Đang xác nhận...' : '✓ Xác nhận làm thủ tục' }}
+        </button>
+        }
+        <button type="button" class="btn-reset" (click)="reset()">Tìm vé khác</button>
+      </div>
+    </div>
+    }
+  </div>
+</div>

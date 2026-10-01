@@ -1,14 +1,277 @@
 <div class="events-page">
   <div class="page-header">
-    <div>
-      <h2>🎉 All Events</h2>
+    <a class="btn-back-home" routerLink="/">← Trang chủ</a>
+  </div>
 
-      <p>Discover amazing events happening around you</p>
+  <div class="search-card">
+    <div class="search-tabs">
+      @for (tab of bookingTabs; track tab.id) {
+      <button type="button" class="search-tab" [class.active]="activeTab() === tab.id" (click)="selectTab(tab.id)">{{ tab.label }}</button>
+      }
     </div>
+
+    @if (activeTab() === 'mua-ve') {
+    <div class="search-panel">
+      <div class="trip-type-row">
+        <button type="button" class="trip-pill" [class.active]="tripType() === 'round-trip'" (click)="selectTripType('round-trip')">
+          Khứ hồi
+        </button>
+        <button type="button" class="trip-pill" [class.active]="tripType() === 'one-way'" (click)="selectTripType('one-way')">
+          Một chiều
+        </button>
+        <button type="button" class="trip-pill" [class.active]="tripType() === 'multi-city'" (click)="selectTripType('multi-city')">
+          Nhiều chặng
+        </button>
+      </div>
+
+      <div class="search-fields-row">
+        <div
+          class="airport-field"
+          [class.active]="openAirportDropdown === 'departure'"
+          (click)="toggleAirportDropdown('departure', $event); $event.stopPropagation()"
+        >
+          <label>Từ</label>
+          <div class="airport-display">
+            @if (departureAirportPreview(); as airport) {
+            <span class="airport-code">{{ airport.code }}</span>
+            <span class="airport-city-pill">{{ airport.city }}, Việt Nam</span>
+            } @else {
+            <span class="airport-placeholder">Chọn điểm đi</span>
+            }
+          </div>
+
+          @if (departureAirportPreview()) {
+          <button type="button" class="field-clear-btn" title="Bỏ chọn điểm đi" (click)="clearDepartureAirport($event)">✕</button>
+          } @if (openAirportDropdown === 'departure') {
+          <div class="airport-dropdown" (click)="$event.stopPropagation()">
+            <div class="airport-dropdown-search">
+              <span class="search-icon">🔍</span>
+              <input type="text" placeholder="Tìm kiếm" [(ngModel)]="departureSearchText" (click)="$event.stopPropagation()" autofocus />
+            </div>
+            <div class="airport-dropdown-list">
+              @for (airport of filteredDepartureAirports(); track airport.id) {
+              <button
+                type="button"
+                class="airport-dropdown-item"
+                [class.active]="airport.id === searchDepartureAirportId"
+                (click)="selectDepartureAirport(airport.id)"
+              >
+                <div class="airport-dropdown-main">
+                  <span class="airport-dropdown-city">{{ airport.city }}</span>
+                  <span class="airport-dropdown-country">Việt Nam</span>
+                </div>
+                <div class="airport-dropdown-side">
+                  <span class="airport-dropdown-code-pill">{{ airport.code }}</span>
+                  <span class="airport-dropdown-sub">{{ airport.city }} ({{ airport.code }})</span>
+                </div>
+              </button>
+              } @empty {
+              <div class="airport-dropdown-empty">Không tìm thấy sân bay phù hợp</div>
+              }
+            </div>
+          </div>
+          }
+        </div>
+
+        <button type="button" class="swap-btn" (click)="swapAirports()" title="Hoán đổi điểm đi / điểm đến">⇄</button>
+
+        <div
+          class="airport-field"
+          [class.active]="openAirportDropdown === 'arrival'"
+          (click)="toggleAirportDropdown('arrival', $event); $event.stopPropagation()"
+        >
+          <label>Đến</label>
+          <div class="airport-display">
+            @if (arrivalAirportPreview(); as airport) {
+            <span class="airport-code">{{ airport.code }}</span>
+            <span class="airport-city-pill">{{ airport.city }}, Việt Nam</span>
+            } @else {
+            <span class="airport-placeholder">Chọn điểm đến</span>
+            }
+          </div>
+
+          @if (arrivalAirportPreview()) {
+          <button type="button" class="field-clear-btn" title="Bỏ chọn điểm đến" (click)="clearArrivalAirport($event)">✕</button>
+          } @if (openAirportDropdown === 'arrival') {
+          <div class="airport-dropdown" (click)="$event.stopPropagation()">
+            <div class="airport-dropdown-search">
+              <span class="search-icon">🔍</span>
+              <input type="text" placeholder="Tìm kiếm" [(ngModel)]="arrivalSearchText" (click)="$event.stopPropagation()" autofocus />
+            </div>
+            <div class="airport-dropdown-list">
+              @for (airport of filteredArrivalAirports(); track airport.id) {
+              <button
+                type="button"
+                class="airport-dropdown-item"
+                [class.active]="airport.id === searchArrivalAirportId"
+                (click)="selectArrivalAirport(airport.id)"
+              >
+                <div class="airport-dropdown-main">
+                  <span class="airport-dropdown-city">{{ airport.city }}</span>
+                  <span class="airport-dropdown-country">Việt Nam</span>
+                </div>
+                <div class="airport-dropdown-side">
+                  <span class="airport-dropdown-code-pill">{{ airport.code }}</span>
+                  <span class="airport-dropdown-sub">{{ airport.city }} ({{ airport.code }})</span>
+                </div>
+              </button>
+              } @empty {
+              <div class="airport-dropdown-empty">Không tìm thấy sân bay phù hợp</div>
+              }
+            </div>
+          </div>
+          }
+        </div>
+
+        <div
+          class="date-field date-range-field"
+          [class.active]="showDatePicker"
+          (click)="toggleDatePicker($event); $event.stopPropagation()"
+        >
+          <label>📅 {{ tripType() === 'round-trip' ? 'Ngày đi - Ngày về' : 'Ngày đi' }}</label>
+          <div class="airport-display">
+            @if (dateRangeLabel()) {
+            <span class="airport-code date-range-value">{{ dateRangeLabel() }}</span>
+            } @else {
+            <span class="airport-placeholder">{{ tripType() === 'round-trip' ? 'dd/mm/yyyy - dd/mm/yyyy' : 'dd/mm/yyyy' }}</span>
+            }
+          </div>
+
+          @if (dateRangeLabel()) {
+          <button type="button" class="field-clear-btn" title="Bỏ chọn ngày" (click)="clearDates($event)">✕</button>
+          } @if (showDatePicker) {
+          <div class="date-range-dropdown" (click)="$event.stopPropagation()">
+            <ngb-datepicker [displayMonths]="2" [dayTemplate]="dayTpl" outsideDays="hidden" (dateSelect)="onDateSelect($event)" />
+            <ng-template #dayTpl let-date>
+              <span class="custom-day" [class.range]="isRange(date)" [class.inside]="isInside(date)"> {{ date.day }} </span>
+            </ng-template>
+          </div>
+          }
+        </div>
+
+        <button type="button" class="btn-search" (click)="applyAirportFilter()">🔎 Tìm chuyến bay</button>
+      </div>
+
+      @if (searchErrorMessage) {
+      <div class="search-error-message">⚠️ {{ searchErrorMessage }}</div>
+      } @if (tripBuilderLegCount > 0) {
+      <div class="trip-progress-banner">
+        <span>✓ Đã chọn {{ tripBuilderLegCount }} chặng. Đang tìm chặng tiếp theo — chọn chuyến bay bên dưới để tiếp tục.</span>
+        <button type="button" class="trip-cancel-btn" (click)="cancelTripInProgress()">✕ Huỷ, tìm chuyến mới</button>
+      </div>
+      }
+    </div>
+    } @else if (activeTab() === 'quan-ly') {
+    <div class="search-panel">
+      @if (!accountService.isAuthenticated()) {
+      <div class="manage-booking-result manage-booking-not-found">🔒 Vui lòng <a routerLink="/login">đăng nhập</a> để xem vé đã đặt.</div>
+      } @else {
+      <div class="search-fields-row">
+        <div class="airport-field">
+          <label>Mã đặt chỗ/số vé điện tử</label>
+          <input type="text" class="airport-input" placeholder="Nhập mã vé để tra cứu" [(ngModel)]="bookingSearchCode" />
+        </div>
+      </div>
+
+      @if (bookingLoading) {
+      <div class="manage-booking-result">Đang tải vé của bạn...</div>
+      } @else if (!bookingSearchCode.trim()) {
+      <div class="manage-booking-result">Nhập mã đặt chỗ/số vé điện tử để xem vé của bạn.</div>
+      } @else if (filteredBookingTickets.length === 0) {
+      <div class="manage-booking-result manage-booking-not-found">Không tìm thấy vé phù hợp với mã đã nhập.</div>
+      } @else {
+      <div class="manage-booking-list">
+        @for (ticket of filteredBookingTickets; track ticket.id) {
+        <a routerLink="/my-tickets" class="manage-booking-item">
+          <div class="manage-booking-body">
+            <strong class="manage-booking-title">{{ ticket.eventTitle }}</strong>
+            <div class="manage-booking-meta">
+              <span class="manage-booking-seat">💺 Ghế {{ ticket.seatLabel }}</span>
+              <span class="manage-booking-code">{{ ticket.qrCode }}</span>
+            </div>
+          </div>
+          <span class="manage-booking-status" [class.is-used]="ticket.checkedIn" [class.is-cancelled]="ticket.status === 'CANCELLED'">
+            {{ ticket.checkedIn ? 'Đã check-in' : ticket.status }}
+          </span>
+          <span class="manage-booking-arrow">›</span>
+        </a>
+        }
+      </div>
+      } }
+    </div>
+    } @else if (activeTab() === 'lam-thu-tuc') {
+    <div class="search-panel">
+      @if (!accountService.isAuthenticated()) {
+      <div class="manage-booking-result manage-booking-not-found">🔒 Vui lòng <a routerLink="/login">đăng nhập</a> để làm thủ tục.</div>
+      } @else if (checkinLoading) {
+      <div class="manage-booking-result">Đang tải vé của bạn...</div>
+      } @else if (checkinTickets.length === 0) {
+      <div class="manage-booking-result">Không có vé nào đủ điều kiện làm thủ tục (chỉ áp dụng vé đã thanh toán, chưa check-in).</div>
+      } @else {
+      <div class="manage-booking-list">
+        @for (ticket of checkinTickets; track ticket.id) {
+        <div class="manage-booking-item checkin-item">
+          <div class="manage-booking-body">
+            <strong class="manage-booking-title">{{ ticket.eventTitle }}</strong>
+            <div class="manage-booking-meta">
+              <span class="manage-booking-seat">💺 Ghế {{ ticket.seatLabel }}</span>
+              <span class="manage-booking-code">{{ ticket.qrCode }}</span>
+            </div>
+          </div>
+          <button type="button" class="btn-checkin" [disabled]="confirmingTicketId === ticket.id" (click)="confirmSelfCheckIn(ticket)">
+            {{ confirmingTicketId === ticket.id ? 'Đang xử lý...' : '✓ Làm thủ tục' }}
+          </button>
+        </div>
+        }
+      </div>
+      }
+    </div>
+    } @else if (activeTab() === 'trang-thai') {
+    <div class="search-panel">
+      @if (filteredEvents.length === 0) {
+      <div class="manage-booking-result">Không có chuyến bay nào phù hợp bộ lọc hiện tại.</div>
+      } @else {
+      <div class="status-list">
+        @for (event of filteredEvents; track event.id) { @for (showtime of event.showtimes ?? []; track showtime.id) {
+        <div class="status-row">
+          <div class="status-route">
+            <strong>{{ event.departureAirport?.code || '---' }} → {{ event.arrivalAirport?.code || '---' }}</strong>
+            <span class="status-flight-title">{{ event.title }}</span>
+          </div>
+          <span class="status-time">{{ formatShowtimeTime(showtime.startTime) }}</span>
+          <span class="status-badge" [ngClass]="flightStatus(showtime).cls">{{ flightStatus(showtime).label }}</span>
+        </div>
+        } }
+      </div>
+      }
+    </div>
+    } @else if (activeTab() === 'lich-bay') {
+    <div class="search-panel">
+      @if (filteredEvents.length === 0) {
+      <div class="manage-booking-result">Không có chuyến bay nào phù hợp bộ lọc hiện tại.</div>
+      } @else {
+      <div class="schedule-list">
+        @for (event of filteredEvents; track event.id) {
+        <div class="schedule-row">
+          <div class="schedule-route">
+            <strong>{{ event.departureAirport?.code || '---' }} → {{ event.arrivalAirport?.code || '---' }}</strong>
+            <span class="status-flight-title">{{ event.title }}</span>
+          </div>
+          <div class="schedule-times">
+            @for (showtime of event.showtimes ?? []; track showtime.id) {
+            <span class="schedule-time-chip">{{ formatShowtimeTime(showtime.startTime) }}</span>
+            }
+          </div>
+        </div>
+        }
+      </div>
+      }
+    </div>
+    }
   </div>
 
   <div class="search-section">
-    <input type="text" placeholder="Search by event, category, organizer..." [(ngModel)]="searchText" (input)="searchEvents()" />
+    <input type="text" placeholder="Tìm theo số hiệu chuyến bay, hạng vé..." [(ngModel)]="searchText" (input)="searchEvents()" />
 
     @if(searchText){
 
@@ -19,21 +282,80 @@
 
   @if(isLoading){
 
-  <div class="loading">Loading events...</div>
+  <div class="loading">Đang tải chuyến bay...</div>
 
   } @else if(filteredEvents.length === 0){
 
   <div class="empty">
-    <h3>No events found</h3>
+    <h3>Không tìm thấy chuyến bay nào</h3>
 
-    <p>Try another keyword.</p>
+    <p>Vui lòng thử từ khoá khác.</p>
   </div>
 
   } @else{
-  <div class="event-grid">
-    @for(event of filteredEvents; track trackById($index,event)){
-    <jhi-event-card [event]="event" />
+  <div class="flight-results">
+    @for(event of pagedEvents; track trackById($index,event)){ @let showtime = nearestShowtime(event);
+    <div class="flight-card" (click)="goToEvent(event.id)">
+      <div class="flight-card-route">
+        <div class="flight-time-block">
+          <span class="flight-time">{{ formatShowtimeTime(showtime?.startTime) }}</span>
+          <span class="flight-airport-code">{{ event.departureAirport?.code || '---' }}</span>
+          <span class="flight-terminal">{{ event.departureAirport?.city }}</span>
+        </div>
+
+        <div class="flight-route-line">
+          <span class="flight-route-label">Bay thẳng</span>
+          <div class="flight-route-track"><span class="flight-route-dot"></span><span class="flight-route-dot"></span></div>
+        </div>
+
+        <div class="flight-time-block">
+          <span class="flight-time">{{ formatShowtimeTime(showtime?.endTime) }}</span>
+          <span class="flight-airport-code">{{ event.arrivalAirport?.code || '---' }}</span>
+          <span class="flight-terminal">{{ event.arrivalAirport?.city }}</span>
+        </div>
+
+        <div class="flight-card-meta">
+          <span class="flight-duration" *ngIf="duration(showtime)">⏱ Thời gian bay {{ duration(showtime) }}</span>
+          <span class="flight-room">✈ {{ event.title }} · Khai thác bởi {{ showtime?.aircraft?.name || 'Dugx Events' }}</span>
+        </div>
+      </div>
+
+      <div class="flight-fare-columns">
+        <button type="button" class="fare-col fare-economy" (click)="goToEvent(event.id); $event.stopPropagation()">
+          <span class="fare-label">Phổ thông</span>
+          <span class="fare-from" *ngIf="showtime?.basePrice">từ</span>
+          <span class="fare-price">
+            @if (showtime?.basePrice) { {{ showtime!.basePrice | number }}<small>VND</small> } @else { Liên hệ }
+          </span>
+        </button>
+        <button type="button" class="fare-col fare-premium" (click)="goToEvent(event.id); $event.stopPropagation()">
+          <span class="fare-label">Phổ thông đặc biệt</span>
+          <span class="fare-from" *ngIf="showtime?.couplePrice">từ</span>
+          <span class="fare-price">
+            @if (showtime?.couplePrice) { {{ showtime!.couplePrice | number }}<small>VND</small> } @else { Liên hệ }
+          </span>
+        </button>
+        <button type="button" class="fare-col fare-business" (click)="goToEvent(event.id); $event.stopPropagation()">
+          <span class="fare-label">Thương gia</span>
+          <span class="fare-from" *ngIf="showtime?.vipPrice">từ</span>
+          <span class="fare-price">
+            @if (showtime?.vipPrice) { {{ showtime!.vipPrice | number }}<small>VND</small> } @else { Liên hệ }
+          </span>
+        </button>
+      </div>
+    </div>
     }
   </div>
-  }
+
+  @if (totalPages > 1) {
+  <div class="pagination-row">
+    <button type="button" class="page-btn page-nav" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">‹</button>
+
+    @for (page of pageNumbers; track page) {
+    <button type="button" class="page-btn" [class.active]="page === currentPage" (click)="goToPage(page)">{{ page }}</button>
+    }
+
+    <button type="button" class="page-btn page-nav" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">›</button>
+  </div>
+  } }
 </div>

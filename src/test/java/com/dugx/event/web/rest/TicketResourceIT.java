@@ -279,7 +279,7 @@ class TicketResourceIT {
         BookingDetail bookingDetail;
         if (TestUtil.findAll(em, BookingDetail.class).isEmpty()) {
             ticketRepository.saveAndFlush(ticket);
-            bookingDetail = BookingDetailResourceIT.createEntity();
+            bookingDetail = new BookingDetail();
         } else {
             bookingDetail = TestUtil.findAll(em, BookingDetail.class).get(0);
         }

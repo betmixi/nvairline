@@ -14,14 +14,6 @@
   border-bottom: 1px solid #e9ecef;
 }
 
-.event-thumb {
-  width: 96px;
-  height: 64px;
-  object-fit: cover;
-  border-radius: 8px;
-  flex-shrink: 0;
-}
-
 .event-meta {
   min-width: 0;
 }
@@ -46,24 +38,158 @@
 }
 
 .ticket-code {
-  margin-top: 0.25rem;
-  font-family: monospace;
-  word-break: break-all;
-  color: #6c757d;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
-.ticket-qr {
-  margin-top: 1rem;
+.ticket-code-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
 
-  img {
-    display: block;
-    width: 100%;
-    max-width: 220px;
-    margin: 0 auto;
+.ticket-code-value {
+  font-family: monospace;
+  font-weight: 700;
+  font-size: 15px;
+  word-break: break-all;
+  color: #1f2937;
+}
+
+.ticket-fields {
+  margin: 12px 0 0;
+}
+
+.ticket-field {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 0;
+  border-bottom: 1px dashed #e9ecef;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  dt {
+    font-size: 12px;
+    color: #6c757d;
+    font-weight: 500;
+  }
+
+  dd {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 700;
+    color: #1f2937;
+    text-align: right;
   }
 }
 
 .empty-state {
   border: 1px dashed #ced4da;
   border-radius: 12px;
+}
+
+/* ================= ĐÁNH GIÁ CHUYẾN BAY ================= */
+
+.review-block {
+  margin: 0 1rem 1rem;
+  padding: 12px 14px;
+  border-top: 1px dashed #e9ecef;
+}
+
+.review-summary-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.review-stars {
+  display: inline-flex;
+  gap: 1px;
+
+  span {
+    color: #d1d5db;
+    font-size: 15px;
+
+    &.filled {
+      color: #f59e0b;
+    }
+  }
+}
+
+.review-comment {
+  font-size: 13.5px;
+  color: #374151;
+}
+
+.review-summary-actions {
+  display: flex;
+  gap: 14px;
+}
+
+.review-link-btn {
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #4f46e5;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &.text-danger {
+    color: #dc2626;
+  }
+}
+
+.review-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rating-picker {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.rating-label {
+  font-size: 13px;
+  color: #6b7280;
+  margin-right: 4px;
+}
+
+.star-btn {
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: 20px;
+  line-height: 1;
+  color: #d1d5db;
+  cursor: pointer;
+  transition: color 0.15s;
+
+  &.active {
+    color: #f59e0b;
+  }
+}
+
+.review-input {
+  font-size: 13.5px;
+  resize: vertical;
+}
+
+.review-form-actions {
+  display: flex;
+  gap: 8px;
 }

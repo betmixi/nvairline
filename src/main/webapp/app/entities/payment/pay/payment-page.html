@@ -5,37 +5,70 @@
     <p class="mt-3">Loading...</p>
   </div>
 
-  <div *ngIf="!isLoading && ticket" class="payment-card">
-    <h2 class="mb-4">Payment</h2>
+  <div *ngIf="!isLoading && legs.length > 0" class="payment-card">
+    <h2 class="mb-4">Thanh toán</h2>
 
-    <div class="info-row">
-      <span>Event</span>
+    <div *ngFor="let leg of legs; let i = index" class="leg-block">
+      <div class="leg-block-title" *ngIf="isMultiLeg">Chặng {{ i + 1 }}</div>
 
-      <strong> {{ ticket.event?.title }} </strong>
+      <div class="info-row">
+        <span>Chuyến bay</span>
+
+        <strong> {{ leg.showtime.event?.title }} </strong>
+      </div>
+
+      <div class="info-row">
+        <span>Giờ bay</span>
+
+        <strong> {{ leg.showtime.startTime?.format('dddd, DD/MM/YYYY HH:mm') }} · {{ leg.showtime.aircraft?.name }} </strong>
+      </div>
+
+      <div class="info-row">
+        <span>Ghế</span>
+
+        <strong> {{ seatLabels(leg) }} </strong>
+      </div>
+
+      <h5 class="mt-3">🧳 Hành lý ký gửi trả trước (không bắt buộc)</h5>
+
+      <div class="baggage-seat-row" *ngFor="let seat of leg.seats">
+        <div class="baggage-seat-label">Ghế {{ seatLabel(seat) }}</div>
+
+        <div class="baggage-seat-options">
+          <button
+            *ngFor="let option of baggageOptions"
+            type="button"
+            class="baggage-pill"
+            [class.active]="baggageOf(seat.id) === option.weightKg"
+            [disabled]="isSubmitting"
+            (click)="toggleBaggage(seat.id, option.weightKg)"
+          >
+            {{ option.weightKg }}kg
+          </button>
+        </div>
+      </div>
+
+      <hr />
     </div>
 
-    <div class="info-row">
-      <span>Ticket</span>
+    <button
+      *ngIf="canAddMoreLegs"
+      type="button"
+      class="btn btn-outline-primary w-100 mb-3"
+      [disabled]="isSubmitting"
+      (click)="addAnotherLeg()"
+    >
+      + Thêm chặng bay khác
+    </button>
 
-      <strong> {{ ticket.name }} </strong>
+    <div class="info-row" *ngIf="baggageTotal > 0">
+      <span>Hành lý thêm</span>
+
+      <strong>+{{ baggageTotal | number }} đ</strong>
     </div>
-
-    <div class="info-row">
-      <span>Price</span>
-
-      <strong> {{ ticket.price | number }} đ </strong>
-    </div>
-
-    <div class="info-row">
-      <span>Quantity</span>
-
-      <strong> {{ quantity }} </strong>
-    </div>
-
-    <hr />
 
     <div class="info-row total">
-      <span>Total</span>
+      <span>Tổng cộng</span>
 
       <strong> {{ total | number }} đ </strong>
     </div>
@@ -54,6 +87,7 @@
         [(ngModel)]="couponCode"
         [disabled]="isSubmitting"
       />
+      <div class="form-text" *ngIf="isMultiLeg">Mã giảm giá sẽ tự động áp dụng cho chặng có chuyến bay khớp với mã.</div>
     </div>
 
     <hr />
@@ -78,5 +112,9 @@
     </button>
 
     <button class="btn btn-outline-secondary w-100 mt-2" [disabled]="isSubmitting" (click)="cancel()">Huỷ</button>
+  </div>
+
+  <div *ngIf="!isLoading && legs.length === 0" class="text-center">
+    <p class="text-muted">Không có thông tin đơn hàng.</p>
   </div>
 </div>

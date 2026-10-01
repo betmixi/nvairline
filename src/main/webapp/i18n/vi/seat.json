@@ -1,0 +1,27 @@
+{
+  "dugxApp": {
+    "seat": {
+      "home": {
+        "title": "Ghế",
+        "refreshListLabel": "Tải lại danh sách",
+        "createLabel": "Thêm mới một Ghế",
+        "createOrEditLabel": "Thêm mới hoặc cập nhật Ghế",
+        "notFound": "Không tìm thấy Ghế nào"
+      },
+      "created": "Một Ghế mới được tạo với định danh {{ param }}",
+      "updated": "Một Ghế cập nhật với định danh {{ param }}",
+      "deleted": "Một Ghế đã xóa với định danh {{ param }}",
+      "delete": {
+        "question": "Bạn có chắc là muốn xóa Ghế {{ id }}?"
+      },
+      "detail": {
+        "title": "Ghế"
+      },
+      "id": "ID",
+      "rowLabel": "Hàng",
+      "seatNumber": "Số ghế",
+      "seatType": "Loại ghế",
+      "aircraft": "Máy bay"
+    }
+  }
+}

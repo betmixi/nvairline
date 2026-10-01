@@ -72,7 +72,7 @@ public class BookingDetailQueryService extends QueryService<BookingDetail> {
         specification = specification.and((root, query, builder) -> {
             if (Long.class != query.getResultType()) {
                 root.fetch(BookingDetail_.booking, JoinType.LEFT);
-                root.fetch(BookingDetail_.ticketType, JoinType.LEFT);
+                root.fetch(BookingDetail_.showtimeSeat, JoinType.LEFT);
             }
             return null;
         });
@@ -82,11 +82,10 @@ public class BookingDetailQueryService extends QueryService<BookingDetail> {
                 Specification.allOf(
                     Boolean.TRUE.equals(criteria.getDistinct()) ? distinct(criteria.getDistinct()) : Specification.unrestricted(),
                     buildRangeSpecification(criteria.getId(), BookingDetail_.id),
-                    buildRangeSpecification(criteria.getQuantity(), BookingDetail_.quantity),
                     buildRangeSpecification(criteria.getPrice(), BookingDetail_.price),
                     buildSpecification(criteria.getBookingId(), root -> root.join(BookingDetail_.booking, JoinType.LEFT).get(Booking_.id)),
-                    buildSpecification(criteria.getTicketTypeId(), root ->
-                        root.join(BookingDetail_.ticketType, JoinType.LEFT).get(TicketType_.id)
+                    buildSpecification(criteria.getShowtimeSeatId(), root ->
+                        root.join(BookingDetail_.showtimeSeat, JoinType.LEFT).get(ShowtimeSeat_.id)
                     )
                 )
             );

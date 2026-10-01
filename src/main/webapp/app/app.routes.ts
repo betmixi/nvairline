@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 
 import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
-import { Authority } from 'app/shared/jhipster/constants';
 
 import { errorRoute } from './layouts/error/error.route';
 
@@ -17,10 +16,9 @@ const routes: Routes = [
     outlet: 'navbar',
   },
   {
+    // Quyen han cu the (ADMIN, hoac ADMIN+STAFF cho vai check-in) duoc gate
+    // rieng tren tung route con trong admin.routes.ts - o day chi can dang nhap.
     path: 'admin',
-    data: {
-      authorities: [Authority.ADMIN],
-    },
     canActivate: [UserRouteAccessService],
     loadChildren: () => import('./admin/admin.routes'),
   },
@@ -41,35 +39,78 @@ const routes: Routes = [
     title: 'Vé của tôi',
   },
   {
-    path: 'organizer/register',
+    // Nang hang ghe cho ve da mua, thu them phan chenh lech gia qua VNPay.
+    path: 'upgrade-seat',
     canActivate: [UserRouteAccessService],
-    loadComponent: () => import('./organizer/organizer-register'),
-    title: 'Become Organizer',
+    loadComponent: () => import('app/user/upgrade/upgrade-tickets'),
+    title: 'Nâng hạng ghế',
   },
   {
-    path: 'organizer/dashboard',
+    // Mua them hanh ly ky gui tra truoc cho ve da mua.
+    path: 'baggage',
     canActivate: [UserRouteAccessService],
-    loadComponent: () => import('./organizer/dashboard/dashboard').then(m => m.DashboardComponent),
-    title: 'Organizer Dashboard',
+    loadComponent: () => import('app/user/baggage/baggage-tickets'),
+    title: 'Hành lý trả trước',
   },
   {
-    path: 'organizer/events',
-    loadComponent: () => import('./organizer/events/event').then(m => m.OrganizerEventComponent),
+    // 4 dich vu bo tro dung chung 1 component, chi khac addonType/tieu de/icon.
+    path: 'shopping',
+    canActivate: [UserRouteAccessService],
+    loadComponent: () => import('app/user/addon/addon-tickets'),
+    data: { addonType: 'SHOPPING', pageTitle: 'Mua sắm', pageIcon: '🛍️' },
+    title: 'Mua sắm',
   },
   {
-    path: 'organizer/revenue',
+    path: 'hotel-tour',
     canActivate: [UserRouteAccessService],
-    loadComponent: () => import('./organizer/revenue/revenue').then(m => m.RevenueComponent),
-    title: 'Revenue',
+    loadComponent: () => import('app/user/addon/addon-tickets'),
+    data: { addonType: 'HOTEL_TOUR', pageTitle: 'Khách sạn & Tour', pageIcon: '🏨' },
+    title: 'Khách sạn & Tour',
   },
   {
-    path: 'organizer/events/:eventId/tickets',
+    path: 'insurance',
     canActivate: [UserRouteAccessService],
-    loadComponent: () => import('./organizer/manage-tickets/manage-tickets').then(m => m.ManageTicketsComponent),
+    loadComponent: () => import('app/user/addon/addon-tickets'),
+    data: { addonType: 'INSURANCE', pageTitle: 'Bảo hiểm', pageIcon: '🛡️' },
+    title: 'Bảo hiểm',
+  },
+  {
+    path: 'other-services',
+    canActivate: [UserRouteAccessService],
+    loadComponent: () => import('app/user/addon/addon-tickets'),
+    data: { addonType: 'OTHER_SERVICE', pageTitle: 'Dịch vụ khác', pageIcon: '🧩' },
+    title: 'Dịch vụ khác',
+  },
+  {
+    // Trang tong hop, dan huong sang tat ca dich vu bo tro co the mua them cho ve.
+    path: 'services',
+    canActivate: [UserRouteAccessService],
+    loadComponent: () => import('app/user/services-hub/services-hub'),
+    title: 'Dịch vụ bổ trợ',
+  },
+  {
+    // UC Lien he ho tro: gui yeu cau va xem phan hoi.
+    path: 'support',
+    canActivate: [UserRouteAccessService],
+    loadComponent: () => import('app/user/support/support'),
+    title: 'Liên hệ hỗ trợ',
+  },
+  {
+    // Tich diem Lotusmiles: xem so du va lich su tich/doi diem.
+    path: 'loyalty',
+    canActivate: [UserRouteAccessService],
+    loadComponent: () => import('app/user/loyalty/loyalty').then(m => m.LoyaltyComponent),
+    title: 'Tích điểm',
   },
   {
     path: 'events',
     loadComponent: () => import('app/user/events/events').then(m => m.EventsComponent),
+  },
+  {
+    path: 'favorites',
+    canActivate: [UserRouteAccessService],
+    loadComponent: () => import('app/user/favorites/favorites').then(m => m.FavoritesComponent),
+    title: 'Sự kiện đã lưu',
   },
   {
     // Xem chi tiet su kien truoc khi mua ve, khong can dang nhap.

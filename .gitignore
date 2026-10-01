@@ -163,3 +163,4 @@ coverage/
 ######################
 /src/main/webapp/swagger-ui/*
 !/src/main/webapp/swagger-ui/index.html
+database_export.sql

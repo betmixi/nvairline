@@ -3,7 +3,6 @@ package com.dugx.event.domain;
 import static com.dugx.event.domain.AddressTestSamples.*;
 import static com.dugx.event.domain.CategoryTestSamples.*;
 import static com.dugx.event.domain.EventTestSamples.*;
-import static com.dugx.event.domain.OrganizerTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.dugx.event.web.rest.TestUtil;
@@ -47,17 +46,5 @@ class EventTest {
 
         event.address(null);
         assertThat(event.getAddress()).isNull();
-    }
-
-    @Test
-    void organizerTest() {
-        Event event = getEventRandomSampleGenerator();
-        Organizer organizerBack = getOrganizerRandomSampleGenerator();
-
-        event.setOrganizer(organizerBack);
-        assertThat(event.getOrganizer()).isEqualTo(organizerBack);
-
-        event.organizer(null);
-        assertThat(event.getOrganizer()).isNull();
     }
 }

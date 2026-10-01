@@ -1,0 +1,235 @@
+:host {
+  display: block;
+}
+
+.state-box {
+  text-align: center;
+  padding: 90px 20px;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 18px;
+  color: #6b7280;
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover {
+    color: #2563eb;
+  }
+}
+
+.event-header-plain {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 28px;
+
+  h1 {
+    font-size: 26px;
+    font-weight: 800;
+    margin: 0;
+    color: #1f2937;
+  }
+}
+
+.category-badge {
+  display: inline-block;
+  width: fit-content;
+  padding: 6px 16px;
+  border-radius: 30px;
+  background: #eff6ff;
+  border: 1px solid #dbe4f3;
+  color: #01319f;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.section-title {
+  font-weight: 800;
+  color: #1f2937;
+  margin-bottom: 18px;
+}
+
+.date-group {
+  margin-bottom: 26px;
+}
+
+.date-label {
+  font-weight: 700;
+  color: #374151;
+  margin-bottom: 12px;
+  text-transform: capitalize;
+}
+
+/* =========================
+        FLIGHT CARD (danh sach suat chieu kieu "ve may bay")
+========================= */
+
+.flight-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  background: #fff;
+  border: 1px solid #e5e9f0;
+  border-radius: 16px;
+  margin-bottom: 18px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+}
+
+.flight-card-route {
+  flex: 1 1 60%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 24px;
+  position: relative;
+}
+
+.flight-time-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 90px;
+}
+
+.flight-time {
+  font-size: 22px;
+  font-weight: 800;
+  color: #1f2937;
+}
+
+.flight-airport-code {
+  font-size: 14px;
+  font-weight: 700;
+  color: #2563eb;
+}
+
+.flight-terminal {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.flight-route-line {
+  flex: 1 1 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 90px;
+}
+
+.flight-route-label {
+  font-size: 11.5px;
+  color: #9ca3af;
+}
+
+.flight-route-track {
+  width: 100%;
+  height: 1px;
+  background: #d1d5db;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+}
+
+.flight-route-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #9ca3af;
+  transform: translateY(-2.5px);
+}
+
+.flight-card-meta {
+  flex: 1 1 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 12.5px;
+  color: #6b7280;
+  padding-top: 8px;
+  border-top: 1px dashed #e5e9f0;
+}
+
+.flight-fare-columns {
+  flex: 1 1 38%;
+  display: flex;
+  min-width: 260px;
+}
+
+.fare-col {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border: none;
+  padding: 16px 12px;
+  text-align: center;
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+.fare-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.fare-from {
+  font-size: 10.5px;
+  opacity: 0.85;
+}
+
+.fare-price {
+  font-size: 15px;
+  font-weight: 800;
+
+  small {
+    font-size: 10px;
+    font-weight: 600;
+    margin-left: 3px;
+  }
+}
+
+.fare-economy {
+  background: #0f4c5c;
+  color: #fff;
+
+  &:hover {
+    background: #0a3947;
+  }
+}
+
+.fare-premium {
+  background: #d7f0e6;
+  color: #0f4c5c;
+
+  &:hover {
+    background: #c3e8da;
+  }
+}
+
+.fare-business {
+  background: #f2b705;
+  color: #3a2b00;
+
+  &:hover {
+    background: #dba504;
+  }
+}
+
+@media (max-width: 768px) {
+  .flight-card {
+    flex-direction: column;
+  }
+
+  .flight-fare-columns {
+    flex-direction: column;
+  }
+}

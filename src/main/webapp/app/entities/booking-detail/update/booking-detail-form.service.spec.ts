@@ -20,10 +20,9 @@ describe('BookingDetail Form Service', () => {
         expect(formGroup.controls).toEqual(
           expect.objectContaining({
             id: expect.any(Object),
-            quantity: expect.any(Object),
             price: expect.any(Object),
             booking: expect.any(Object),
-            ticketType: expect.any(Object),
+            showtimeSeatId: expect.any(Object),
           }),
         );
       });
@@ -34,10 +33,9 @@ describe('BookingDetail Form Service', () => {
         expect(formGroup.controls).toEqual(
           expect.objectContaining({
             id: expect.any(Object),
-            quantity: expect.any(Object),
             price: expect.any(Object),
             booking: expect.any(Object),
-            ticketType: expect.any(Object),
+            showtimeSeatId: expect.any(Object),
           }),
         );
       });

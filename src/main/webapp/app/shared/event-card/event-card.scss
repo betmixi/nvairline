@@ -17,6 +17,11 @@
   box-shadow: 0 28px 55px rgba(37, 99, 235, 0.15);
 }
 
+.card-media-link {
+  display: block;
+  text-decoration: none;
+}
+
 .event-image {
   width: 100%;
   height: 220px;
@@ -25,8 +30,55 @@
   transition: 0.45s;
 }
 
+.event-image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44px;
+  background: linear-gradient(135deg, #eef3ff, #dce6ff);
+  opacity: 0.8;
+}
+
 .event-card:hover .event-image {
   transform: scale(1.06);
+}
+
+/* ================= ROUTE BANNER (departure -> arrival), chi hien khi da co du lieu tuyen bay ================= */
+
+.route-banner {
+  display: block;
+  background: linear-gradient(135deg, #01319f, #0044cc);
+  padding: 18px 20px 14px;
+  position: relative;
+}
+
+.route-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.airport-code {
+  font-size: 26px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.route-arrow {
+  font-size: 18px;
+  color: #f9b000;
+}
+
+.route-cities {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 /* ================= TEXT ================= */
@@ -44,7 +96,7 @@
   font-weight: inherit;
 
   &:hover {
-    color: #2563eb;
+    color: #01319f;
   }
 }
 
@@ -59,8 +111,8 @@
   display: inline-block;
   padding: 6px 14px;
   border-radius: 30px;
-  background: #eef2ff;
-  color: #4f46e5;
+  background: #fff6e0;
+  color: #b17700;
   font-weight: 600;
   font-size: 13px;
 }
@@ -77,7 +129,7 @@
 .price {
   font-size: 20px;
   font-weight: 700;
-  color: #2563eb;
+  color: #01319f;
 }
 
 /* ================= BUTTON ================= */
@@ -87,11 +139,12 @@
   border-radius: 14px;
   padding: 11px 24px;
   font-weight: 700;
-  background: linear-gradient(90deg, #2563eb, #4f46e5);
+  color: #1a1200;
+  background: linear-gradient(90deg, #f9b000, #ffcb4d);
   transition: 0.3s;
 }
 
 .btn-primary:hover {
   transform: translateY(-3px);
-  box-shadow: 0 15px 30px rgba(79, 70, 229, 0.3);
+  box-shadow: 0 15px 30px rgba(249, 176, 0, 0.35);
 }

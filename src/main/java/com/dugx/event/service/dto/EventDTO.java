@@ -32,13 +32,22 @@ public class EventDTO implements Serializable {
 
     private Instant createdDate;
 
+    private Boolean supportsOneWay;
+
+    private Boolean supportsRoundTrip;
+
+    private Boolean supportsMultiCity;
+
     private CategoryDTO category;
 
     private AddressDTO address;
 
-    private OrganizerDTO organizer;
+    private AirportDTO departureAirport;
+
+    private AirportDTO arrivalAirport;
+
     private BigDecimal price;
-    private List<TicketTypeDTO> ticketTypes;
+    private List<ShowtimeDTO> showtimes;
 
     public Long getId() {
         return id;
@@ -104,6 +113,30 @@ public class EventDTO implements Serializable {
         this.createdDate = createdDate;
     }
 
+    public Boolean getSupportsOneWay() {
+        return supportsOneWay;
+    }
+
+    public void setSupportsOneWay(Boolean supportsOneWay) {
+        this.supportsOneWay = supportsOneWay;
+    }
+
+    public Boolean getSupportsRoundTrip() {
+        return supportsRoundTrip;
+    }
+
+    public void setSupportsRoundTrip(Boolean supportsRoundTrip) {
+        this.supportsRoundTrip = supportsRoundTrip;
+    }
+
+    public Boolean getSupportsMultiCity() {
+        return supportsMultiCity;
+    }
+
+    public void setSupportsMultiCity(Boolean supportsMultiCity) {
+        this.supportsMultiCity = supportsMultiCity;
+    }
+
     public CategoryDTO getCategory() {
         return category;
     }
@@ -120,12 +153,20 @@ public class EventDTO implements Serializable {
         this.address = address;
     }
 
-    public OrganizerDTO getOrganizer() {
-        return organizer;
+    public AirportDTO getDepartureAirport() {
+        return departureAirport;
     }
 
-    public void setOrganizer(OrganizerDTO organizer) {
-        this.organizer = organizer;
+    public void setDepartureAirport(AirportDTO departureAirport) {
+        this.departureAirport = departureAirport;
+    }
+
+    public AirportDTO getArrivalAirport() {
+        return arrivalAirport;
+    }
+
+    public void setArrivalAirport(AirportDTO arrivalAirport) {
+        this.arrivalAirport = arrivalAirport;
     }
 
     public BigDecimal getPrice() {
@@ -136,8 +177,8 @@ public class EventDTO implements Serializable {
         this.price = price;
     }
 
-    public List<TicketTypeDTO> getTicketTypes() {
-        return ticketTypes;
+    public List<ShowtimeDTO> getShowtimes() {
+        return showtimes;
     }
 
     @Override
@@ -156,8 +197,8 @@ public class EventDTO implements Serializable {
         return Objects.equals(this.id, eventDTO.id);
     }
 
-    public void setTicketTypes(List<TicketTypeDTO> ticketTypes) {
-        this.ticketTypes = ticketTypes;
+    public void setShowtimes(List<ShowtimeDTO> showtimes) {
+        this.showtimes = showtimes;
     }
 
     @Override
@@ -177,9 +218,13 @@ public class EventDTO implements Serializable {
             ", endTime='" + getEndTime() + "'" +
             ", status='" + getStatus() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +
+            ", supportsOneWay='" + getSupportsOneWay() + "'" +
+            ", supportsRoundTrip='" + getSupportsRoundTrip() + "'" +
+            ", supportsMultiCity='" + getSupportsMultiCity() + "'" +
             ", category=" + getCategory() +
             ", address=" + getAddress() +
-            ", organizer=" + getOrganizer() +
+            ", departureAirport=" + getDepartureAirport() +
+            ", arrivalAirport=" + getArrivalAirport() +
             "}";
     }
 }

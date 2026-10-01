@@ -12,7 +12,6 @@ export interface AdminDashboard {
   totalEvents: number;
   totalBookings: number;
   totalRevenue: number;
-  pendingOrganizer: number;
   recentEvents: IEvent[];
   topEventsByTickets: TopEvent[];
   topEventsByRevenue: TopEvent[];

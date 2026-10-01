@@ -12,8 +12,8 @@ import com.dugx.event.IntegrationTest;
 import com.dugx.event.domain.Address;
 import com.dugx.event.domain.Category;
 import com.dugx.event.domain.Event;
-import com.dugx.event.domain.Organizer;
 import com.dugx.event.repository.EventRepository;
+import com.dugx.event.security.AuthoritiesConstants;
 import com.dugx.event.service.EventService;
 import com.dugx.event.service.dto.EventDTO;
 import com.dugx.event.service.mapper.EventMapper;
@@ -44,7 +44,7 @@ import org.springframework.transaction.annotation.Transactional;
 @IntegrationTest
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 class EventResourceIT {
 
     private static final String DEFAULT_TITLE = "AAAAAAAAAA";
@@ -544,28 +544,6 @@ class EventResourceIT {
 
         // Get all the eventList where address equals to (addressId + 1)
         defaultEventShouldNotBeFound("addressId.equals=" + (addressId + 1));
-    }
-
-    @Test
-    @Transactional
-    void getAllEventsByOrganizerIsEqualToSomething() throws Exception {
-        Organizer organizer;
-        if (TestUtil.findAll(em, Organizer.class).isEmpty()) {
-            eventRepository.saveAndFlush(event);
-            organizer = OrganizerResourceIT.createEntity();
-        } else {
-            organizer = TestUtil.findAll(em, Organizer.class).get(0);
-        }
-        em.persist(organizer);
-        em.flush();
-        event.setOrganizer(organizer);
-        eventRepository.saveAndFlush(event);
-        Long organizerId = organizer.getId();
-        // Get all the eventList where organizer equals to organizerId
-        defaultEventShouldBeFound("organizerId.equals=" + organizerId);
-
-        // Get all the eventList where organizer equals to (organizerId + 1)
-        defaultEventShouldNotBeFound("organizerId.equals=" + (organizerId + 1));
     }
 
     private void defaultEventFiltering(String shouldBeFound, String shouldNotBeFound) throws Exception {

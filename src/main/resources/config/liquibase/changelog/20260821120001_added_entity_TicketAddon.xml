@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <!--
+        Added the entity TicketAddon: dich vu bo tro mua them cho mot ve da mua
+        (mua sam mien thue, khach san & tour, bao hiem du lich, dich vu khac),
+        thanh toan qua VNPay. Mot ban ghi = mot muc hang trong "gio hang" cua
+        mot lan mua.
+    -->
+    <changeSet id="20260821120001-1" author="dugx">
+        <createTable tableName="ticket_addon">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="addon_type" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="item_code" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="item_label" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="unit_price" type="decimal(21,2)">
+                <constraints nullable="false" />
+            </column>
+            <column name="quantity" type="integer">
+                <constraints nullable="false" />
+            </column>
+            <column name="total_price" type="decimal(21,2)">
+                <constraints nullable="false" />
+            </column>
+            <column name="status" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="created_date" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+            <column name="ticket_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="booking_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

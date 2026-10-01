@@ -18,10 +18,9 @@ type BookingDetailFormDefaults = Pick<NewBookingDetail, 'id'>;
 
 type BookingDetailFormGroupContent = {
   id: FormControl<IBookingDetail['id'] | NewBookingDetail['id']>;
-  quantity: FormControl<IBookingDetail['quantity']>;
   price: FormControl<IBookingDetail['price']>;
   booking: FormControl<IBookingDetail['booking']>;
-  ticketType: FormControl<IBookingDetail['ticketType']>;
+  showtimeSeatId: FormControl<number | null>;
 };
 
 export type BookingDetailFormGroup = FormGroup<BookingDetailFormGroupContent>;
@@ -42,15 +41,20 @@ export class BookingDetailFormService {
           validators: [Validators.required],
         },
       ),
-      quantity: new FormControl(bookingDetailRawValue.quantity),
       price: new FormControl(bookingDetailRawValue.price),
       booking: new FormControl(bookingDetailRawValue.booking),
-      ticketType: new FormControl(bookingDetailRawValue.ticketType),
+      showtimeSeatId: new FormControl(bookingDetailRawValue.showtimeSeat?.id ?? null),
     });
   }
 
   getBookingDetail(form: BookingDetailFormGroup): IBookingDetail | NewBookingDetail {
-    return form.getRawValue();
+    const raw = form.getRawValue();
+    return {
+      id: raw.id,
+      price: raw.price,
+      booking: raw.booking,
+      showtimeSeat: raw.showtimeSeatId != null ? { id: raw.showtimeSeatId } : null,
+    };
   }
 
   resetForm(form: BookingDetailFormGroup, bookingDetail: BookingDetailFormGroupInput): void {
@@ -58,6 +62,7 @@ export class BookingDetailFormService {
     form.reset({
       ...bookingDetailRawValue,
       id: { value: bookingDetailRawValue.id, disabled: true },
+      showtimeSeatId: bookingDetailRawValue.showtimeSeat?.id ?? null,
     });
   }
 

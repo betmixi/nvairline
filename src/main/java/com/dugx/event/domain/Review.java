@@ -30,8 +30,9 @@ public class Review implements Serializable {
     @Column(name = "rating", nullable = false)
     private Integer rating;
 
-    @Lob
-    @Column(name = "comment")
+    // Khong dung @Lob: cot trong DB la "text" thuong. Neu de @Lob, Hibernate se
+    // doc/ghi qua large object (oid) khien du lieu text thuong bi loi khi doc.
+    @Column(name = "comment", columnDefinition = "text")
     private String comment;
 
     @Column(name = "created_date")
@@ -41,8 +42,17 @@ public class Review implements Serializable {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "category", "address", "organizer" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "category", "address" }, allowSetters = true)
     private Event event;
+
+    @Column(name = "hidden", nullable = false)
+    private Boolean hidden = false;
+
+    @Column(name = "reply", columnDefinition = "text")
+    private String reply;
+
+    @Column(name = "replied_date")
+    private Instant repliedDate;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -122,6 +132,30 @@ public class Review implements Serializable {
     public Review event(Event event) {
         this.setEvent(event);
         return this;
+    }
+
+    public Boolean getHidden() {
+        return this.hidden;
+    }
+
+    public void setHidden(Boolean hidden) {
+        this.hidden = hidden;
+    }
+
+    public String getReply() {
+        return this.reply;
+    }
+
+    public void setReply(String reply) {
+        this.reply = reply;
+    }
+
+    public Instant getRepliedDate() {
+        return this.repliedDate;
+    }
+
+    public void setRepliedDate(Instant repliedDate) {
+        this.repliedDate = repliedDate;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

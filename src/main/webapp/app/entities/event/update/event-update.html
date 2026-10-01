@@ -2,7 +2,7 @@
   <div class="col-8">
     <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
       <h2 id="jhi-event-heading" data-cy="EventCreateUpdateHeading" jhiTranslate="dugxApp.event.home.createOrEditLabel">
-        Create or edit a Event
+        Thêm mới hoặc cập nhật chuyến bay
       </h2>
 
       <div>
@@ -16,8 +16,16 @@
         </div>
         } @let titleRef = editForm.get('title')!;
         <div class="mb-3">
-          <label class="form-label" for="field_title" jhiTranslate="dugxApp.event.title">Title</label>
-          <input type="text" class="form-control" name="title" id="field_title" data-cy="title" formControlName="title" />
+          <label class="form-label" for="field_title" jhiTranslate="dugxApp.event.title">Số hiệu chuyến bay</label>
+          <input
+            type="text"
+            class="form-control"
+            name="title"
+            id="field_title"
+            data-cy="title"
+            formControlName="title"
+            placeholder="Ví dụ: VN123"
+          />
           @if (titleRef.invalid && (titleRef.dirty || titleRef.touched)) {
           <div>
             @if (titleRef.errors?.required) {
@@ -29,12 +37,6 @@
 
         <div class="mb-3">
           <label class="form-label" for="field_banner" jhiTranslate="dugxApp.event.banner">Banner</label>
-
-          @if (editForm.get('banner')?.value) {
-          <div class="mb-2">
-            <img [src]="editForm.get('banner')?.value" alt="Banner preview" class="img-thumbnail" style="max-height: 180px" />
-          </div>
-          }
 
           <input
             type="file"
@@ -91,6 +93,22 @@
         </div>
 
         <div class="mb-3">
+          <label class="form-label">Loại hành trình được phép đặt</label>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="field_supportsOneWay" formControlName="supportsOneWay" />
+            <label class="form-check-label" for="field_supportsOneWay">Một chiều</label>
+          </div>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="field_supportsRoundTrip" formControlName="supportsRoundTrip" />
+            <label class="form-check-label" for="field_supportsRoundTrip">Khứ hồi</label>
+          </div>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="field_supportsMultiCity" formControlName="supportsMultiCity" />
+            <label class="form-check-label" for="field_supportsMultiCity">Nhiều chặng</label>
+          </div>
+        </div>
+
+        <div class="mb-3">
           <label class="form-label" for="field_createdDate" jhiTranslate="dugxApp.event.createdDate">Created Date</label>
           <div class="d-flex">
             <input
@@ -140,18 +158,35 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label" for="field_organizer" jhiTranslate="dugxApp.event.organizer">Organizer</label>
+          <label class="form-label" for="field_departureAirport">Sân bay đi</label>
           <select
             class="form-control"
-            id="field_organizer"
-            data-cy="organizer"
-            name="organizer"
-            formControlName="organizer"
-            [compareWith]="compareOrganizer"
+            id="field_departureAirport"
+            data-cy="departureAirport"
+            name="departureAirport"
+            formControlName="departureAirport"
+            [compareWith]="compareAirport"
           >
             <option [ngValue]="null"></option>
-            @for (organizerOption of organizersSharedCollection(); track $index) {
-            <option [ngValue]="organizerOption">{{ organizerOption.companyName }}</option>
+            @for (airportOption of airportsSharedCollection(); track $index) {
+            <option [ngValue]="airportOption">{{ airportOption.code }} - {{ airportOption.name }} ({{ airportOption.city }})</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_arrivalAirport">Sân bay đến</label>
+          <select
+            class="form-control"
+            id="field_arrivalAirport"
+            data-cy="arrivalAirport"
+            name="arrivalAirport"
+            formControlName="arrivalAirport"
+            [compareWith]="compareAirport"
+          >
+            <option [ngValue]="null"></option>
+            @for (airportOption of airportsSharedCollection(); track $index) {
+            <option [ngValue]="airportOption">{{ airportOption.code }} - {{ airportOption.name }} ({{ airportOption.city }})</option>
             }
           </select>
         </div>
@@ -163,50 +198,13 @@
         </button>
         <hr class="my-4" />
 
-        <h4 class="mb-3">🎟 Ticket Types</h4>
-
-        @for (ticket of tickets; track $index) {
-
-        <div class="card mb-3">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Ticket Name</label>
-
-                <input
-                  class="form-control"
-                  [(ngModel)]="ticket.name"
-                  [ngModelOptions]="{standalone: true}"
-                  placeholder="VIP / Standard / Early Bird"
-                />
-              </div>
-
-              <div class="col-md-3 mb-3">
-                <label class="form-label">Price</label>
-
-                <input type="number" class="form-control" [(ngModel)]="ticket.price" [ngModelOptions]="{standalone: true}" />
-              </div>
-
-              <div class="col-md-3 mb-3">
-                <label class="form-label">Quantity</label>
-
-                <input type="number" class="form-control" [(ngModel)]="ticket.quantity" [ngModelOptions]="{standalone: true}" />
-              </div>
-            </div>
-
-            @if (tickets.length > 1) {
-
-            <button type="button" class="btn btn-outline-danger" (click)="removeTicket($index)">🗑 Delete Ticket</button>
-
-            }
-          </div>
-        </div>
-
-        }
-
-        <button type="button" class="btn btn-outline-primary" (click)="addTicket()">➕ Add Ticket Type</button>
-
+        @if (event?.id) {
+        <p class="text-muted">
+          Quản lý giờ bay (máy bay, giờ bay, giá vé) ở màn hình
+          <a [routerLink]="['/admin/events', event!.id, 'showtimes']">Quản lý giờ bay</a>.
+        </p>
         <hr class="my-4" />
+        }
         <button
           type="submit"
           id="save-entity"

@@ -1,6 +1,7 @@
 package com.dugx.event.web.rest;
 
 import com.dugx.event.repository.EventRepository;
+import com.dugx.event.repository.ShowtimeRepository;
 import com.dugx.event.service.EventQueryService;
 import com.dugx.event.service.EventService;
 import com.dugx.event.service.criteria.EventCriteria;
@@ -10,6 +11,9 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -21,6 +25,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -47,10 +52,70 @@ public class EventResource {
 
     private final EventQueryService eventQueryService;
 
-    public EventResource(EventService eventService, EventRepository eventRepository, EventQueryService eventQueryService) {
+    private final ShowtimeRepository showtimeRepository;
+
+    private static final ZoneId VN_ZONE = ZoneId.of("Asia/Ho_Chi_Minh");
+
+    public EventResource(
+        EventService eventService,
+        EventRepository eventRepository,
+        EventQueryService eventQueryService,
+        ShowtimeRepository showtimeRepository
+    ) {
         this.eventService = eventService;
         this.eventRepository = eventRepository;
         this.eventQueryService = eventQueryService;
+        this.showtimeRepository = showtimeRepository;
+    }
+
+    /**
+     * Neu co truyen showtimeDate (yyyy-MM-dd), rang buoc criteria.id() theo danh sach Event
+     * co it nhat 1 gio bay trong ngay do (mui gio Viet Nam) - khong dung den EventCriteria/
+     * EventQueryService, tan dung nguyen ven pipeline Specification hien co.
+     */
+    private void applyShowtimeDateFilter(EventCriteria criteria, String showtimeDate) {
+        if (showtimeDate == null || showtimeDate.isBlank()) {
+            return;
+        }
+        try {
+            LocalDate date = LocalDate.parse(showtimeDate);
+            var start = date.atStartOfDay(VN_ZONE).toInstant();
+            var end = date.plusDays(1).atStartOfDay(VN_ZONE).toInstant();
+            List<Long> matchingEventIds = showtimeRepository.findEventIdsByStartTimeBetween(start, end);
+            criteria.id().setIn(matchingEventIds);
+        } catch (DateTimeParseException e) {
+            LOG.debug("Invalid showtimeDate param, ignoring: {}", showtimeDate);
+        }
+    }
+
+    /**
+     * Neu co truyen tripType (one-way | round-trip | multi-city), rang buoc criteria theo cot
+     * supportsOneWay/supportsRoundTrip/supportsMultiCity tuong ung - moi Event co the duoc gioi han
+     * chi ban theo mot so loai hanh trinh nhat dinh (giong hang bay that phan loai hang ve).
+     */
+    private void applyTripTypeFilter(EventCriteria criteria, String tripType) {
+        if (tripType == null || tripType.isBlank()) {
+            return;
+        }
+        switch (tripType) {
+            case "one-way" -> criteria.supportsOneWay().setEquals(true);
+            case "round-trip" -> criteria.supportsRoundTrip().setEquals(true);
+            case "multi-city" -> criteria.supportsMultiCity().setEquals(true);
+            default -> LOG.debug("Unknown tripType param, ignoring: {}", tripType);
+        }
+    }
+
+    /**
+     * San bay di va san bay den cua mot su kien khong duoc trung nhau.
+     */
+    private void validateDepartureArrivalAirports(EventDTO eventDTO) {
+        if (
+            eventDTO.getDepartureAirport() != null &&
+            eventDTO.getArrivalAirport() != null &&
+            Objects.equals(eventDTO.getDepartureAirport().getId(), eventDTO.getArrivalAirport().getId())
+        ) {
+            throw new BadRequestAlertException("Departure airport and arrival airport must be different", ENTITY_NAME, "sameairport");
+        }
     }
 
     /**
@@ -61,11 +126,13 @@ public class EventResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<EventDTO> createEvent(@Valid @RequestBody EventDTO eventDTO) throws URISyntaxException {
         LOG.debug("REST request to save Event : {}", eventDTO);
         if (eventDTO.getId() != null) {
             throw new BadRequestAlertException("A new event cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        validateDepartureArrivalAirports(eventDTO);
         eventDTO = eventService.save(eventDTO);
         return ResponseEntity.created(new URI("/api/events/" + eventDTO.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, eventDTO.getId().toString()))
@@ -83,6 +150,7 @@ public class EventResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<EventDTO> updateEvent(
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody EventDTO eventDTO
@@ -98,6 +166,7 @@ public class EventResource {
         if (!eventRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
+        validateDepartureArrivalAirports(eventDTO);
 
         eventDTO = eventService.update(eventDTO);
         return ResponseEntity.ok()
@@ -117,6 +186,7 @@ public class EventResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<EventDTO> partialUpdateEvent(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody EventDTO eventDTO
@@ -132,6 +202,7 @@ public class EventResource {
         if (!eventRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
+        validateDepartureArrivalAirports(eventDTO);
 
         Optional<EventDTO> result = eventService.partialUpdate(eventDTO);
 
@@ -149,6 +220,7 @@ public class EventResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Events in body.
      */
     @GetMapping("")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<List<EventDTO>> getAllEvents(
         EventCriteria criteria,
         @org.springdoc.core.annotations.ParameterObject Pageable pageable
@@ -163,9 +235,13 @@ public class EventResource {
     @GetMapping("/public")
     public ResponseEntity<List<EventDTO>> getPublicEvents(
         EventCriteria criteria,
+        @RequestParam(required = false) String showtimeDate,
+        @RequestParam(required = false) String tripType,
         @org.springdoc.core.annotations.ParameterObject Pageable pageable
     ) {
         criteria.status().setEquals(true);
+        applyShowtimeDateFilter(criteria, showtimeDate);
+        applyTripTypeFilter(criteria, tripType);
 
         Page<EventDTO> page = eventQueryService.findByCriteria(criteria, pageable);
 
@@ -187,21 +263,17 @@ public class EventResource {
     }
 
     @GetMapping("/public/search")
-    public ResponseEntity<List<EventDTO>> searchPublicEvents(EventCriteria criteria, @ParameterObject Pageable pageable) {
+    public ResponseEntity<List<EventDTO>> searchPublicEvents(
+        EventCriteria criteria,
+        @RequestParam(required = false) String showtimeDate,
+        @RequestParam(required = false) String tripType,
+        @ParameterObject Pageable pageable
+    ) {
         criteria.status().setEquals(true);
+        applyShowtimeDateFilter(criteria, showtimeDate);
+        applyTripTypeFilter(criteria, tripType);
 
         Page<EventDTO> page = eventQueryService.findByCriteria(criteria, pageable);
-
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
-    }
-
-    @GetMapping("/my-events")
-    public ResponseEntity<List<EventDTO>> getMyEvents(@ParameterObject Pageable pageable) {
-        LOG.debug("REST request to get my events");
-
-        Page<EventDTO> page = eventService.findMyEvents(pageable);
 
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
 
@@ -215,6 +287,7 @@ public class EventResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
      */
     @GetMapping("/count")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Long> countEvents(EventCriteria criteria) {
         LOG.debug("REST request to count Events by criteria: {}", criteria);
         return ResponseEntity.ok().body(eventQueryService.countByCriteria(criteria));
@@ -227,6 +300,7 @@ public class EventResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the eventDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<EventDTO> getEvent(@PathVariable("id") Long id) {
         LOG.debug("REST request to get Event : {}", id);
         Optional<EventDTO> eventDTO = eventService.findOne(id);
@@ -240,6 +314,7 @@ public class EventResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteEvent(@PathVariable("id") Long id) {
         LOG.debug("REST request to delete Event : {}", id);
         eventService.delete(id);

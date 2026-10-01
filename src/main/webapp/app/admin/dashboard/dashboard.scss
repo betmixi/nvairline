@@ -1,10 +1,5 @@
 :host {
   display: block;
-  min-height: 100vh;
-  padding: 32px 36px 56px;
-  background:
-    radial-gradient(600px 400px at 5% 0%, rgba(109, 93, 252, 0.06), transparent 60%),
-    radial-gradient(600px 400px at 95% 10%, rgba(255, 140, 0, 0.06), transparent 60%), #f6f7fb;
 }
 
 .admin-dashboard {
@@ -236,51 +231,129 @@
   }
 }
 
-/* ---- ranking chart ---- */
+/* ---- charts row ---- */
 
-.rank-chart {
+.charts-row {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 24px;
+  align-items: stretch;
+}
+
+.charts-row .chart-panel {
+  margin-top: 0;
+}
+
+@media (max-width: 992px) {
+  .charts-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- bar chart ---- */
+
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 18px;
+  height: 240px;
+  padding-top: 8px;
+}
+
+.bar-col {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.bar-value {
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #12141c;
+  white-space: nowrap;
+}
+
+.bar-track {
+  flex: 1;
+  width: 100%;
+  max-width: 56px;
+  display: flex;
+  align-items: flex-end;
+  background: #f0f1f5;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  width: 100%;
+  min-height: 4px;
+  border-radius: 10px 10px 0 0;
+  transition: height 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.bar-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #6b7280;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+/* ---- donut chart ---- */
+
+.donut-chart {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.donut-svg {
+  width: 160px;
+  height: 160px;
+  flex-shrink: 0;
+}
+
+.donut-svg circle {
+  transition: stroke-dasharray 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.donut-legend {
+  flex: 1;
+  min-width: 160px;
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 12px;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 }
 
-.rank-row {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.rank-badge {
+.legend-dot {
   flex-shrink: 0;
-  width: 34px;
-  height: 34px;
-  border-radius: 11px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: 800;
-  color: #ffffff;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
 }
 
-.rank-main {
+.legend-label {
   flex: 1;
   min-width: 0;
-}
-
-.rank-top {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 14px;
-  margin-bottom: 9px;
-}
-
-.rank-title {
-  font-size: 14.5px;
+  font-size: 13.5px;
   font-weight: 600;
   color: #2b2d38;
   overflow: hidden;
@@ -288,25 +361,11 @@
   white-space: nowrap;
 }
 
-.rank-value {
+.legend-value {
   flex-shrink: 0;
-  font-size: 14.5px;
+  font-size: 13.5px;
   font-weight: 800;
   color: #12141c;
-}
-
-.rank-track {
-  height: 10px;
-  border-radius: 5px;
-  background: #f0f1f5;
-  overflow: hidden;
-}
-
-.rank-fill {
-  height: 100%;
-  border-radius: 0 5px 5px 0;
-  min-width: 4px;
-  transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .chart-empty {
@@ -314,15 +373,4 @@
   font-size: 14px;
   margin: 0;
   padding: 12px 0;
-}
-
-@media (max-width: 560px) {
-  .rank-top {
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .rank-title {
-    white-space: normal;
-  }
 }

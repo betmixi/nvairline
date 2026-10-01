@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-DugxApp<dugx>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.dugx.event.DugxApp",
+            "projectName": "dugx",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

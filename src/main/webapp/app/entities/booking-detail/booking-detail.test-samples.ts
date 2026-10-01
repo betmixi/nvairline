@@ -6,12 +6,11 @@ export const sampleWithRequiredData: IBookingDetail = {
 
 export const sampleWithPartialData: IBookingDetail = {
   id: 18921,
-  quantity: 23216,
+  price: 23216,
 };
 
 export const sampleWithFullData: IBookingDetail = {
   id: 14278,
-  quantity: 3426,
   price: 28998.43,
 };
 

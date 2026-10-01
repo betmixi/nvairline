@@ -38,11 +38,19 @@ public class EventCriteria implements Serializable, Criteria {
 
     private InstantFilter createdDate;
 
+    private BooleanFilter supportsOneWay;
+
+    private BooleanFilter supportsRoundTrip;
+
+    private BooleanFilter supportsMultiCity;
+
     private LongFilter categoryId;
 
     private LongFilter addressId;
 
-    private LongFilter organizerId;
+    private LongFilter departureAirportId;
+
+    private LongFilter arrivalAirportId;
 
     private Boolean distinct;
 
@@ -56,9 +64,13 @@ public class EventCriteria implements Serializable, Criteria {
         this.endTime = other.optionalEndTime().map(InstantFilter::copy).orElse(null);
         this.status = other.optionalStatus().map(BooleanFilter::copy).orElse(null);
         this.createdDate = other.optionalCreatedDate().map(InstantFilter::copy).orElse(null);
+        this.supportsOneWay = other.optionalSupportsOneWay().map(BooleanFilter::copy).orElse(null);
+        this.supportsRoundTrip = other.optionalSupportsRoundTrip().map(BooleanFilter::copy).orElse(null);
+        this.supportsMultiCity = other.optionalSupportsMultiCity().map(BooleanFilter::copy).orElse(null);
         this.categoryId = other.optionalCategoryId().map(LongFilter::copy).orElse(null);
         this.addressId = other.optionalAddressId().map(LongFilter::copy).orElse(null);
-        this.organizerId = other.optionalOrganizerId().map(LongFilter::copy).orElse(null);
+        this.departureAirportId = other.optionalDepartureAirportId().map(LongFilter::copy).orElse(null);
+        this.arrivalAirportId = other.optionalArrivalAirportId().map(LongFilter::copy).orElse(null);
         this.distinct = other.distinct;
     }
 
@@ -200,6 +212,63 @@ public class EventCriteria implements Serializable, Criteria {
         this.createdDate = createdDate;
     }
 
+    public BooleanFilter getSupportsOneWay() {
+        return supportsOneWay;
+    }
+
+    public Optional<BooleanFilter> optionalSupportsOneWay() {
+        return Optional.ofNullable(supportsOneWay);
+    }
+
+    public BooleanFilter supportsOneWay() {
+        if (supportsOneWay == null) {
+            setSupportsOneWay(new BooleanFilter());
+        }
+        return supportsOneWay;
+    }
+
+    public void setSupportsOneWay(BooleanFilter supportsOneWay) {
+        this.supportsOneWay = supportsOneWay;
+    }
+
+    public BooleanFilter getSupportsRoundTrip() {
+        return supportsRoundTrip;
+    }
+
+    public Optional<BooleanFilter> optionalSupportsRoundTrip() {
+        return Optional.ofNullable(supportsRoundTrip);
+    }
+
+    public BooleanFilter supportsRoundTrip() {
+        if (supportsRoundTrip == null) {
+            setSupportsRoundTrip(new BooleanFilter());
+        }
+        return supportsRoundTrip;
+    }
+
+    public void setSupportsRoundTrip(BooleanFilter supportsRoundTrip) {
+        this.supportsRoundTrip = supportsRoundTrip;
+    }
+
+    public BooleanFilter getSupportsMultiCity() {
+        return supportsMultiCity;
+    }
+
+    public Optional<BooleanFilter> optionalSupportsMultiCity() {
+        return Optional.ofNullable(supportsMultiCity);
+    }
+
+    public BooleanFilter supportsMultiCity() {
+        if (supportsMultiCity == null) {
+            setSupportsMultiCity(new BooleanFilter());
+        }
+        return supportsMultiCity;
+    }
+
+    public void setSupportsMultiCity(BooleanFilter supportsMultiCity) {
+        this.supportsMultiCity = supportsMultiCity;
+    }
+
     public LongFilter getCategoryId() {
         return categoryId;
     }
@@ -238,23 +307,42 @@ public class EventCriteria implements Serializable, Criteria {
         this.addressId = addressId;
     }
 
-    public LongFilter getOrganizerId() {
-        return organizerId;
+    public LongFilter getDepartureAirportId() {
+        return departureAirportId;
     }
 
-    public Optional<LongFilter> optionalOrganizerId() {
-        return Optional.ofNullable(organizerId);
+    public Optional<LongFilter> optionalDepartureAirportId() {
+        return Optional.ofNullable(departureAirportId);
     }
 
-    public LongFilter organizerId() {
-        if (organizerId == null) {
-            setOrganizerId(new LongFilter());
+    public LongFilter departureAirportId() {
+        if (departureAirportId == null) {
+            setDepartureAirportId(new LongFilter());
         }
-        return organizerId;
+        return departureAirportId;
     }
 
-    public void setOrganizerId(LongFilter organizerId) {
-        this.organizerId = organizerId;
+    public void setDepartureAirportId(LongFilter departureAirportId) {
+        this.departureAirportId = departureAirportId;
+    }
+
+    public LongFilter getArrivalAirportId() {
+        return arrivalAirportId;
+    }
+
+    public Optional<LongFilter> optionalArrivalAirportId() {
+        return Optional.ofNullable(arrivalAirportId);
+    }
+
+    public LongFilter arrivalAirportId() {
+        if (arrivalAirportId == null) {
+            setArrivalAirportId(new LongFilter());
+        }
+        return arrivalAirportId;
+    }
+
+    public void setArrivalAirportId(LongFilter arrivalAirportId) {
+        this.arrivalAirportId = arrivalAirportId;
     }
 
     public Boolean getDistinct() {
@@ -293,16 +381,36 @@ public class EventCriteria implements Serializable, Criteria {
             Objects.equals(endTime, that.endTime) &&
             Objects.equals(status, that.status) &&
             Objects.equals(createdDate, that.createdDate) &&
+            Objects.equals(supportsOneWay, that.supportsOneWay) &&
+            Objects.equals(supportsRoundTrip, that.supportsRoundTrip) &&
+            Objects.equals(supportsMultiCity, that.supportsMultiCity) &&
             Objects.equals(categoryId, that.categoryId) &&
             Objects.equals(addressId, that.addressId) &&
-            Objects.equals(organizerId, that.organizerId) &&
+            Objects.equals(departureAirportId, that.departureAirportId) &&
+            Objects.equals(arrivalAirportId, that.arrivalAirportId) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, banner, startTime, endTime, status, createdDate, categoryId, addressId, organizerId, distinct);
+        return Objects.hash(
+            id,
+            title,
+            banner,
+            startTime,
+            endTime,
+            status,
+            createdDate,
+            supportsOneWay,
+            supportsRoundTrip,
+            supportsMultiCity,
+            categoryId,
+            addressId,
+            departureAirportId,
+            arrivalAirportId,
+            distinct
+        );
     }
 
     // prettier-ignore
@@ -316,9 +424,13 @@ public class EventCriteria implements Serializable, Criteria {
             optionalEndTime().map(f -> "endTime=" + f + ", ").orElse("") +
             optionalStatus().map(f -> "status=" + f + ", ").orElse("") +
             optionalCreatedDate().map(f -> "createdDate=" + f + ", ").orElse("") +
+            optionalSupportsOneWay().map(f -> "supportsOneWay=" + f + ", ").orElse("") +
+            optionalSupportsRoundTrip().map(f -> "supportsRoundTrip=" + f + ", ").orElse("") +
+            optionalSupportsMultiCity().map(f -> "supportsMultiCity=" + f + ", ").orElse("") +
             optionalCategoryId().map(f -> "categoryId=" + f + ", ").orElse("") +
             optionalAddressId().map(f -> "addressId=" + f + ", ").orElse("") +
-            optionalOrganizerId().map(f -> "organizerId=" + f + ", ").orElse("") +
+            optionalDepartureAirportId().map(f -> "departureAirportId=" + f + ", ").orElse("") +
+            optionalArrivalAirportId().map(f -> "arrivalAirportId=" + f + ", ").orElse("") +
             optionalDistinct().map(f -> "distinct=" + f + ", ").orElse("") +
         "}";
     }

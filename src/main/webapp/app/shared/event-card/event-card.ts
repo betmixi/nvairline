@@ -26,6 +26,26 @@ export class EventCardComponent {
     return this.event.address?.location ?? 'Đang cập nhật';
   }
 
+  hasRoute(): boolean {
+    return !!(this.event.departureAirport?.code && this.event.arrivalAirport?.code);
+  }
+
+  getDepartureCode(): string {
+    return this.event.departureAirport?.code ?? '---';
+  }
+
+  getArrivalCode(): string {
+    return this.event.arrivalAirport?.code ?? '---';
+  }
+
+  getDepartureCity(): string {
+    return this.event.departureAirport?.city ?? '';
+  }
+
+  getArrivalCity(): string {
+    return this.event.arrivalAirport?.city ?? '';
+  }
+
   getPrice(): string {
     if (this.event.price === null || this.event.price === undefined) {
       return 'Liên hệ';

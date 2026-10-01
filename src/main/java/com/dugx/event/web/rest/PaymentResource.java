@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -60,6 +61,7 @@ public class PaymentResource {
     }
 
     @GetMapping("/test")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<String> testVNPay() {
         return ResponseEntity.ok(vnPayService.getTmnCode());
     }
@@ -72,6 +74,7 @@ public class PaymentResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<PaymentDTO> createPayment(@RequestBody PaymentDTO paymentDTO) throws URISyntaxException {
         LOG.debug("REST request to save Payment : {}", paymentDTO);
         if (paymentDTO.getId() != null) {
@@ -94,6 +97,7 @@ public class PaymentResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<PaymentDTO> updatePayment(
         @PathVariable(value = "id", required = false) final Long id,
         @RequestBody PaymentDTO paymentDTO
@@ -128,6 +132,7 @@ public class PaymentResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<PaymentDTO> partialUpdatePayment(
         @PathVariable(value = "id", required = false) final Long id,
         @RequestBody PaymentDTO paymentDTO
@@ -160,6 +165,7 @@ public class PaymentResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Payments in body.
      */
     @GetMapping("")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<List<PaymentDTO>> getAllPayments(
         PaymentCriteria criteria,
         @org.springdoc.core.annotations.ParameterObject Pageable pageable
@@ -178,6 +184,7 @@ public class PaymentResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
      */
     @GetMapping("/count")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Long> countPayments(PaymentCriteria criteria) {
         LOG.debug("REST request to count Payments by criteria: {}", criteria);
         return ResponseEntity.ok().body(paymentQueryService.countByCriteria(criteria));
@@ -190,6 +197,7 @@ public class PaymentResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the paymentDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<PaymentDTO> getPayment(@PathVariable("id") Long id) {
         LOG.debug("REST request to get Payment : {}", id);
         Optional<PaymentDTO> paymentDTO = paymentService.findOne(id);
@@ -203,6 +211,7 @@ public class PaymentResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Void> deletePayment(@PathVariable("id") Long id) {
         LOG.debug("REST request to delete Payment : {}", id);
         paymentService.delete(id);

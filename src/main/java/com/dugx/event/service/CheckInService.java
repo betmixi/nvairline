@@ -9,6 +9,7 @@ import com.dugx.event.domain.User;
 import com.dugx.event.repository.CheckInRepository;
 import com.dugx.event.repository.TicketRepository;
 import com.dugx.event.repository.UserRepository;
+import com.dugx.event.security.AuthoritiesConstants;
 import com.dugx.event.security.SecurityUtils;
 import com.dugx.event.service.dto.CheckInDTO;
 import com.dugx.event.service.dto.CheckInRequest;
@@ -126,11 +127,16 @@ public class CheckInService {
         checkInRepository.deleteById(id);
     }
 
+    /**
+     * Check-in mo cho ca khach hang tu lam thu tuc ve cua chinh minh, va cho Quan
+     * ly/Nhan vien lam thu tuc ho bat ky ve nao (khong can la chu ve).
+     */
     @Transactional
     public CheckInDTO checkIn(CheckInRequest request) {
         Ticket ticket = validateTicket(request);
-
         User user = getCurrentUser();
+
+        assertCanCheckIn(ticket, user);
 
         CheckIn checkIn = createCheckIn(ticket, user);
 
@@ -158,6 +164,18 @@ public class CheckInService {
         }
 
         return ticket;
+    }
+
+    private void assertCanCheckIn(Ticket ticket, User currentUser) {
+        boolean isStaffOrAdmin = SecurityUtils.hasCurrentUserAnyOfAuthorities(AuthoritiesConstants.ADMIN, AuthoritiesConstants.STAFF);
+        if (isStaffOrAdmin) {
+            return;
+        }
+
+        User owner = ticket.getBookingDetail().getBooking().getUser();
+        if (owner == null || !owner.getId().equals(currentUser.getId())) {
+            throw new BadRequestAlertException("You do not own this ticket", ENTITY_NAME, "accessdenied");
+        }
     }
 
     private User getCurrentUser() {

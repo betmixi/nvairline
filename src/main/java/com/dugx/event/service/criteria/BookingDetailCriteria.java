@@ -26,13 +26,11 @@ public class BookingDetailCriteria implements Serializable, Criteria {
 
     private LongFilter id;
 
-    private IntegerFilter quantity;
-
     private BigDecimalFilter price;
 
     private LongFilter bookingId;
 
-    private LongFilter ticketTypeId;
+    private LongFilter showtimeSeatId;
 
     private Boolean distinct;
 
@@ -40,10 +38,9 @@ public class BookingDetailCriteria implements Serializable, Criteria {
 
     public BookingDetailCriteria(BookingDetailCriteria other) {
         this.id = other.optionalId().map(LongFilter::copy).orElse(null);
-        this.quantity = other.optionalQuantity().map(IntegerFilter::copy).orElse(null);
         this.price = other.optionalPrice().map(BigDecimalFilter::copy).orElse(null);
         this.bookingId = other.optionalBookingId().map(LongFilter::copy).orElse(null);
-        this.ticketTypeId = other.optionalTicketTypeId().map(LongFilter::copy).orElse(null);
+        this.showtimeSeatId = other.optionalShowtimeSeatId().map(LongFilter::copy).orElse(null);
         this.distinct = other.distinct;
     }
 
@@ -69,25 +66,6 @@ public class BookingDetailCriteria implements Serializable, Criteria {
 
     public void setId(LongFilter id) {
         this.id = id;
-    }
-
-    public IntegerFilter getQuantity() {
-        return quantity;
-    }
-
-    public Optional<IntegerFilter> optionalQuantity() {
-        return Optional.ofNullable(quantity);
-    }
-
-    public IntegerFilter quantity() {
-        if (quantity == null) {
-            setQuantity(new IntegerFilter());
-        }
-        return quantity;
-    }
-
-    public void setQuantity(IntegerFilter quantity) {
-        this.quantity = quantity;
     }
 
     public BigDecimalFilter getPrice() {
@@ -128,23 +106,23 @@ public class BookingDetailCriteria implements Serializable, Criteria {
         this.bookingId = bookingId;
     }
 
-    public LongFilter getTicketTypeId() {
-        return ticketTypeId;
+    public LongFilter getShowtimeSeatId() {
+        return showtimeSeatId;
     }
 
-    public Optional<LongFilter> optionalTicketTypeId() {
-        return Optional.ofNullable(ticketTypeId);
+    public Optional<LongFilter> optionalShowtimeSeatId() {
+        return Optional.ofNullable(showtimeSeatId);
     }
 
-    public LongFilter ticketTypeId() {
-        if (ticketTypeId == null) {
-            setTicketTypeId(new LongFilter());
+    public LongFilter showtimeSeatId() {
+        if (showtimeSeatId == null) {
+            setShowtimeSeatId(new LongFilter());
         }
-        return ticketTypeId;
+        return showtimeSeatId;
     }
 
-    public void setTicketTypeId(LongFilter ticketTypeId) {
-        this.ticketTypeId = ticketTypeId;
+    public void setShowtimeSeatId(LongFilter showtimeSeatId) {
+        this.showtimeSeatId = showtimeSeatId;
     }
 
     public Boolean getDistinct() {
@@ -177,17 +155,16 @@ public class BookingDetailCriteria implements Serializable, Criteria {
         final BookingDetailCriteria that = (BookingDetailCriteria) o;
         return (
             Objects.equals(id, that.id) &&
-            Objects.equals(quantity, that.quantity) &&
             Objects.equals(price, that.price) &&
             Objects.equals(bookingId, that.bookingId) &&
-            Objects.equals(ticketTypeId, that.ticketTypeId) &&
+            Objects.equals(showtimeSeatId, that.showtimeSeatId) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, quantity, price, bookingId, ticketTypeId, distinct);
+        return Objects.hash(id, price, bookingId, showtimeSeatId, distinct);
     }
 
     // prettier-ignore
@@ -195,10 +172,9 @@ public class BookingDetailCriteria implements Serializable, Criteria {
     public String toString() {
         return "BookingDetailCriteria{" +
             optionalId().map(f -> "id=" + f + ", ").orElse("") +
-            optionalQuantity().map(f -> "quantity=" + f + ", ").orElse("") +
             optionalPrice().map(f -> "price=" + f + ", ").orElse("") +
             optionalBookingId().map(f -> "bookingId=" + f + ", ").orElse("") +
-            optionalTicketTypeId().map(f -> "ticketTypeId=" + f + ", ").orElse("") +
+            optionalShowtimeSeatId().map(f -> "showtimeSeatId=" + f + ", ").orElse("") +
             optionalDistinct().map(f -> "distinct=" + f + ", ").orElse("") +
         "}";
     }

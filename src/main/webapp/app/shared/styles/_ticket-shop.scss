@@ -1,0 +1,265 @@
+// Ngon ngu thiet ke dung chung cho cac trang "chon ve roi mua them dich vu"
+// (baggage/upgrade/addon-tickets): the mem bong, so lieu to, pill option -
+// thay the kieu vien net dut cu, tranh sao chep 3 lan giua 3 trang.
+@import 'tokens';
+
+:host {
+  display: block;
+  min-height: 100vh;
+  background: $page-bg;
+}
+
+.btn-back-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: $brand-blue;
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.btn-back-home:hover {
+  transform: translateX(-3px);
+  text-decoration: underline;
+}
+
+.shop-header {
+  margin-bottom: 20px;
+}
+
+.shop-header h2 {
+  font-size: 30px;
+  font-weight: 800;
+  color: $text-dark;
+}
+
+.shop-header p {
+  color: $text-muted;
+  font-size: 15px;
+}
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(160px, 220px));
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: #fff;
+  border-radius: $card-radius;
+  padding: 20px;
+  box-shadow: $card-shadow;
+}
+
+.stat-title {
+  font-size: 13px;
+  color: $text-muted;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 800;
+  color: $brand-blue;
+}
+
+.event-group {
+  border: none;
+  border-radius: $card-radius;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: $card-shadow;
+}
+
+.event-header {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 18px 20px;
+  background: #fff;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.event-meta {
+  min-width: 0;
+}
+
+.ticket-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+  padding: 18px 20px;
+}
+
+.ticket-card {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  border: 1px solid #eef1f6;
+  border-radius: 14px;
+  background: #fafbfe;
+  transition: box-shadow 0.2s;
+
+  &:hover {
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+  }
+}
+
+.empty-state {
+  border: none;
+  border-radius: $card-radius;
+  background: #fff;
+  box-shadow: $card-shadow;
+  padding: 48px 20px;
+}
+
+.empty-state .empty-icon {
+  font-size: 44px;
+  margin-bottom: 10px;
+}
+
+.shop-panel {
+  border-top: 1px dashed #e5e9f0;
+  padding-top: 14px;
+  margin-top: 4px;
+}
+
+// ================= OPTION PILLS (baggage/upgrade) =================
+
+.option-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 8px;
+}
+
+.option-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 12px 8px;
+  border: 1px solid #dbe4f3;
+  border-radius: 12px;
+  background: #f5f8ff;
+  transition: 0.15s;
+
+  &:hover:not(:disabled) {
+    border-color: $accent-blue;
+    background: #eaf1ff;
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.option-pill-label {
+  font-weight: 700;
+  font-size: 13.5px;
+  color: $text-dark;
+}
+
+.option-pill-price {
+  font-size: 12px;
+  color: #4b5563;
+}
+
+.option-pill-diff {
+  font-size: 12px;
+  font-weight: 700;
+  color: $accent-blue;
+}
+
+// ================= ADDON LIST =================
+
+.addon-catalog {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.addon-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid #dbe4f3;
+  border-radius: 12px;
+  background: #f5f8ff;
+}
+
+.addon-item-label {
+  font-weight: 600;
+  font-size: 13.5px;
+  color: $text-dark;
+}
+
+.addon-item-price {
+  font-size: 12px;
+  color: #4b5563;
+}
+
+.addon-toggle-btn {
+  padding: 5px 14px;
+  border: 1px solid $accent-blue;
+  border-radius: 999px;
+  background: #fff;
+  color: $accent-blue;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+
+  &.active {
+    background: $accent-blue;
+    color: #fff;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.addon-qty-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+
+  button {
+    width: 26px;
+    height: 26px;
+    border: 1px solid #dbe4f3;
+    border-radius: 8px;
+    background: #fff;
+    font-weight: 700;
+    line-height: 1;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  span {
+    min-width: 16px;
+    text-align: center;
+    font-weight: 700;
+  }
+}
+
+.addon-cart-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+  margin-top: 4px;
+  border-top: 1px dashed #dbe4f3;
+  font-size: 14px;
+}

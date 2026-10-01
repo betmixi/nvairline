@@ -88,7 +88,7 @@ export class EventService extends EventsService {
   }
 
   query(req?: any): Observable<HttpResponse<IEvent[]>> {
-    const options = createRequestOption(req);
+    const options = createRequestOption(this.buildCriteriaParams(req));
     return this.http
       .get<RestEvent[]>(this.resourceUrl, { params: options, observe: 'response' })
       .pipe(map(res => res.clone({ body: this.convertResponseArrayFromServer(res.body!) })));
@@ -96,10 +96,40 @@ export class EventService extends EventsService {
 
   /** Danh sach su kien khong can dang nhap (dung cho trang chu / danh sach su kien). */
   queryPublic(req?: any): Observable<HttpResponse<IEvent[]>> {
-    const options = createRequestOption(req);
+    const options = createRequestOption(this.buildCriteriaParams(req));
     return this.http
       .get<RestEvent[]>(`${this.resourceUrl}/public`, { params: options, observe: 'response' })
       .pipe(map(res => res.clone({ body: this.convertResponseArrayFromServer(res.body!) })));
+  }
+
+  /**
+   * Chuyen doi cac tham so tim kiem tien loi (departureAirportId, arrivalAirportId, ...) thanh
+   * dang tham so criteria chuan cua JHipster (vi du: departureAirportId.equals=5) de goi API
+   * GET /api/events va GET /api/events/public voi bo loc theo san bay di / san bay den.
+   */
+  private buildCriteriaParams(req?: any): any {
+    if (!req) {
+      return req;
+    }
+    const { departureAirportId, arrivalAirportId, showtimeDate, tripType, ...rest } = req;
+    const params: any = { ...rest };
+    if (departureAirportId !== undefined && departureAirportId !== null && departureAirportId !== '') {
+      params['departureAirportId.equals'] = departureAirportId;
+    }
+    if (arrivalAirportId !== undefined && arrivalAirportId !== null && arrivalAirportId !== '') {
+      params['arrivalAirportId.equals'] = arrivalAirportId;
+    }
+    // showtimeDate (yyyy-MM-dd) khong phai field cua EventCriteria - EventResource doc truc tiep
+    // tu request param va tu loc theo Event co gio bay trong ngay do.
+    if (showtimeDate !== undefined && showtimeDate !== null && showtimeDate !== '') {
+      params.showtimeDate = showtimeDate;
+    }
+    // tripType (one-way | round-trip | multi-city) cung duoc EventResource doc truc tiep, loc theo
+    // cot supportsOneWay/supportsRoundTrip/supportsMultiCity tuong ung cua Event.
+    if (tripType !== undefined && tripType !== null && tripType !== '') {
+      params.tripType = tripType;
+    }
+    return params;
   }
 
   delete(id: number): Observable<HttpResponse<{}>> {

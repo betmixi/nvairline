@@ -15,10 +15,6 @@
         <dd>
           <span>{{ bookingDetailRef.id }}</span>
         </dd>
-        <dt><span jhiTranslate="dugxApp.bookingDetail.quantity">Quantity</span></dt>
-        <dd>
-          <span>{{ bookingDetailRef.quantity }}</span>
-        </dd>
         <dt><span jhiTranslate="dugxApp.bookingDetail.price">Price</span></dt>
         <dd>
           <span>{{ bookingDetailRef.price }}</span>
@@ -31,12 +27,13 @@
           </div>
           }
         </dd>
-        <dt><span jhiTranslate="dugxApp.bookingDetail.ticketType">Ticket Type</span></dt>
+        <dt><span jhiTranslate="dugxApp.bookingDetail.showtimeSeat">Showtime Seat</span></dt>
         <dd>
-          @if (bookingDetail()!.ticketType) {
-          <div>
-            <a [routerLink]="['/ticket-type', bookingDetail()!.ticketType?.id, 'view']">{{ bookingDetailRef.ticketType?.name }}</a>
-          </div>
+          @if (bookingDetail()!.showtimeSeat) {
+          <span>
+            {{ bookingDetailRef.showtimeSeat?.seat?.rowLabel }}{{ bookingDetailRef.showtimeSeat?.seat?.seatNumber }} ({{
+            bookingDetailRef.showtimeSeat?.seat?.seatType }})
+          </span>
           }
         </dd>
       </dl>

@@ -1,12 +1,18 @@
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faCalendarDays, faSackDollar, faTicket, faUserClock, faUsers } from '@fortawesome/free-solid-svg-icons';
+import {
+  faAddressBook,
+  faCalendarDays,
+  faCircleQuestion,
+  faSackDollar,
+  faStar,
+  faTicket,
+  faUsers,
+} from '@fortawesome/free-solid-svg-icons';
 import { AdminDashboardService } from './admin-dashboard.service';
 import { AdminDashboard, TopEvent } from './admin-dashboard.model';
-import { IOrganizer } from 'app/entities/organizer/organizer.model';
 
 /** Thang mau tim dam dan theo hang (da kiem tra tuong phan + do doc thang do). */
 const RANK_COLORS = ['#3f32b8', '#5a4ae0', '#7462f7', '#8f7ffd', '#a99dff'];
@@ -21,6 +27,20 @@ export interface RankedEvent {
   color: string;
 }
 
+export interface RevenueSlice {
+  label: string;
+  value: number;
+  percent: number;
+  color: string;
+  dashArray: string;
+  dashOffset: number;
+}
+
+/** Ban kinh + chu vi vong tron cua bieu do donut (xem donutSlices()). */
+const DONUT_RADIUS = 60;
+const DONUT_CIRCUMFERENCE = 2 * Math.PI * DONUT_RADIUS;
+const OTHERS_COLOR = '#d8dbe6';
+
 @Component({
   selector: 'jhi-dashboard',
   standalone: true,
@@ -29,20 +49,20 @@ export interface RankedEvent {
   styleUrls: ['./dashboard.scss'],
 })
 export class DashboardComponent implements OnInit {
-  private readonly dashboardService = inject(AdminDashboardService);
-  private readonly cdr = inject(ChangeDetectorRef);
-  private router = inject(Router);
-
   faUsers = faUsers;
   faCalendar = faCalendarDays;
   faTicket = faTicket;
-  faUserClock = faUserClock;
   faMoney = faSackDollar;
+  faStar = faStar;
+  faSupport = faCircleQuestion;
+  faCustomers = faAddressBook;
 
   dashboard: AdminDashboard | null = null;
-  organizers: IOrganizer[] = [];
 
   measure: RankMeasure = 'tickets';
+
+  private readonly dashboardService = inject(AdminDashboardService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   setMeasure(measure: RankMeasure): void {
     this.measure = measure;
@@ -54,7 +74,7 @@ export class DashboardComponent implements OnInit {
 
     const rows = source ?? [];
 
-    const valueOf = (event: TopEvent): number => (this.measure === 'tickets' ? event.ticketsSold : event.revenue) ?? 0;
+    const valueOf = (event: TopEvent): number => (this.measure === 'tickets' ? event.ticketsSold : event.revenue);
 
     const max = Math.max(...rows.map(valueOf), 1);
 
@@ -71,64 +91,59 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  /** Ty trong doanh thu: top 5 su kien + phan con lai ("Cac su kien khac"), ve bang donut chart. */
+  get revenueSlices(): RevenueSlice[] {
+    const top5 = this.dashboard?.topEventsByRevenue ?? [];
+    const totalRevenue = this.dashboard?.totalRevenue ?? 0;
+    const top5Sum = top5.reduce((sum, event) => sum + event.revenue, 0);
+    const others = Math.max(totalRevenue - top5Sum, 0);
+
+    const raw = [
+      ...top5.map((event, index) => ({
+        label: event.title,
+        value: event.revenue,
+        color: RANK_COLORS[index] ?? RANK_COLORS[RANK_COLORS.length - 1],
+      })),
+      ...(others > 0 ? [{ label: 'Các sự kiện khác', value: others, color: OTHERS_COLOR }] : []),
+    ];
+
+    const total = raw.reduce((sum, row) => sum + row.value, 0) || 1;
+
+    let cumulativePercent = 0;
+
+    return raw.map(row => {
+      const percent = (row.value / total) * 100;
+      const dashLength = (percent / 100) * DONUT_CIRCUMFERENCE;
+
+      const slice: RevenueSlice = {
+        label: row.label,
+        value: row.value,
+        percent,
+        color: row.color,
+        dashArray: `${dashLength} ${DONUT_CIRCUMFERENCE - dashLength}`,
+        dashOffset: -((cumulativePercent / 100) * DONUT_CIRCUMFERENCE),
+      };
+
+      cumulativePercent += percent;
+
+      return slice;
+    });
+  }
+
   ngOnInit(): void {
     this.loadDashboard();
-    this.loadPendingOrganizers();
   }
 
   private loadDashboard(): void {
     this.dashboardService.getDashboard().subscribe({
       next: (res: AdminDashboard) => {
-        console.log('Dashboard:', res);
-
         this.dashboard = res;
 
         this.cdr.detectChanges();
       },
-      error: err => {
+      error(err) {
         console.error('Dashboard Error:', err);
       },
-    });
-  }
-
-  private loadPendingOrganizers(): void {
-    this.dashboardService.getPendingOrganizers().subscribe({
-      next: res => {
-        this.organizers = res;
-        this.cdr.detectChanges();
-      },
-      error: err => {
-        console.error('Pending Organizer Error:', err);
-      },
-    });
-  }
-
-  approve(id: number): void {
-    this.dashboardService.approveOrganizer(id).subscribe({
-      next: () => {
-        this.loadDashboard();
-        this.loadPendingOrganizers();
-      },
-      error: err => {
-        console.error(err);
-      },
-    });
-  }
-
-  reject(id: number): void {
-    this.dashboardService.rejectOrganizer(id).subscribe({
-      next: () => {
-        this.loadDashboard();
-        this.loadPendingOrganizers();
-      },
-      error: err => {
-        console.error(err);
-      },
-    });
-  }
-  goOrganizerRequests(): void {
-    this.router.navigate(['/admin/organizer-requests']).then(success => {
-      console.log('Navigate:', success);
     });
   }
 }

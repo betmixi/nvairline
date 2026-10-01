@@ -30,7 +30,10 @@ type EventFormRawValue = FormValueOf<IEvent>;
 
 type NewEventFormRawValue = FormValueOf<NewEvent>;
 
-type EventFormDefaults = Pick<NewEvent, 'id' | 'startTime' | 'endTime' | 'status' | 'createdDate'>;
+type EventFormDefaults = Pick<
+  NewEvent,
+  'id' | 'startTime' | 'endTime' | 'status' | 'createdDate' | 'supportsOneWay' | 'supportsRoundTrip' | 'supportsMultiCity'
+>;
 
 type EventFormGroupContent = {
   id: FormControl<EventFormRawValue['id'] | NewEvent['id']>;
@@ -41,9 +44,13 @@ type EventFormGroupContent = {
   endTime: FormControl<EventFormRawValue['endTime']>;
   status: FormControl<EventFormRawValue['status']>;
   createdDate: FormControl<EventFormRawValue['createdDate']>;
+  supportsOneWay: FormControl<EventFormRawValue['supportsOneWay']>;
+  supportsRoundTrip: FormControl<EventFormRawValue['supportsRoundTrip']>;
+  supportsMultiCity: FormControl<EventFormRawValue['supportsMultiCity']>;
   category: FormControl<EventFormRawValue['category']>;
   address: FormControl<EventFormRawValue['address']>;
-  organizer: FormControl<EventFormRawValue['organizer']>;
+  departureAirport: FormControl<EventFormRawValue['departureAirport']>;
+  arrivalAirport: FormControl<EventFormRawValue['arrivalAirport']>;
 };
 
 export type EventFormGroup = FormGroup<EventFormGroupContent>;
@@ -73,9 +80,13 @@ export class EventFormService {
       endTime: new FormControl(eventRawValue.endTime),
       status: new FormControl(eventRawValue.status),
       createdDate: new FormControl(eventRawValue.createdDate),
+      supportsOneWay: new FormControl(eventRawValue.supportsOneWay),
+      supportsRoundTrip: new FormControl(eventRawValue.supportsRoundTrip),
+      supportsMultiCity: new FormControl(eventRawValue.supportsMultiCity),
       category: new FormControl(eventRawValue.category),
       address: new FormControl(eventRawValue.address),
-      organizer: new FormControl(eventRawValue.organizer),
+      departureAirport: new FormControl(eventRawValue.departureAirport),
+      arrivalAirport: new FormControl(eventRawValue.arrivalAirport),
     });
   }
 
@@ -100,6 +111,9 @@ export class EventFormService {
       endTime: currentTime,
       status: false,
       createdDate: currentTime,
+      supportsOneWay: true,
+      supportsRoundTrip: true,
+      supportsMultiCity: true,
     };
   }
 

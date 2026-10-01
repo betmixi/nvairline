@@ -4,11 +4,13 @@ import com.dugx.event.repository.FavoriteRepository;
 import com.dugx.event.service.FavoriteQueryService;
 import com.dugx.event.service.FavoriteService;
 import com.dugx.event.service.criteria.FavoriteCriteria;
+import com.dugx.event.service.dto.EventDTO;
 import com.dugx.event.service.dto.FavoriteDTO;
 import com.dugx.event.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -18,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -62,6 +65,7 @@ public class FavoriteResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<FavoriteDTO> createFavorite(@RequestBody FavoriteDTO favoriteDTO) throws URISyntaxException {
         LOG.debug("REST request to save Favorite : {}", favoriteDTO);
         if (favoriteDTO.getId() != null) {
@@ -84,6 +88,7 @@ public class FavoriteResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<FavoriteDTO> updateFavorite(
         @PathVariable(value = "id", required = false) final Long id,
         @RequestBody FavoriteDTO favoriteDTO
@@ -118,6 +123,7 @@ public class FavoriteResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<FavoriteDTO> partialUpdateFavorite(
         @PathVariable(value = "id", required = false) final Long id,
         @RequestBody FavoriteDTO favoriteDTO
@@ -150,6 +156,7 @@ public class FavoriteResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Favorites in body.
      */
     @GetMapping("")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<List<FavoriteDTO>> getAllFavorites(
         FavoriteCriteria criteria,
         @org.springdoc.core.annotations.ParameterObject Pageable pageable
@@ -168,6 +175,7 @@ public class FavoriteResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
      */
     @GetMapping("/count")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Long> countFavorites(FavoriteCriteria criteria) {
         LOG.debug("REST request to count Favorites by criteria: {}", criteria);
         return ResponseEntity.ok().body(favoriteQueryService.countByCriteria(criteria));
@@ -180,6 +188,7 @@ public class FavoriteResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the favoriteDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<FavoriteDTO> getFavorite(@PathVariable("id") Long id) {
         LOG.debug("REST request to get Favorite : {}", id);
         Optional<FavoriteDTO> favoriteDTO = favoriteService.findOne(id);
@@ -193,11 +202,31 @@ public class FavoriteResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteFavorite(@PathVariable("id") Long id) {
         LOG.debug("REST request to delete Favorite : {}", id);
         favoriteService.delete(id);
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    /** Bat/tat yeu thich mot su kien cho nguoi dung dang dang nhap. */
+    @PostMapping("/events/{eventId}/toggle")
+    public ResponseEntity<Map<String, Boolean>> toggleFavorite(@PathVariable Long eventId) {
+        boolean favorited = favoriteService.toggleFavorite(eventId);
+        return ResponseEntity.ok(Map.of("favorited", favorited));
+    }
+
+    /** Kiem tra su kien co dang duoc nguoi dung hien tai yeu thich khong. */
+    @GetMapping("/events/{eventId}")
+    public ResponseEntity<Map<String, Boolean>> isFavorited(@PathVariable Long eventId) {
+        return ResponseEntity.ok(Map.of("favorited", favoriteService.isFavorited(eventId)));
+    }
+
+    /** Danh sach su kien da luu cua nguoi dung dang dang nhap. */
+    @GetMapping("/my")
+    public ResponseEntity<List<EventDTO>> myFavorites() {
+        return ResponseEntity.ok(favoriteService.getMyFavoriteEvents());
     }
 }

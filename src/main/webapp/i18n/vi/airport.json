@@ -1,0 +1,26 @@
+{
+  "dugxApp": {
+    "airport": {
+      "home": {
+        "title": "Sân bay",
+        "refreshListLabel": "Tải lại danh sách",
+        "createLabel": "Thêm mới một Sân bay",
+        "createOrEditLabel": "Thêm mới hoặc cập nhật Sân bay",
+        "notFound": "Không tìm thấy Sân bay nào"
+      },
+      "created": "Một Sân bay mới được tạo với định danh {{ param }}",
+      "updated": "Một Sân bay cập nhật với định danh {{ param }}",
+      "deleted": "Một Sân bay đã xóa với định danh {{ param }}",
+      "delete": {
+        "question": "Bạn có chắc là muốn xóa Sân bay {{ id }}?"
+      },
+      "detail": {
+        "title": "Sân bay"
+      },
+      "id": "ID",
+      "code": "Mã sân bay (IATA)",
+      "name": "Tên sân bay",
+      "city": "Thành phố"
+    }
+  }
+}
