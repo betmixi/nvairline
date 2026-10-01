@@ -565,24 +565,30 @@
 .quick-services-row {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 16px;
+  justify-content: center;
+  gap: 24px;
   padding: 28px 24px;
 }
 
 .quick-service {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 10px;
-  flex: 1 1 120px;
+  gap: 16px;
+  flex: 0 1 280px;
+  padding: 16px 22px;
+  background: #fff;
+  border: 1px solid #e7ebf3;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(16, 24, 40, 0.06);
   text-decoration: none;
-  color: #4a5a7a;
+  color: #0a2559;
   transition: 0.2s;
 }
 
 .quick-service:hover {
   color: #01319f;
+  border-color: #c9d6f5;
+  box-shadow: 0 12px 26px rgba(1, 49, 159, 0.14);
   transform: translateY(-3px);
 }
 
@@ -590,28 +596,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  height: 56px;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   background: #eef3ff;
   font-size: 24px;
 }
 
 .quick-service-label {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.3px;
-  text-align: center;
 }
 
 @media (max-width: 768px) {
-  .quick-services-row {
-    justify-content: space-around;
-  }
-
   .quick-service {
-    flex: 1 1 90px;
+    flex: 1 1 100%;
   }
 }
 
