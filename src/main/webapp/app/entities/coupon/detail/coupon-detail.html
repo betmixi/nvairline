@@ -15,23 +15,23 @@
         <dd>
           <span>{{ couponRef.id }}</span>
         </dd>
-        <dt><span jhiTranslate="dugxApp.coupon.code">Code</span></dt>
+        <dt><span jhiTranslate="dugxApp.coupon.code">Mã ưu đãi</span></dt>
         <dd>
           <span>{{ couponRef.code }}</span>
         </dd>
-        <dt><span jhiTranslate="dugxApp.coupon.discount">Discount</span></dt>
+        <dt><span jhiTranslate="dugxApp.coupon.discount">Giảm giá</span></dt>
         <dd>
           <span>{{ couponRef.discount }}</span>
         </dd>
-        <dt><span jhiTranslate="dugxApp.coupon.startDate">Start Date</span></dt>
+        <dt><span jhiTranslate="dugxApp.coupon.startDate">Ngày bắt đầu</span></dt>
         <dd>
           <span>{{ couponRef.startDate | formatMediumDatetime }}</span>
         </dd>
-        <dt><span jhiTranslate="dugxApp.coupon.endDate">End Date</span></dt>
+        <dt><span jhiTranslate="dugxApp.coupon.endDate">Ngày kết thúc</span></dt>
         <dd>
           <span>{{ couponRef.endDate | formatMediumDatetime }}</span>
         </dd>
-        <dt><span jhiTranslate="dugxApp.coupon.quantity">Quantity</span></dt>
+        <dt><span jhiTranslate="dugxApp.coupon.quantity">Số Lượng</span></dt>
         <dd>
           <span>{{ couponRef.quantity }}</span>
         </dd>
@@ -47,10 +47,6 @@
 
       <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
         <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
-      </button>
-
-      <button type="button" [routerLink]="['/coupon', couponRef.id, 'edit']" class="btn btn-primary">
-        <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
       </button>
     </div>
     }

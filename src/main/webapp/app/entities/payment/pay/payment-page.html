@@ -67,6 +67,12 @@
       <strong>+{{ baggageTotal | number }} đ</strong>
     </div>
 
+    <div class="info-row is-discount" *ngIf="couponDiscount > 0">
+      <span>Giảm giá ({{ couponCode }})</span>
+
+      <strong>-{{ couponDiscount | number }} đ</strong>
+    </div>
+
     <div class="info-row total">
       <span>Tổng cộng</span>
 
@@ -77,6 +83,19 @@
 
     <div class="mt-3">
       <label class="form-label" for="couponCode">Mã giảm giá (nếu có)</label>
+
+      <div class="my-coupons-list" *ngIf="myCoupons.length > 0">
+        <button
+          type="button"
+          class="coupon-chip"
+          *ngFor="let coupon of myCoupons"
+          [class.is-selected]="couponCode === coupon.code"
+          [disabled]="isSubmitting"
+          (click)="selectCoupon(coupon)"
+        >
+          🎟️ {{ coupon.label }}
+        </button>
+      </div>
 
       <input
         id="couponCode"

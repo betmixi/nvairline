@@ -7,8 +7,8 @@
       </div>
 
       <div class="header-title">
-        <h2>User Management</h2>
-        <p>Manage users and roles</p>
+        <h2>Quản lý người dùng</h2>
+        <p>Quản lý người dùng và phân quyền</p>
       </div>
     </div>
 
@@ -16,13 +16,13 @@
       <button class="btn-refresh" (click)="loadAll()" [disabled]="isLoading()">
         <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined"> </fa-icon>
 
-        Refresh
+        Làm mới
       </button>
 
       <button class="btn-create" [routerLink]="['./new']">
         <fa-icon icon="plus"></fa-icon>
 
-        New User
+        Thêm người dùng
       </button>
     </div>
   </div>
@@ -38,10 +38,14 @@
       <div>
         <h3>
           <fa-icon icon="database"></fa-icon>
-          User List
+          Danh sách người dùng
         </h3>
 
-        <p>{{ totalItems() }} registered users</p>
+        <p>{{ totalItems() }} người dùng đã đăng ký</p>
+      </div>
+
+      <div class="search-bar">
+        <input type="text" class="form-control" placeholder="🔍 Tìm theo tên đăng nhập, email, họ tên..." [(ngModel)]="keyword" />
       </div>
     </div>
 
@@ -55,7 +59,7 @@
             </th>
 
             <th jhiSortBy="login" style="width: 260px">
-              User
+              Người dùng
               <fa-icon icon="sort"></fa-icon>
             </th>
 
@@ -65,36 +69,32 @@
               <fa-icon icon="sort"></fa-icon>
             </th>
 
-            <th>Status</th>
+            <th>Trạng thái</th>
 
-            <th>Role</th>
-
-            <th>Account</th>
+            <th>Phân quyền</th>
 
             <th jhiSortBy="createdDate">
-              Created
-
-              <fa-icon icon="sort"></fa-icon>
-            </th>
-
-            <th jhiSortBy="lastModifiedBy">
-              Modified By
+              Ngày tạo
 
               <fa-icon icon="sort"></fa-icon>
             </th>
 
             <th jhiSortBy="lastModifiedDate">
-              Modified Date
+              Ngày sửa đổi
 
               <fa-icon icon="sort"></fa-icon>
             </th>
 
-            <th class="text-end">Actions</th>
+            <th class="text-end">Chức năng</th>
           </tr>
         </thead>
 
         <tbody>
-          @for (userManagement of users(); track trackIdentity(userManagement)) {
+          @if (filteredUsers.length === 0) {
+          <tr>
+            <td colspan="8" class="no-result">Không tìm thấy người dùng nào khớp với từ khóa.</td>
+          </tr>
+          } @for (userManagement of filteredUsers; track trackIdentity(userManagement)) {
 
           <tr>
             <!-- ID -->
@@ -131,49 +131,40 @@
                 (click)="setActive(userManagement,false)"
                 [disabled]="!currentAccount() || currentAccount()?.login===userManagement.login"
               >
-                Activated
+                Đang hoạt động
               </button>
 
               } @else {
 
-              <button class="status inactive" (click)="setActive(userManagement,true)">Deactivated</button>
+              <button class="status inactive" (click)="setActive(userManagement,true)">Đã khóa</button>
 
               }
             </td>
 
-            <!-- ROLE -->
+            <!-- ROLE (bam truc tiep de bat/tat, khong can vao trang Edit) -->
 
             <td>
-              <div class="role-list">
-                @for (authority of userManagement.authorities; track $index) {
+              <div class="role-toggle-list">
+                @for (authority of rowAuthorities(userManagement); track authority) {
 
-                <span class="role-badge"> {{ authority.replace('ROLE_', '') }} </span>
+                <button
+                  type="button"
+                  class="role-toggle"
+                  [class.active]="userManagement.authorities?.includes(authority)"
+                  [class.fixed]="authority === 'ROLE_ADMIN'"
+                  [disabled]="authority === 'ROLE_ADMIN' || savingAuthorityFor() === userManagement.login"
+                  (click)="toggleAuthority(userManagement, authority)"
+                >
+                  {{ authority.replace('ROLE_', '') }}
+                </button>
 
                 }
               </div>
             </td>
 
-            <!-- ACCOUNT -->
-
-            <td>
-              @if (userManagement.authorities?.includes('ROLE_ADMIN')) {
-
-              <span class="account admin"> 👑 Admin </span>
-
-              } @else {
-
-              <span class="account user"> 👤 User </span>
-
-              }
-            </td>
-
             <!-- CREATED -->
 
             <td>{{ userManagement.createdDate | date:'dd/MM/yyyy HH:mm' }}</td>
-
-            <!-- MODIFIED BY -->
-
-            <td>{{ userManagement.lastModifiedBy }}</td>
 
             <!-- MODIFIED DATE -->
 

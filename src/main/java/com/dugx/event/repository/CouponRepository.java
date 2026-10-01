@@ -1,6 +1,7 @@
 package com.dugx.event.repository;
 
 import com.dugx.event.domain.Coupon;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,12 @@ public interface CouponRepository extends JpaRepository<Coupon, Long>, JpaSpecif
     }
 
     Optional<Coupon> findByCode(String code);
+
+    /** 1 coupon admin da tao san, dung muc giam gia, chua ai doi (redeemedByUser = null) va con so luong. */
+    Optional<Coupon> findFirstByDiscountAndRedeemedByUserIsNullAndQuantityGreaterThanOrderByIdAsc(BigDecimal discount, Integer quantity);
+
+    /** Tat ca coupon con dung duoc (con so luong) - dung de hien danh sach chon nhanh luc thanh toan. */
+    List<Coupon> findByQuantityGreaterThan(Integer quantity);
 
     @Query(value = "select coupon from Coupon coupon left join fetch coupon.event", countQuery = "select count(coupon) from Coupon coupon")
     Page<Coupon> findAllWithToOneRelationships(Pageable pageable);

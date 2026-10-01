@@ -99,6 +99,37 @@
 .table-header {
   padding: 22px 28px;
   border-bottom: 1px solid #edf2f7;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.search-bar {
+  flex: 1;
+  min-width: 220px;
+  max-width: 360px;
+
+  .form-control {
+    border-radius: 12px;
+    height: 44px;
+    border: 1px solid #d6ddec;
+    padding: 10px 16px;
+    width: 100%;
+
+    &:focus {
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+      outline: none;
+    }
+  }
+}
+
+.no-result {
+  text-align: center;
+  padding: 32px !important;
+  color: #64748b;
 }
 
 .table-header h3 {
@@ -202,6 +233,48 @@ tbody tr:hover {
   border-radius: 30px;
   font-size: 12px;
   font-weight: 700;
+}
+
+.role-toggle-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.role-toggle {
+  background: #fff;
+  border: 1.5px solid #dbe4f0;
+  color: #94a3b8;
+  padding: 6px 12px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.role-toggle:hover:not(:disabled) {
+  border-color: #4f46e5;
+  color: #4f46e5;
+}
+
+.role-toggle.active {
+  background: #dbeafe;
+  border-color: #2563eb;
+  color: #0369a1;
+}
+
+.role-toggle:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.role-toggle.fixed.active {
+  background: #fef3c7;
+  border-color: #d97706;
+  color: #b45309;
+  opacity: 1;
+  cursor: default;
 }
 
 .status {

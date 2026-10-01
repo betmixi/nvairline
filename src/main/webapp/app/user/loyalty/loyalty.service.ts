@@ -2,7 +2,7 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { ILoyaltyBalance, ILoyaltyOffer, IPointsHistory } from './loyalty.model';
+import { ILoyaltyBalance, ILoyaltyCoupon, ILoyaltyOffer, IPointsHistory } from './loyalty.model';
 
 /** Tich diem Lotusmiles cua nguoi dung dang dang nhap. */
 @Injectable({ providedIn: 'root' })
@@ -26,5 +26,9 @@ export class LoyaltyService {
 
   redeem(offerId: string): Observable<ILoyaltyBalance> {
     return this.http.post<ILoyaltyBalance>(`/api/loyalty/redeem/${encodeURIComponent(offerId)}`, {});
+  }
+
+  getMyCoupons(): Observable<ILoyaltyCoupon[]> {
+    return this.http.get<ILoyaltyCoupon[]>('/api/loyalty/me/coupons');
   }
 }

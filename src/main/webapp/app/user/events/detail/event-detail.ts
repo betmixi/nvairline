@@ -47,6 +47,9 @@ export default class UserEventDetailComponent implements OnInit {
   editingReviewId: number | null = null;
   isDeletingReview = false;
 
+  /** Suat chieu da duoc chon san tu the ket qua tim kiem (query param showtimeId), neu co. */
+  private preselectedShowtimeId: number | null = null;
+
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly eventService = inject(EventService);
@@ -75,12 +78,27 @@ export default class UserEventDetailComponent implements OnInit {
     return prices.length ? Math.min(...prices) : null;
   }
 
+  /** Suat chieu cu the da chon tu the ket qua tim kiem, de hien ro ngay/gio/gia dang xac nhan mua. */
+  get selectedShowtime(): IShowtime | null {
+    if (this.preselectedShowtimeId === null) {
+      return null;
+    }
+    return this.upcomingShowtimes.find(st => st.id === this.preselectedShowtimeId) ?? null;
+  }
+
+  formatDateTime(value: unknown): string {
+    const d = dayjs(value as never);
+    return d.isValid() ? d.format('HH:mm, dddd DD/MM/YYYY') : '';
+  }
+
   get hasAvailableTickets(): boolean {
     return this.upcomingShowtimes.length > 0;
   }
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
+    const showtimeId = this.route.snapshot.queryParamMap.get('showtimeId');
+    this.preselectedShowtimeId = showtimeId ? Number(showtimeId) : null;
 
     if (!id) {
       this.isLoading = false;
@@ -232,9 +250,10 @@ export default class UserEventDetailComponent implements OnInit {
   }
 
   /**
-   * Da chon gio bay + hang ve tu the ket qua tim kiem roi, nen neu su kien
-   * chi co dung 1 gio bay thi vao thang trang chon ghe, khong bat chon lai
-   * gio bay mot lan nua. Chi hien danh sach gio bay khi co nhieu lua chon.
+   * Neu da chon san 1 gio bay cu the tu the ket qua tim kiem (query param showtimeId) thi
+   * vao thang trang chon ghe cua dung gio bay do, khong bat chon lai lan nua. Tuong tu neu
+   * su kien chi co dung 1 gio bay. Chi hien danh sach gio bay de chon khi co nhieu lua chon
+   * va chua biet nguoi dung muon gio nao.
    */
   buyTicket(): void {
     if (!this.event) {
@@ -242,8 +261,11 @@ export default class UserEventDetailComponent implements OnInit {
     }
 
     const upcoming = this.upcomingShowtimes;
+    const preselected = this.preselectedShowtimeId !== null ? upcoming.find(st => st.id === this.preselectedShowtimeId) : undefined;
 
-    if (upcoming.length === 1) {
+    if (preselected) {
+      this.router.navigate(['/event', this.event.id, 'showtimes', preselected.id, 'seats']);
+    } else if (upcoming.length === 1) {
       this.router.navigate(['/event', this.event.id, 'showtimes', upcoming[0].id, 'seats']);
     } else {
       this.router.navigate(['/event', this.event.id, 'showtimes']);

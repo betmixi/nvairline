@@ -225,6 +225,12 @@ export default class SeatPickerComponent implements OnInit {
     }
   }
 
+  /** Quay lai dung trang truoc do (trang xac nhan mua, hoac trang chon gio bay) thay vi luon
+   * ve trang danh sach gio bay - tranh lam lai mot buoc da di qua. */
+  goBack(): void {
+    globalThis.history.back();
+  }
+
   continueToPayment(): void {
     if (!this.showtime || this.selectedIds.size === 0) {
       return;

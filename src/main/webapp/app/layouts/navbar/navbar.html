@@ -30,13 +30,6 @@
       </li>
 
       <li routerLinkActive="active">
-        <a class="nav-item-link" routerLink="/services" (click)="collapseNavbar()">
-          <span class="nav-icon">🛎️</span>
-          <span class="nav-label">Dịch vụ bổ trợ</span>
-        </a>
-      </li>
-
-      <li routerLinkActive="active">
         <a class="nav-item-link" routerLink="/loyalty" (click)="collapseNavbar()">
           <span class="nav-icon">👑</span>
           <span class="nav-label">Tích điểm và đổi ưu đãi</span>
@@ -46,7 +39,7 @@
       <li routerLinkActive="active">
         <a class="nav-item-link" routerLink="/support" (click)="collapseNavbar()">
           <span class="nav-icon">❓</span>
-          <span class="nav-label">Liên hệ</span>
+          <span class="nav-label">Liên hệ hỗ trợ</span>
         </a>
       </li>
     </ul>
@@ -56,13 +49,6 @@
       <a class="nav-item-link" routerLink="/admin/check-in" routerLinkActive="active" (click)="collapseNavbar()">
         <span class="nav-icon">🛫</span>
         <span class="nav-label">Check-in</span>
-      </a>
-    </div>
-
-    <div *jhiHasAnyAuthority="'ROLE_ADMIN'" class="admin-section">
-      <a class="nav-item-link" routerLink="/admin/dashboard" routerLinkActive="active" (click)="collapseNavbar()">
-        <span class="nav-icon">⚙️</span>
-        <span class="nav-label">Quản trị</span>
       </a>
     </div>
   </div>

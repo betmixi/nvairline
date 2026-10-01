@@ -1,18 +1,23 @@
 package com.dugx.event.service;
 
 import com.dugx.event.domain.Booking;
+import com.dugx.event.domain.Coupon;
 import com.dugx.event.domain.LoyaltyAccount;
 import com.dugx.event.domain.PointsHistory;
 import com.dugx.event.domain.User;
+import com.dugx.event.repository.CouponRepository;
 import com.dugx.event.repository.LoyaltyAccountRepository;
 import com.dugx.event.repository.PointsHistoryRepository;
 import com.dugx.event.security.SecurityUtils;
 import com.dugx.event.service.dto.LoyaltyBalanceDTO;
+import com.dugx.event.service.dto.LoyaltyCouponDTO;
 import com.dugx.event.service.dto.LoyaltyOfferDTO;
 import com.dugx.event.service.dto.PointsHistoryDTO;
 import com.dugx.event.web.rest.errors.BadRequestAlertException;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -40,12 +45,26 @@ public class LoyaltyService {
         new LoyaltyOfferDTO("UPGRADE_BUSINESS", "Nâng hạng Thương gia", "Áp dụng cho 1 chặng bay tiếp theo", 300)
     );
 
+    /** So tien giam gia quy doi cho tung loai uu dai co the ap vao gia ve (chi 2 loai nay sinh coupon that). */
+    private static final Map<String, BigDecimal> DISCOUNT_BY_OFFER_ID = Map.of(
+        "DISCOUNT_20K",
+        BigDecimal.valueOf(20_000),
+        "DISCOUNT_50K",
+        BigDecimal.valueOf(50_000)
+    );
+
     private final LoyaltyAccountRepository loyaltyAccountRepository;
     private final PointsHistoryRepository pointsHistoryRepository;
+    private final CouponRepository couponRepository;
 
-    public LoyaltyService(LoyaltyAccountRepository loyaltyAccountRepository, PointsHistoryRepository pointsHistoryRepository) {
+    public LoyaltyService(
+        LoyaltyAccountRepository loyaltyAccountRepository,
+        PointsHistoryRepository pointsHistoryRepository,
+        CouponRepository couponRepository
+    ) {
         this.loyaltyAccountRepository = loyaltyAccountRepository;
         this.pointsHistoryRepository = pointsHistoryRepository;
+        this.couponRepository = couponRepository;
     }
 
     /** So diem tuong ung voi so tien da chi (dung khi cong diem sau thanh toan). */
@@ -111,9 +130,49 @@ public class LoyaltyService {
             throw new BadRequestAlertException("Bạn không đủ điểm để đổi ưu đãi này", "loyalty", "insufficientpoints");
         }
 
+        // Voi uu dai co quy doi ra giam gia tien mat, phai chac chan con coupon admin da tao san truoc
+        // khi tru diem - tranh tru diem oan neu het ma (kiem tra truoc, gan sau khi tru diem thanh cong;
+        // neu loi o buoc gan thi @Transactional se rollback het, tra lai diem cho user).
+        BigDecimal discount = DISCOUNT_BY_OFFER_ID.get(offer.getId());
+        Coupon coupon = null;
+        if (discount != null) {
+            coupon = couponRepository
+                .findFirstByDiscountAndRedeemedByUserIsNullAndQuantityGreaterThanOrderByIdAsc(discount, 0)
+                .orElseThrow(() ->
+                    new BadRequestAlertException("Ưu đãi này tạm hết mã, vui lòng thử lại sau", "loyalty", "coupon_out_of_stock")
+                );
+        }
+
         awardPoints(account.getUser(), -offer.getPointCost(), "Đổi ưu đãi: " + offer.getLabel(), null);
 
+        if (coupon != null) {
+            coupon.setRedeemedByUser(account.getUser());
+            couponRepository.save(coupon);
+        }
+
         return getMyBalance();
+    }
+
+    /**
+     * Tat ca ma giam gia admin da tao, con hieu luc (con so luong, trong thoi han) - de nguoi dung
+     * chon nhanh luc thanh toan thay vi phai go tay. Khong gioi han theo nguoi da doi bang diem hay
+     * chua, vi admin co the tao ma dung chung cho nhieu khach.
+     */
+    @Transactional(readOnly = true)
+    public List<LoyaltyCouponDTO> getMyCoupons() {
+        Instant now = Instant.now();
+        return couponRepository
+            .findByQuantityGreaterThan(0)
+            .stream()
+            .filter(c -> c.getStartDate() == null || !c.getStartDate().isAfter(now))
+            .filter(c -> c.getEndDate() == null || c.getEndDate().isAfter(now))
+            .filter(c -> c.getDiscount() != null)
+            .map(c -> new LoyaltyCouponDTO(c.getCode(), c.getCode() + " · Giảm " + formatVnd(c.getDiscount()) + "đ", c.getDiscount()))
+            .toList();
+    }
+
+    private String formatVnd(BigDecimal amount) {
+        return amount == null ? "0" : String.format("%,.0f", amount).replace(',', '.');
     }
 
     @Transactional(readOnly = true)

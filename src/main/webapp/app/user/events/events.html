@@ -295,7 +295,7 @@
   } @else{
   <div class="flight-results">
     @for(event of pagedEvents; track trackById($index,event)){ @let showtime = nearestShowtime(event);
-    <div class="flight-card" (click)="goToEvent(event.id)">
+    <div class="flight-card" (click)="goToEventWithShowtime(event)">
       <div class="flight-card-route">
         <div class="flight-time-block">
           <span class="flight-time">{{ formatShowtimeTime(showtime?.startTime) }}</span>
@@ -304,7 +304,7 @@
         </div>
 
         <div class="flight-route-line">
-          <span class="flight-route-label">Bay thẳng</span>
+          <span class="flight-route-label">{{ tripTypeLabel() }}</span>
           <div class="flight-route-track"><span class="flight-route-dot"></span><span class="flight-route-dot"></span></div>
         </div>
 
@@ -315,27 +315,28 @@
         </div>
 
         <div class="flight-card-meta">
+          <span class="flight-date" *ngIf="formatShowtimeDate(showtime?.startTime)">📅 {{ formatShowtimeDate(showtime?.startTime) }}</span>
           <span class="flight-duration" *ngIf="duration(showtime)">⏱ Thời gian bay {{ duration(showtime) }}</span>
           <span class="flight-room">✈ {{ event.title }} · Khai thác bởi {{ showtime?.aircraft?.name || 'Dugx Events' }}</span>
         </div>
       </div>
 
       <div class="flight-fare-columns">
-        <button type="button" class="fare-col fare-economy" (click)="goToEvent(event.id); $event.stopPropagation()">
+        <button type="button" class="fare-col fare-economy" (click)="goToEventWithShowtime(event); $event.stopPropagation()">
           <span class="fare-label">Phổ thông</span>
           <span class="fare-from" *ngIf="showtime?.basePrice">từ</span>
           <span class="fare-price">
             @if (showtime?.basePrice) { {{ showtime!.basePrice | number }}<small>VND</small> } @else { Liên hệ }
           </span>
         </button>
-        <button type="button" class="fare-col fare-premium" (click)="goToEvent(event.id); $event.stopPropagation()">
+        <button type="button" class="fare-col fare-premium" (click)="goToEventWithShowtime(event); $event.stopPropagation()">
           <span class="fare-label">Phổ thông đặc biệt</span>
           <span class="fare-from" *ngIf="showtime?.couplePrice">từ</span>
           <span class="fare-price">
             @if (showtime?.couplePrice) { {{ showtime!.couplePrice | number }}<small>VND</small> } @else { Liên hệ }
           </span>
         </button>
-        <button type="button" class="fare-col fare-business" (click)="goToEvent(event.id); $event.stopPropagation()">
+        <button type="button" class="fare-col fare-business" (click)="goToEventWithShowtime(event); $event.stopPropagation()">
           <span class="fare-label">Thương gia</span>
           <span class="fare-from" *ngIf="showtime?.vipPrice">từ</span>
           <span class="fare-price">

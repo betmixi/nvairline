@@ -45,6 +45,10 @@ public class Coupon implements Serializable {
     @JsonIgnoreProperties(value = { "category", "address" }, allowSetters = true)
     private Event event;
 
+    /** User da doi coupon nay bang diem Lotusmiles (null = coupon khuyen mai chung do admin tao). */
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User redeemedByUser;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public Long getId() {
@@ -136,6 +140,14 @@ public class Coupon implements Serializable {
     public Coupon event(Event event) {
         this.setEvent(event);
         return this;
+    }
+
+    public User getRedeemedByUser() {
+        return this.redeemedByUser;
+    }
+
+    public void setRedeemedByUser(User redeemedByUser) {
+        this.redeemedByUser = redeemedByUser;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

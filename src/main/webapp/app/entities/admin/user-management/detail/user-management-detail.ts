@@ -3,14 +3,14 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
-import { TranslateDirective } from 'app/shared/language';
 import { IUserManagement } from '../user-management.model';
 
 @Component({
   selector: 'jhi-user-mgmt-detail',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './user-management-detail.html',
-  imports: [FontAwesomeModule, DatePipe, TranslateDirective],
+  styleUrl: './user-management-detail.scss',
+  imports: [FontAwesomeModule, DatePipe],
 })
 export class UserManagementDetail {
   readonly userManagement = input<IUserManagement | null>(null);

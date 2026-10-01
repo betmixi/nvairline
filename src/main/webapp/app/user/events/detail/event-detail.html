@@ -154,43 +154,24 @@
 
     <aside class="side-col">
       <div class="buy-card">
+        @if (selectedShowtime) {
+        <div class="selected-showtime-box">
+          <span class="text-muted">Giờ bay bạn đã chọn</span>
+          <strong>{{ formatDateTime(selectedShowtime.startTime) }}</strong>
+        </div>
+        }
+
         <div class="price-line">
-          <span class="text-muted">Giá vé từ</span>
-          <strong class="price-value"> {{ lowestPrice !== null ? (lowestPrice | number) + ' đ' : 'Liên hệ' }} </strong>
+          <span class="text-muted">{{ selectedShowtime ? 'Giá vé' : 'Giá vé từ' }}</span>
+          <strong class="price-value">
+            {{ (selectedShowtime ? selectedShowtime.basePrice : lowestPrice) !== null ? ((selectedShowtime ? selectedShowtime.basePrice :
+            lowestPrice) | number) + ' đ' : 'Liên hệ' }}
+          </strong>
         </div>
 
         <button class="btn btn-primary w-100 buy-btn" [disabled]="!hasAvailableTickets" (click)="buyTicket()">
-          {{ hasAvailableTickets ? 'Mua vé ngay' : 'Đã hết vé' }}
+          {{ hasAvailableTickets ? 'Xác nhận mua vé' : 'Đã hết vé' }}
         </button>
-
-        <button
-          class="favorite-btn"
-          [class.is-favorited]="isFavorited"
-          [disabled]="isTogglingFavorite"
-          (click)="toggleFavorite()"
-          [attr.aria-pressed]="isFavorited"
-        >
-          <span class="heart">{{ isFavorited ? '❤' : '🤍' }}</span>
-          {{ isFavorited ? 'Đã lưu' : 'Lưu sự kiện' }}
-        </button>
-
-        @if (upcomingShowtimes.length) {
-
-        <div class="ticket-preview">
-          <div class="ticket-preview-title">Giờ bay</div>
-
-          @for (showtime of upcomingShowtimes; track showtime.id) {
-          <div class="ticket-preview-row">
-            <div>
-              <div class="ticket-name">{{ $any(showtime.startTime) | date: 'HH:mm dd/MM' }}</div>
-              <div class="text-muted small">{{ showtime.aircraft?.name }}</div>
-            </div>
-            <strong>{{ showtime.basePrice | number }} đ</strong>
-          </div>
-          }
-        </div>
-
-        }
       </div>
     </aside>
   </div>

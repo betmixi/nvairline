@@ -5,7 +5,7 @@
   </div>
 
   <div *ngIf="!isLoading && showtime" class="container py-4">
-    <a class="back-link" [routerLink]="['/event', showtime.event?.id, 'showtimes']">← Chọn giờ bay khác</a>
+    <a class="back-link" (click)="goBack()">← Quay lại</a>
 
     <div class="header-card">
       <div class="header-info">

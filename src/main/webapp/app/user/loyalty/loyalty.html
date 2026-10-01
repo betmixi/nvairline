@@ -44,6 +44,33 @@
   </div>
 
   <div class="card-box">
+    <h2 class="section-title">🎟️ Ưu đãi của bạn</h2>
+
+    @if (isLoading) {
+    <div class="state-box">Đang tải...</div>
+    } @else if (myRedeemedOffers.length === 0) {
+    <div class="state-box">
+      <div class="empty-icon">🎟️</div>
+      <h3>Bạn chưa đổi ưu đãi nào</h3>
+      <p>Đổi điểm lấy ưu đãi ở mục bên trên để xem tại đây.</p>
+    </div>
+    } @else {
+    <div class="history-list">
+      @for (item of myRedeemedOffers; track item.id) {
+      <div class="history-row">
+        <div class="history-info">
+          <span class="history-reason">{{ item.reason }}</span>
+          <span class="history-date">{{ item.createdDate | date: 'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+        <span class="history-points is-negative">{{ item.points }} điểm</span>
+        <button type="button" class="use-offer-btn" routerLink="/events">Dùng ưu đãi</button>
+      </div>
+      }
+    </div>
+    }
+  </div>
+
+  <div class="card-box">
     <h2 class="section-title">Lịch sử điểm</h2>
 
     @if (isLoading) {

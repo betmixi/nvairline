@@ -27,6 +27,12 @@ export class LoyaltyComponent implements OnInit {
   private readonly loyaltyService = inject(LoyaltyService);
   private readonly cdr = inject(ChangeDetectorRef);
 
+  /** Cac uu dai tai khoan da doi, suy ra tu lich su diem (ban ghi diem am, ly do bat dau
+   * bang "Doi uu dai:" - dung lai redeemOffer() da ghi o LoyaltyService, khong can API moi). */
+  get myRedeemedOffers(): IPointsHistory[] {
+    return this.history.filter(item => item.points < 0 && (item.reason ?? '').startsWith('Đổi ưu đãi:'));
+  }
+
   ngOnInit(): void {
     this.loadBalance();
 

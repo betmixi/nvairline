@@ -16,3 +16,10 @@ export interface ILoyaltyOffer {
   description?: string | null;
   pointCost: number;
 }
+
+/** 1 coupon ca nhan da doi bang diem, con dung duoc - chon de ap vao gia khi dat ve. */
+export interface ILoyaltyCoupon {
+  code: string;
+  label: string;
+  discount: number;
+}

@@ -43,6 +43,7 @@
     <include file="config/liquibase/changelog/20260906100001_added_entity_SupportRequest.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260909190001_added_entity_LoyaltyAccount.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260909190003_added_entity_PointsHistory.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20261001090001_added_entity_CustomerProfile.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20260715034412_added_entity_constraints_Event.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260715073100_added_entity_constraints_Organizer.xml" relativeToChangelogFile="false"/>
@@ -67,6 +68,7 @@
     <include file="config/liquibase/changelog/20260821120002_added_entity_constraints_TicketAddon.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260909190002_added_entity_constraints_LoyaltyAccount.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260909190004_added_entity_constraints_PointsHistory.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20261001090002_added_entity_constraints_CustomerProfile.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <include file="config/liquibase/changelog/20260817120005_updated_entity_BookingDetail_add_showtime_seat.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260817120006_updated_entity_constraints_BookingDetail_add_showtime_seat.xml" relativeToChangelogFile="false"/>
@@ -81,5 +83,6 @@
     <include file="config/liquibase/changelog/20260909180001_added_data_Authority_Staff.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260909200001_updated_entity_BookingDetail_add_leg_index.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260919090001_updated_entity_Event_add_trip_type_support.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20261001150001_updated_entity_Coupon_add_redeemed_by_user.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

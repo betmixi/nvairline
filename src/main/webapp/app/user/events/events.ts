@@ -406,6 +406,16 @@ export class EventsComponent implements OnInit {
     this.router.navigate(['/events', eventId]);
   }
 
+  /**
+   * Bam vao 1 the ket qua tim kiem (hoac 1 muc gia tren the): sang trang chi tiet su kien
+   * kem theo showtimeId cua suat chieu dang hien thi tren the, de trang chi tiet dung ngay
+   * gio bay/gia do khi xac nhan mua - khong bat nguoi dung chon lai gio bay lan nua.
+   */
+  goToEventWithShowtime(event: IEvent): void {
+    const showtime = this.nearestShowtime(event);
+    this.router.navigate(['/events', event.id], showtime ? { queryParams: { showtimeId: showtime.id } } : undefined);
+  }
+
   /** Cac suat chieu con ve trong tuong lai cua mot event (dung de loc bo su kien da het gio bay). */
   private upcomingShowtimes(event: IEvent): IShowtime[] {
     const now = dayjs();
@@ -434,6 +444,27 @@ export class EventsComponent implements OnInit {
     }
     const d = dayjs(value as never);
     return d.isValid() ? d.format('HH:mm') : '--:--';
+  }
+
+  /** Ngay bay cua 1 showtime, dang dd/mm/yyyy, dung chung logic voi formatShowtimeTime. */
+  formatShowtimeDate(value: unknown): string {
+    if (!value) {
+      return '';
+    }
+    const d = dayjs(value as never);
+    return d.isValid() ? d.format('DD/MM/YYYY') : '';
+  }
+
+  /** Nhan loai hanh trinh hien tai, hien thi thay cho "Bay thang" tren the ket qua tim kiem. */
+  tripTypeLabel(): string {
+    switch (this.tripType()) {
+      case 'round-trip':
+        return 'Khứ hồi';
+      case 'multi-city':
+        return 'Nhiều chặng';
+      default:
+        return 'Một chiều';
+    }
   }
 
   /** Thoi luong bay: hieu giua endTime va startTime, dang "Xh Yphut". */
@@ -469,6 +500,12 @@ export class EventsComponent implements OnInit {
     // Mot chieu chi can 1 ngay di, bo ngay ve neu truoc do dang o che do khu hoi.
     if (type === 'one-way') {
       this.toDate = null;
+    }
+    // Neu da co ket qua tim kiem tren trang (da chon san bay truoc do), tai lai ngay voi
+    // loai hanh trinh moi - tranh truong hop bam doi tab nhung danh sach ben duoi khong
+    // doi vi phai bam "Tim chuyen bay" lai moi goi API.
+    if (this.departureAirportId !== null || this.arrivalAirportId !== null) {
+      this.loadEvents();
     }
   }
 

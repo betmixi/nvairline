@@ -7,7 +7,7 @@ COPY mvnw pom.xml ./
 COPY .mvn .mvn
 
 COPY . .
-RUN ./mvnw -ntp verify -Pprod -DskipTests -Dmodernizer.skip=true
+RUN chmod +x ./mvnw && ./mvnw -ntp verify -Pprod -DskipTests -Dmodernizer.skip=true
 
 # ---------- Run stage: chi can JRE + file jar da build, khong can JDK/Node nua ----------
 FROM eclipse-temurin:21-jre

@@ -16,7 +16,7 @@
         </div>
         } @let codeRef = editForm.get('code')!;
         <div class="mb-3">
-          <label class="form-label" for="field_code" jhiTranslate="dugxApp.coupon.code">Code</label>
+          <label class="form-label" for="field_code" jhiTranslate="dugxApp.coupon.code">Mã ưu đãi</label>
           <input type="text" class="form-control" name="code" id="field_code" data-cy="code" formControlName="code" />
           @if (codeRef.invalid && (codeRef.dirty || codeRef.touched)) {
           <div>
@@ -28,12 +28,12 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label" for="field_discount" jhiTranslate="dugxApp.coupon.discount">Discount</label>
+          <label class="form-label" for="field_discount" jhiTranslate="dugxApp.coupon.discount">Giảm giá</label>
           <input type="number" class="form-control" name="discount" id="field_discount" data-cy="discount" formControlName="discount" />
         </div>
 
         <div class="mb-3">
-          <label class="form-label" for="field_startDate" jhiTranslate="dugxApp.coupon.startDate">Start Date</label>
+          <label class="form-label" for="field_startDate" jhiTranslate="dugxApp.coupon.startDate">Ngày bắt đầu</label>
           <div class="d-flex">
             <input
               id="field_startDate"
@@ -48,7 +48,7 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label" for="field_endDate" jhiTranslate="dugxApp.coupon.endDate">End Date</label>
+          <label class="form-label" for="field_endDate" jhiTranslate="dugxApp.coupon.endDate">Ngày kết thúc</label>
           <div class="d-flex">
             <input
               id="field_endDate"
@@ -63,7 +63,7 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label" for="field_quantity" jhiTranslate="dugxApp.coupon.quantity">Quantity</label>
+          <label class="form-label" for="field_quantity" jhiTranslate="dugxApp.coupon.quantity">Số Lượng</label>
           <input type="number" class="form-control" name="quantity" id="field_quantity" data-cy="quantity" formControlName="quantity" />
         </div>
 

@@ -8,6 +8,9 @@ import { ShowtimeService } from 'app/entities/showtime/service/showtime.service'
 import { IShowtime, IShowtimeSeat } from 'app/entities/showtime/showtime.model';
 import { BAGGAGE_CATALOG } from 'app/entities/baggage/baggage.model';
 import { TripBuilderService } from 'app/booking/trip-builder.service';
+import { AccountService } from 'app/core/auth/account.service';
+import { LoyaltyService } from 'app/user/loyalty/loyalty.service';
+import { ILoyaltyCoupon } from 'app/user/loyalty/loyalty.model';
 import { CheckoutService, ICheckoutLegRequest } from '../service/checkout.service';
 
 interface ILegView {
@@ -45,10 +48,15 @@ export default class PaymentPageComponent implements OnInit {
 
   errorMessage = '';
 
+  /** Cac coupon ca nhan (da doi bang diem Lotusmiles) con dung duoc, de chon nhanh thay vi go tay. */
+  myCoupons: ILoyaltyCoupon[] = [];
+
   private readonly router = inject(Router);
   private readonly showtimeService = inject(ShowtimeService);
   private readonly checkoutService = inject(CheckoutService);
   private readonly tripBuilder = inject(TripBuilderService);
+  private readonly accountService = inject(AccountService);
+  private readonly loyaltyService = inject(LoyaltyService);
   private readonly cdr = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
@@ -57,6 +65,15 @@ export default class PaymentPageComponent implements OnInit {
     if (legSelections.length === 0) {
       this.isLoading = false;
       return;
+    }
+
+    if (this.accountService.isAuthenticated()) {
+      this.loyaltyService.getMyCoupons().subscribe({
+        next: coupons => {
+          this.myCoupons = coupons;
+          this.cdr.detectChanges();
+        },
+      });
     }
 
     const requests = legSelections.map(selection =>
@@ -113,12 +130,25 @@ export default class PaymentPageComponent implements OnInit {
     return Object.values(this.baggageBySeat).reduce((sum, kg) => sum + (this.priceForBaggage(kg) ?? 0), 0);
   }
 
+  /** Neu ma dang nhap/dang chon khop voi 1 coupon ca nhan cua tai khoan thi tru ngay vao tong tien
+   * hien thi (giong het cach BookingService.book() tinh o backend), khong can doi den luc thanh toan
+   * moi thay gia thay doi. */
+  get couponDiscount(): number {
+    const matched = this.myCoupons.find(c => c.code === this.couponCode.trim());
+    return matched ? matched.discount : 0;
+  }
+
   get total(): number {
-    return this.seatsTotal + this.baggageTotal;
+    return Math.max(0, this.seatsTotal + this.baggageTotal - this.couponDiscount);
   }
 
   baggageOf(seatId: number): number {
     return this.baggageBySeat[seatId] ?? 0;
+  }
+
+  /** Chon nhanh 1 coupon ca nhan (bam lai de bo chon) thay vi phai go tay ma giam gia. */
+  selectCoupon(coupon: ILoyaltyCoupon): void {
+    this.couponCode = this.couponCode === coupon.code ? '' : coupon.code;
   }
 
   /** Chọn (hoặc bỏ chọn nếu bấm lại) một gói hành lý cho một ghế. */

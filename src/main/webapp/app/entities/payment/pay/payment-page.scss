@@ -27,6 +27,11 @@
   font-weight: bold;
 }
 
+.is-discount {
+  color: #16a34a;
+  font-weight: 700;
+}
+
 .leg-block-title {
   font-size: 13px;
   font-weight: 800;
@@ -82,6 +87,40 @@ input[type='radio'] {
   &.active {
     background: #2563eb;
     border-color: #2563eb;
+    color: #fff;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.my-coupons-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.coupon-chip {
+  border: 1.5px solid #dbe4f0;
+  border-radius: 20px;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #4f46e5;
+  background: #eef2ff;
+  cursor: pointer;
+  transition: 0.2s;
+
+  &:hover:not(:disabled) {
+    border-color: #4f46e5;
+  }
+
+  &.is-selected {
+    background: #4f46e5;
+    border-color: #4f46e5;
     color: #fff;
   }
 

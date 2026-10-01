@@ -223,14 +223,19 @@ public class BookingService {
         Integer couponLegIndex = null;
         if (request.getCouponCode() != null && !request.getCouponCode().isBlank()) {
             coupon = validateCoupon(request.getCouponCode());
-            for (int i = 0; i < showtimes.size(); i++) {
-                if (coupon.getEvent().getId().equals(showtimes.get(i).getEvent().getId())) {
-                    couponLegIndex = i;
-                    break;
+            if (coupon.getEvent() == null) {
+                // Ma khong gan voi Event cu the (vd doi tu diem Lotusmiles) - ap dung cho chang dau tien.
+                couponLegIndex = 0;
+            } else {
+                for (int i = 0; i < showtimes.size(); i++) {
+                    if (coupon.getEvent().getId().equals(showtimes.get(i).getEvent().getId())) {
+                        couponLegIndex = i;
+                        break;
+                    }
                 }
-            }
-            if (couponLegIndex == null) {
-                throw new BadRequestAlertException("Coupon does not belong to this event", "booking", "coupon_invalid");
+                if (couponLegIndex == null) {
+                    throw new BadRequestAlertException("Coupon does not belong to this event", "booking", "coupon_invalid");
+                }
             }
         }
 

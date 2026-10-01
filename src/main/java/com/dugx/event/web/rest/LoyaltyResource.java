@@ -2,6 +2,7 @@ package com.dugx.event.web.rest;
 
 import com.dugx.event.service.LoyaltyService;
 import com.dugx.event.service.dto.LoyaltyBalanceDTO;
+import com.dugx.event.service.dto.LoyaltyCouponDTO;
 import com.dugx.event.service.dto.LoyaltyOfferDTO;
 import com.dugx.event.service.dto.PointsHistoryDTO;
 import java.util.List;
@@ -46,5 +47,10 @@ public class LoyaltyResource {
     @PostMapping("/redeem/{offerId}")
     public ResponseEntity<LoyaltyBalanceDTO> redeem(@PathVariable String offerId) {
         return ResponseEntity.ok(loyaltyService.redeemOffer(offerId));
+    }
+
+    @GetMapping("/me/coupons")
+    public ResponseEntity<List<LoyaltyCouponDTO>> getMyCoupons() {
+        return ResponseEntity.ok(loyaltyService.getMyCoupons());
     }
 }

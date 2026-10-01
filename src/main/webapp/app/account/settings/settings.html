@@ -1,133 +1,127 @@
-<div>
-  <div class="d-flex justify-content-center">
-    <div class="col-md-8">
-      @if (settingsForm.value.login) {
-      <h2 jhiTranslate="settings.title" [translateValues]="{ username: settingsForm.value.login }">
-        User settings for [<strong>{{ settingsForm.value.login }}</strong>]
-      </h2>
-      } @if (success()) {
-      <div class="alert alert-success" jhiTranslate="settings.messages.success"><strong>Settings saved!</strong></div>
-      }
+<div class="settings-page">
+  <div class="settings-header">
+    <div class="header-icon">👤</div>
+    <div>
+      <h2>Thông tin cá nhân</h2>
+      <p>Quản lý thông tin đăng nhập và hồ sơ khách hàng của bạn</p>
+    </div>
+  </div>
 
-      <jhi-alert-error />
+  @if (success()) {
+  <div class="alert-box success">✅ Đã lưu thông tin thành công!</div>
+  }
 
-      @if (settingsForm.value.login) {
-      <form name="form" (ngSubmit)="save()" [formGroup]="settingsForm" novalidate>
-        <div class="mb-3">
-          <label class="form-label" for="firstName" jhiTranslate="settings.form.firstname">First Name</label>
-          <input
-            type="text"
-            class="form-control"
-            id="firstName"
-            name="firstName"
-            placeholder="{{ 'settings.form.firstname.placeholder' | translate }}"
-            formControlName="firstName"
-            data-cy="firstname"
-          />
+  <jhi-alert-error />
+
+  @if (isLoading()) {
+  <div class="loading-box">Đang tải thông tin...</div>
+  } @else {
+  <form name="form" [formGroup]="settingsForm" (ngSubmit)="save()" novalidate>
+    <!-- ===== THONG TIN DANG NHAP ===== -->
+    <div class="card-section">
+      <h3 class="section-title">🔐 Thông tin đăng nhập</h3>
+
+      <div class="field-grid">
+        <div class="field">
+          <label class="form-label" for="firstName">Họ</label>
+          <input type="text" class="form-control" id="firstName" formControlName="firstName" data-cy="firstname" />
 
           @let firstNameRef = settingsForm.get('firstName')!; @if (firstNameRef.invalid && (firstNameRef.dirty || firstNameRef.touched)) {
           <div>
             @if (firstNameRef?.errors?.required) {
-            <small class="form-text text-danger" jhiTranslate="settings.messages.validate.firstname.required"
-              >Your first name is required.</small
-            >
-            } @if (firstNameRef?.errors?.minlength) {
-            <small class="form-text text-danger" jhiTranslate="settings.messages.validate.firstname.minlength"
-              >Your first name is required to be at least 1 character</small
-            >
+            <small class="form-text text-danger">Vui lòng nhập họ.</small>
             } @if (firstNameRef?.errors?.maxlength) {
-            <small class="form-text text-danger" jhiTranslate="settings.messages.validate.firstname.maxlength"
-              >Your first name cannot be longer than 50 characters</small
-            >
+            <small class="form-text text-danger">Không quá 50 ký tự.</small>
             }
           </div>
           }
         </div>
 
-        <div class="mb-3">
-          <label class="form-label" for="lastName" jhiTranslate="settings.form.lastname">Last Name</label>
-          <input
-            type="text"
-            class="form-control"
-            id="lastName"
-            name="lastName"
-            placeholder="{{ 'settings.form.lastname.placeholder' | translate }}"
-            formControlName="lastName"
-            data-cy="lastname"
-          />
+        <div class="field">
+          <label class="form-label" for="lastName">Tên</label>
+          <input type="text" class="form-control" id="lastName" formControlName="lastName" data-cy="lastname" />
 
           @let lastNameRef = settingsForm.get('lastName')!; @if (lastNameRef.invalid && (lastNameRef.dirty || lastNameRef.touched)) {
           <div>
             @if (lastNameRef?.errors?.required) {
-            <small class="form-text text-danger" jhiTranslate="settings.messages.validate.lastname.required"
-              >Your last name is required.</small
-            >
-            } @if (lastNameRef?.errors?.minlength) {
-            <small class="form-text text-danger" jhiTranslate="settings.messages.validate.lastname.minlength"
-              >Your last name is required to be at least 1 character</small
-            >
+            <small class="form-text text-danger">Vui lòng nhập tên.</small>
             } @if (lastNameRef?.errors?.maxlength) {
-            <small class="form-text text-danger" jhiTranslate="settings.messages.validate.lastname.maxlength"
-              >Your last name cannot be longer than 50 characters</small
-            >
+            <small class="form-text text-danger">Không quá 50 ký tự.</small>
             }
           </div>
           }
         </div>
 
-        <div class="mb-3">
-          <label class="form-label" for="email" jhiTranslate="global.form.email.label">Email</label>
-          <input
-            type="email"
-            class="form-control"
-            id="email"
-            name="email"
-            placeholder="{{ 'global.form.email.placeholder' | translate }}"
-            formControlName="email"
-            data-cy="email"
-          />
+        <div class="field">
+          <label class="form-label" for="email">Email</label>
+          <input type="email" class="form-control" id="email" formControlName="email" data-cy="email" />
 
           @let emailRef = settingsForm.get('email')!; @if (emailRef.invalid && (emailRef.dirty || emailRef.touched)) {
           <div>
             @if (emailRef?.errors?.required) {
-            <small class="form-text text-danger" jhiTranslate="global.messages.validate.email.required">Your email is required.</small>
+            <small class="form-text text-danger">Vui lòng nhập email.</small>
             } @if (emailRef?.errors?.email) {
-            <small class="form-text text-danger" jhiTranslate="global.messages.validate.email.invalid">Your email is invalid.</small>
+            <small class="form-text text-danger">Email không hợp lệ.</small>
             } @if (emailRef?.errors?.minlength) {
-            <small class="form-text text-danger" jhiTranslate="global.messages.validate.email.minlength"
-              >Your email is required to be at least 5 characters.</small
-            >
+            <small class="form-text text-danger">Email phải có ít nhất 5 ký tự.</small>
             } @if (emailRef?.errors?.maxlength) {
-            <small class="form-text text-danger" jhiTranslate="global.messages.validate.email.maxlength"
-              >Your email cannot be longer than 50 characters.</small
-            >
+            <small class="form-text text-danger">Email không quá 254 ký tự.</small>
             }
           </div>
           }
         </div>
+      </div>
+    </div>
 
-        @if (languages && languages.length > 0) {
-        <div class="mb-3">
-          <label for="langKey" jhiTranslate="settings.form.language">Language</label>
-          <select class="form-control" id="langKey" name="langKey" formControlName="langKey" data-cy="langKey">
-            @for (language of languages; track $index) {
-            <option [value]="language">{{ language | findLanguageFromKey }}</option>
-            }
+    <!-- ===== THONG TIN KHACH HANG ===== -->
+    <div class="card-section" [formGroup]="profileForm">
+      <h3 class="section-title">🧳 Thông tin khách hàng</h3>
+      <p class="section-subtitle">Dùng để điền sẵn thông tin hành khách khi đặt vé.</p>
+
+      <div class="field-grid">
+        <div class="field">
+          <label class="form-label" for="phone">Số điện thoại</label>
+          <input type="tel" class="form-control" id="phone" formControlName="phone" placeholder="VD: 0912345678" />
+        </div>
+
+        <div class="field">
+          <label class="form-label" for="dateOfBirth">Ngày sinh</label>
+          <input type="date" class="form-control" id="dateOfBirth" formControlName="dateOfBirth" />
+        </div>
+
+        <div class="field">
+          <label class="form-label" for="gender">Giới tính</label>
+          <select class="form-control" id="gender" formControlName="gender">
+            <option [ngValue]="null">-- Chọn giới tính --</option>
+            <option value="MALE">Nam</option>
+            <option value="FEMALE">Nữ</option>
+            <option value="OTHER">Khác</option>
           </select>
         </div>
-        }
 
-        <button
-          type="submit"
-          [disabled]="settingsForm.invalid"
-          class="btn btn-primary"
-          data-cy="submit"
-          jhiTranslate="settings.form.button"
-        >
-          Save
-        </button>
-      </form>
-      }
+        <div class="field">
+          <label class="form-label" for="idNumber">CCCD / Hộ chiếu</label>
+          <input type="text" class="form-control" id="idNumber" formControlName="idNumber" placeholder="Số CCCD hoặc hộ chiếu" />
+        </div>
+
+        <div class="field field-wide">
+          <label class="form-label" for="address">Địa chỉ</label>
+          <input
+            type="text"
+            class="form-control"
+            id="address"
+            formControlName="address"
+            placeholder="Số nhà, đường, quận/huyện, tỉnh/thành"
+          />
+        </div>
+      </div>
     </div>
-  </div>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="settingsForm.invalid || profileForm.invalid" class="btn-save" data-cy="submit">
+        💾 Lưu thay đổi
+      </button>
+    </div>
+  </form>
+  }
 </div>

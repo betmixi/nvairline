@@ -85,6 +85,9 @@ export default class Navbar implements OnInit {
   }
 
   logout(): void {
+    if (!globalThis.confirm('Bạn có chắc chắn muốn đăng xuất không?')) {
+      return;
+    }
     this.collapseNavbar();
     this.loginService.logout();
     this.router.navigate(['']);

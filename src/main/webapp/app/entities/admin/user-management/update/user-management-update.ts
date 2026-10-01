@@ -1,31 +1,29 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
-import { LANGUAGES } from 'app/config/language.constants';
 import { AlertError } from 'app/shared/alert/alert-error';
-import { FindLanguageFromKeyPipe, TranslateDirective } from 'app/shared/language';
-import { AuthorityService } from '../../authority/service/authority.service';
 import { UserManagementService } from '../service/user-management.service';
 import { IUserManagement } from '../user-management.model';
 
 const userTemplate = {} as IUserManagement;
 
 const newUser: IUserManagement = {
-  langKey: 'en',
+  langKey: 'vi',
   activated: true,
+  authorities: ['ROLE_ADMIN'],
 } as IUserManagement;
 
 @Component({
   selector: 'jhi-user-management-update',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './user-management-update.html',
-  imports: [FindLanguageFromKeyPipe, TranslateDirective, FontAwesomeModule, AlertError, ReactiveFormsModule],
+  styleUrl: './user-management-update.scss',
+  imports: [FontAwesomeModule, AlertError, ReactiveFormsModule],
 })
 export class UserManagementUpdate implements OnInit {
-  languages = LANGUAGES;
   readonly isSaving = signal(false);
 
   editForm = new FormGroup({
@@ -50,15 +48,8 @@ export class UserManagementUpdate implements OnInit {
     authorities: new FormControl(userTemplate.authorities, { nonNullable: true }),
   });
 
-  protected readonly authorityService = inject(AuthorityService);
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  readonly authorities = computed(() => this.authorityService.authorities().map(authority => authority.name));
   private readonly userService = inject(UserManagementService);
   private readonly route = inject(ActivatedRoute);
-
-  constructor() {
-    this.authorityService.authoritiesParams.set({});
-  }
 
   ngOnInit(): void {
     this.route.data.subscribe(({ userManagement }) => {

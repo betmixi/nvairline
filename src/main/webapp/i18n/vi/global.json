@@ -31,7 +31,7 @@
       },
       "account": {
         "main": "Tài khoản",
-        "settings": "Cài đặt",
+        "settings": "Thông tin cá nhân",
         "password": "Mật khẩu",
         "sessions": "Phiên đăng nhập",
         "login": "Đăng nhập",
@@ -103,7 +103,7 @@
     "ribbon": {
       "dev": "Phát triển"
     },
-    "item-count": "Showing {{first}} - {{second}} of {{total}} items."
+    "item-count": "Hiển thị {{first}} - {{second}} trong tổng số {{total}} mục."
   },
   "entity": {
     "action": {
