@@ -87,8 +87,6 @@ export class EventsComponent implements OnInit {
   /** Cac tab kieu dat cho (chi "Mua ve" la thuc su hoat dong, con lai la placeholder de giong giao dien tham chieu). */
   readonly bookingTabs: BookingTab[] = [
     { id: 'mua-ve', label: 'Mua vé' },
-    { id: 'quan-ly', label: 'Quản lý đặt chỗ' },
-    { id: 'lam-thu-tuc', label: 'Làm thủ tục' },
     { id: 'trang-thai', label: 'Trạng thái chuyến bay' },
     { id: 'lich-bay', label: 'Tra cứu lịch bay' },
   ];
@@ -138,7 +136,7 @@ export class EventsComponent implements OnInit {
       if (tripType === 'one-way' || tripType === 'round-trip' || tripType === 'multi-city') {
         this.tripType.set(tripType);
       }
-      if (tab === 'lam-thu-tuc' || tab === 'trang-thai' || tab === 'lich-bay' || tab === 'quan-ly') {
+      if (tab === 'trang-thai' || tab === 'lich-bay') {
         this.selectTab(tab);
       }
       this.loadEvents();

@@ -78,8 +78,6 @@ export default class Home implements OnInit {
   /** Cac tab kieu dat cho (chi "Mua ve" la thuc su hoat dong, con lai la placeholder de giong giao dien tham chieu). */
   readonly bookingTabs: BookingTab[] = [
     { id: 'mua-ve', label: 'Mua vé' },
-    { id: 'quan-ly', label: 'Quản lý đặt chỗ' },
-    { id: 'lam-thu-tuc', label: 'Làm thủ tục' },
     { id: 'trang-thai', label: 'Trạng thái chuyến bay' },
     { id: 'lich-bay', label: 'Tra cứu lịch bay' },
   ];
