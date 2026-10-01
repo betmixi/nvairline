@@ -161,47 +161,6 @@
       </div>
       }
     </div>
-    } @else if (activeTab() === 'trang-thai') {
-    <div class="search-panel">
-      @if (filteredEvents.length === 0) {
-      <div class="manage-booking-result">Không có chuyến bay nào phù hợp bộ lọc hiện tại.</div>
-      } @else {
-      <div class="status-list">
-        @for (event of filteredEvents; track event.id) { @for (showtime of event.showtimes ?? []; track showtime.id) {
-        <div class="status-row">
-          <div class="status-route">
-            <strong>{{ event.departureAirport?.code || '---' }} → {{ event.arrivalAirport?.code || '---' }}</strong>
-            <span class="status-flight-title">{{ event.title }}</span>
-          </div>
-          <span class="status-time">{{ formatShowtimeTime(showtime.startTime) }}</span>
-          <span class="status-badge" [ngClass]="flightStatus(showtime).cls">{{ flightStatus(showtime).label }}</span>
-        </div>
-        } }
-      </div>
-      }
-    </div>
-    } @else if (activeTab() === 'lich-bay') {
-    <div class="search-panel">
-      @if (filteredEvents.length === 0) {
-      <div class="manage-booking-result">Không có chuyến bay nào phù hợp bộ lọc hiện tại.</div>
-      } @else {
-      <div class="schedule-list">
-        @for (event of filteredEvents; track event.id) {
-        <div class="schedule-row">
-          <div class="schedule-route">
-            <strong>{{ event.departureAirport?.code || '---' }} → {{ event.arrivalAirport?.code || '---' }}</strong>
-            <span class="status-flight-title">{{ event.title }}</span>
-          </div>
-          <div class="schedule-times">
-            @for (showtime of event.showtimes ?? []; track showtime.id) {
-            <span class="schedule-time-chip">{{ formatShowtimeTime(showtime.startTime) }}</span>
-            }
-          </div>
-        </div>
-        }
-      </div>
-      }
-    </div>
     }
   </div>
 

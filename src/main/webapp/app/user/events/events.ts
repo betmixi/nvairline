@@ -12,7 +12,7 @@ import { AirportService } from 'app/entities/airport/service/airport.service';
 import { AccountService } from 'app/core/auth/account.service';
 import { TripBuilderService } from 'app/booking/trip-builder.service';
 
-type BookingTabId = 'mua-ve' | 'trang-thai' | 'lich-bay';
+type BookingTabId = 'mua-ve';
 type TripType = 'round-trip' | 'one-way' | 'multi-city';
 
 interface BookingTab {
@@ -66,8 +66,6 @@ export class EventsComponent implements OnInit {
   /** Cac tab kieu dat cho (chi "Mua ve" la thuc su hoat dong, con lai la placeholder de giong giao dien tham chieu). */
   readonly bookingTabs: BookingTab[] = [
     { id: 'mua-ve', label: 'Tra cứu chuyến bay' },
-    { id: 'trang-thai', label: 'Trạng thái chuyến bay' },
-    { id: 'lich-bay', label: 'Tra cứu lịch bay' },
   ];
   readonly activeTab = signal<BookingTabId>('mua-ve');
 
@@ -102,7 +100,6 @@ export class EventsComponent implements OnInit {
       const departure = params.get('departureAirportId');
       const arrival = params.get('arrivalAirportId');
       const showtimeDate = params.get('showtimeDate');
-      const tab = params.get('tab');
       const tripType = params.get('tripType');
       this.departureAirportId = departure ? Number(departure) : null;
       this.arrivalAirportId = arrival ? Number(arrival) : null;
@@ -114,9 +111,6 @@ export class EventsComponent implements OnInit {
       // chuyen sang tim chang ve cho khu hoi, URL khong kem tripType nen phai giu nguyen "round-trip").
       if (tripType === 'one-way' || tripType === 'round-trip' || tripType === 'multi-city') {
         this.tripType.set(tripType);
-      }
-      if (tab === 'trang-thai' || tab === 'lich-bay') {
-        this.selectTab(tab);
       }
       this.loadEvents();
     });
@@ -519,23 +513,5 @@ export class EventsComponent implements OnInit {
       queryParams,
       queryParamsHandling: 'merge',
     });
-  }
-
-  /** Trang thai chuyen bay suy ra tu gio khoi hanh/ket thuc cua showtime - khong co nguon du lieu van hanh thuc te. */
-  flightStatus(showtime: IShowtime | null): { label: string; cls: string } {
-    if (!showtime?.startTime) {
-      return { label: 'Không rõ', cls: 'status-unknown' };
-    }
-    const now = dayjs();
-    const start = dayjs(showtime.startTime as never);
-    const end = showtime.endTime ? dayjs(showtime.endTime as never) : null;
-
-    if (now.isBefore(start)) {
-      return { label: 'Chưa khởi hành', cls: 'status-scheduled' };
-    }
-    if (end && now.isAfter(end)) {
-      return { label: 'Đã hoàn thành', cls: 'status-completed' };
-    }
-    return { label: 'Đang bay', cls: 'status-inflight' };
   }
 }

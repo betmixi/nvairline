@@ -10,7 +10,7 @@ import { AccountService } from 'app/core/auth/account.service';
 import { TranslateDirective } from 'app/shared/language';
 import { TripBuilderService } from 'app/booking/trip-builder.service';
 
-type BookingTabId = 'mua-ve' | 'trang-thai' | 'lich-bay';
+type BookingTabId = 'mua-ve';
 type TripType = 'round-trip' | 'one-way' | 'multi-city';
 
 interface BookingTab {
@@ -65,8 +65,6 @@ export default class Home implements OnInit {
   /** Cac tab kieu dat cho (chi "Mua ve" la thuc su hoat dong, con lai la placeholder de giong giao dien tham chieu). */
   readonly bookingTabs: BookingTab[] = [
     { id: 'mua-ve', label: 'Tra cứu chuyến bay' },
-    { id: 'trang-thai', label: 'Trạng thái chuyến bay' },
-    { id: 'lich-bay', label: 'Tra cứu lịch bay' },
   ];
   readonly activeTab = signal<BookingTabId>('mua-ve');
 
@@ -272,12 +270,6 @@ export default class Home implements OnInit {
   }
 
   selectTab(tabId: BookingTabId): void {
-    if (tabId === 'trang-thai' || tabId === 'lich-bay') {
-      // Cac tab nay da duoc trien khai day du ben trang tim kiem chuyen bay (/events), khong lap lai UI o Home.
-      void this.router.navigate(['/events'], { queryParams: { tab: tabId } });
-      return;
-    }
-
     this.activeTab.set(tabId);
   }
 
