@@ -30,8 +30,14 @@
           <div>
             @if (titleRef.errors?.required) {
             <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            } @if (titleRef.errors?.blank) {
+            <small class="form-text text-danger">Số hiệu chuyến bay không được để trống.</small>
+            } @if (titleRef.errors?.titleExists) {
+            <small class="form-text text-danger">Số hiệu chuyến bay này đã tồn tại, vui lòng nhập số hiệu khác.</small>
             }
           </div>
+          } @if (titleRef.pending) {
+          <small class="form-text text-muted">Đang kiểm tra trùng số hiệu...</small>
           }
         </div>
 
@@ -70,6 +76,9 @@
               placeholder="YYYY-MM-DD HH:mm"
             />
           </div>
+          @if (editForm.controls.startTime.invalid && (editForm.controls.startTime.dirty || editForm.controls.startTime.touched)) {
+          <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+          }
         </div>
 
         <div class="mb-3">
@@ -85,6 +94,11 @@
               placeholder="YYYY-MM-DD HH:mm"
             />
           </div>
+          @if (editForm.controls.endTime.invalid && (editForm.controls.endTime.dirty || editForm.controls.endTime.touched)) {
+          <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+          } @if (editForm.errors?.invalidTime) {
+          <small class="form-text text-danger">Giờ kết thúc không được sớm hơn giờ bắt đầu.</small>
+          }
         </div>
 
         <div class="mb-3">
@@ -172,6 +186,9 @@
             <option [ngValue]="airportOption">{{ airportOption.code }} - {{ airportOption.name }} ({{ airportOption.city }})</option>
             }
           </select>
+          @if (editForm.controls.departureAirport.invalid && (editForm.controls.departureAirport.dirty || editForm.controls.departureAirport.touched)) {
+          <small class="form-text text-danger">Vui lòng chọn sân bay đi.</small>
+          }
         </div>
 
         <div class="mb-3">
@@ -189,6 +206,12 @@
             <option [ngValue]="airportOption">{{ airportOption.code }} - {{ airportOption.name }} ({{ airportOption.city }})</option>
             }
           </select>
+          @if (editForm.controls.arrivalAirport.invalid && (editForm.controls.arrivalAirport.dirty || editForm.controls.arrivalAirport.touched)) {
+          <small class="form-text text-danger">Vui lòng chọn sân bay đến.</small>
+          }
+          @if (editForm.errors?.sameAirport) {
+          <small class="form-text text-danger">Sân bay đi và sân bay đến không được trùng nhau.</small>
+          }
         </div>
       </div>
 
@@ -209,7 +232,7 @@
           type="submit"
           id="save-entity"
           data-cy="entityCreateSaveButton"
-          [disabled]="editForm.invalid || isSaving()"
+          [disabled]="editForm.invalid || editForm.pending || isSaving()"
           class="btn btn-primary"
         >
           <fa-icon icon="save" />&nbsp;<span jhiTranslate="entity.action.save">Save</span>

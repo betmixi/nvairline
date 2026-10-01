@@ -14,15 +14,17 @@ public class CouponDTO implements Serializable {
 
     private Long id;
 
-    @NotNull
+    @NotBlank
     private String code;
 
+    @DecimalMin(value = "0")
     private BigDecimal discount;
 
     private Instant startDate;
 
     private Instant endDate;
 
+    @Min(value = 0)
     private Integer quantity;
 
     private EventDTO event;

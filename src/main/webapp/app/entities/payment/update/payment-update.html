@@ -35,7 +35,10 @@
 
         <div class="mb-3">
           <label class="form-label" for="field_amount" jhiTranslate="dugxApp.payment.amount">Amount</label>
-          <input type="number" class="form-control" name="amount" id="field_amount" data-cy="amount" formControlName="amount" />
+          <input type="number" min="0" class="form-control" name="amount" id="field_amount" data-cy="amount" formControlName="amount" />
+          @if (editForm.get('amount')?.errors?.min) {
+          <small class="form-text text-danger">Không được nhập số âm.</small>
+          }
         </div>
 
         <div class="mb-3">

@@ -1,10 +1,10 @@
 import { HttpResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject, signal } from '@angular/core';
+import { AsyncValidatorFn, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Observable, finalize, map } from 'rxjs';
+import { Observable, catchError, finalize, map, of, switchMap, tap, timer } from 'rxjs';
 import { DataUtils, FileLoadError } from 'app/core/util/data-util.service';
 import { UploadService } from 'app/core/util/upload.service';
 import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
@@ -48,6 +48,7 @@ export class EventUpdate implements OnInit {
   protected airportService = inject(AirportService);
   protected activatedRoute = inject(ActivatedRoute);
   protected router = inject(Router);
+  private readonly cdr = inject(ChangeDetectorRef);
   // eslint-disable-next-line @typescript-eslint/member-ordering
   editForm: EventFormGroup = this.eventFormService.createEventFormGroup();
 
@@ -58,6 +59,8 @@ export class EventUpdate implements OnInit {
   compareAirport = (o1: IAirport | null, o2: IAirport | null): boolean => this.airportService.compareAirport(o1, o2);
 
   ngOnInit(): void {
+    this.editForm.controls.title.addAsyncValidators(this.titleUniqueValidator());
+
     this.activatedRoute.data.subscribe(({ event }) => {
       this.event = event;
 
@@ -68,6 +71,26 @@ export class EventUpdate implements OnInit {
       this.loadRelationshipsOptions();
     });
   }
+  /** Bao loi neu so hieu chuyen bay da ton tai (khong phan biet hoa thuong), bo qua chinh chuyen bay dang sua. */
+  private titleUniqueValidator(): AsyncValidatorFn {
+    return control => {
+      const value = ((control.value as string | null) ?? '').trim();
+      if (!value) {
+        return of(null);
+      }
+      return timer(400).pipe(
+        switchMap(() => this.eventService.query({ 'title.contains': value, size: 50 })),
+        map(res =>
+          (res.body ?? []).some(e => e.id !== this.event?.id && (e.title ?? '').trim().toLowerCase() === value.toLowerCase())
+            ? { titleExists: true }
+            : null,
+        ),
+        catchError(() => of(null)),
+        tap(() => this.cdr.markForCheck()),
+      );
+    };
+  }
+
   byteSize(base64String: string): string {
     return this.dataUtils.byteSize(base64String);
   }

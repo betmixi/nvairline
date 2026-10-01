@@ -51,19 +51,19 @@
         <div class="col-md-4">
           <label class="form-label"> Giá vé phổ thông </label>
 
-          <input type="number" class="form-control" [(ngModel)]="newShowtime.basePrice" />
+          <input type="number" min="0" class="form-control" [(ngModel)]="newShowtime.basePrice" />
         </div>
 
         <div class="col-md-4">
           <label class="form-label"> Giá vé thương gia </label>
 
-          <input type="number" class="form-control" [(ngModel)]="newShowtime.vipPrice" />
+          <input type="number" min="0" class="form-control" [(ngModel)]="newShowtime.vipPrice" />
         </div>
 
         <div class="col-md-4">
           <label class="form-label"> Giá vé phổ thông đặc biệt </label>
 
-          <input type="number" class="form-control" [(ngModel)]="newShowtime.couplePrice" />
+          <input type="number" min="0" class="form-control" [(ngModel)]="newShowtime.couplePrice" />
         </div>
       </div>
 

@@ -24,13 +24,16 @@
         <div class="mb-3">
           <label class="form-label" for="field_seatNumber" jhiTranslate="dugxApp.seat.seatNumber">Seat Number</label>
           <input
-            type="number"
+            type="number" min="0"
             class="form-control"
             name="seatNumber"
             id="field_seatNumber"
             data-cy="seatNumber"
             formControlName="seatNumber"
           />
+          @if (editForm.get('seatNumber')?.errors?.min) {
+          <small class="form-text text-danger">Không được nhập số âm.</small>
+          }
         </div>
 
         <div class="mb-3">

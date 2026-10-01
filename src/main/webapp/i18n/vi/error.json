@@ -9,6 +9,14 @@
       "500": "Internal server error."
     },
     "concurrencyFailure": "Another user modified this data at the same time as you. Your changes were rejected.",
-    "validation": "Validation error on the server."
+    "validation": "Validation error on the server.",
+    "titlerequired": "Số hiệu chuyến bay không được để trống.",
+    "titleexists": "Số hiệu chuyến bay này đã tồn tại.",
+    "invalidtime": "Giờ kết thúc không được sớm hơn giờ bắt đầu.",
+    "sameairport": "Sân bay đi và sân bay đến không được trùng nhau.",
+    "timerequired": "Vui lòng nhập giờ bắt đầu và kết thúc.",
+    "negativeprice": "Giá vé không được là số âm.",
+    "showtimeexists": "Chuyến bay này đã có giờ bay bắt đầu vào thời điểm đó.",
+    "aircraftbusy": "Máy bay này đã có giờ bay khác trùng khoảng thời gian đã chọn."
   }
 }

@@ -78,6 +78,28 @@ public class ShowtimeService {
             throw new BadRequestAlertException("Aircraft is required", "showtime", "roomrequired");
         }
 
+        if (showtimeDTO.getStartTime() == null || showtimeDTO.getEndTime() == null) {
+            throw new BadRequestAlertException("Start time and end time are required", "showtime", "timerequired");
+        }
+        if (!showtimeDTO.getEndTime().isAfter(showtimeDTO.getStartTime())) {
+            throw new BadRequestAlertException("End time must be after start time", "showtime", "invalidtime");
+        }
+        if (isNegative(showtimeDTO.getBasePrice()) || isNegative(showtimeDTO.getVipPrice()) || isNegative(showtimeDTO.getCouplePrice())) {
+            throw new BadRequestAlertException("Prices must not be negative", "showtime", "negativeprice");
+        }
+        if (showtimeRepository.existsByEvent_IdAndStartTime(showtimeDTO.getEvent().getId(), showtimeDTO.getStartTime())) {
+            throw new BadRequestAlertException("This flight already has a showtime at that time", "showtime", "showtimeexists");
+        }
+        if (
+            showtimeRepository.existsAircraftOverlap(
+                showtimeDTO.getAircraft().getId(),
+                showtimeDTO.getStartTime(),
+                showtimeDTO.getEndTime()
+            )
+        ) {
+            throw new BadRequestAlertException("Aircraft is already scheduled in that time range", "showtime", "aircraftbusy");
+        }
+
         eventRepository
             .findById(showtimeDTO.getEvent().getId())
             .orElseThrow(() -> new BadRequestAlertException("Event not found", "showtime", "eventnotfound"));
@@ -88,6 +110,10 @@ public class ShowtimeService {
         generateShowtimeSeats(showtime);
 
         return showtimeMapper.toDto(showtime);
+    }
+
+    private static boolean isNegative(BigDecimal value) {
+        return value != null && value.signum() < 0;
     }
 
     private void generateShowtimeSeats(Showtime showtime) {

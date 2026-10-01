@@ -43,6 +43,11 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
     )
     Optional<Event> findOneWithToOneRelationships(@Param("id") Long id);
 
+    /** Kiem tra trung so hieu chuyen bay (khong phan biet hoa thuong). */
+    boolean existsByTitleIgnoreCase(String title);
+
+    boolean existsByTitleIgnoreCaseAndIdNot(String title, Long id);
+
     // Tìm kiếm theo từ khóa
     @Query(
         """

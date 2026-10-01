@@ -69,7 +69,10 @@
         @let capacityRef = editForm.get('capacity')!;
         <div class="mb-3">
           <label class="form-label" for="field_capacity" jhiTranslate="dugxApp.venue.capacity">Capacity</label>
-          <input type="number" class="form-control" name="capacity" id="field_capacity" data-cy="capacity" formControlName="capacity" />
+          <input type="number" min="0" class="form-control" name="capacity" id="field_capacity" data-cy="capacity" formControlName="capacity" />
+          @if (editForm.get('capacity')?.errors?.min) {
+          <small class="form-text text-danger">Không được nhập số âm.</small>
+          }
           @if (capacityRef.invalid && (capacityRef.dirty || capacityRef.touched)) {
           <div>
             @if (capacityRef.errors?.required) {

@@ -95,13 +95,9 @@ export class ManageShowtimesComponent implements OnInit {
   saveShowtime(): void {
     this.errorMessage = '';
 
-    if (!this.newShowtime.aircraftId) {
-      this.errorMessage = 'Vui lòng chọn máy bay.';
-      return;
-    }
-
-    if (!this.newShowtime.startTime || !this.newShowtime.endTime) {
-      this.errorMessage = 'Vui lòng nhập giờ bắt đầu và kết thúc.';
+    const validationError = this.validateNewShowtime();
+    if (validationError) {
+      this.errorMessage = validationError;
       return;
     }
 
@@ -133,9 +129,72 @@ export class ManageShowtimesComponent implements OnInit {
         },
         error: err => {
           this.isSaving = false;
-          this.errorMessage = err?.error?.title ?? 'Không tạo được giờ bay.';
+          this.errorMessage = this.serverErrorMessage(err);
         },
       });
+  }
+
+  /** Kiem tra du lieu o phia client truoc khi gui: bo trong, so am, thoi gian sai, gio bay bi trung. */
+  private validateNewShowtime(): string | null {
+    const { aircraftId, startTime, endTime } = this.newShowtime;
+
+    if (!aircraftId) {
+      return 'Vui lòng chọn máy bay.';
+    }
+
+    if (!startTime || !endTime) {
+      return 'Vui lòng nhập giờ bắt đầu và kết thúc.';
+    }
+
+    const start = dayjs(startTime);
+    const end = dayjs(endTime);
+    if (!start.isValid() || !end.isValid()) {
+      return 'Giờ bắt đầu hoặc giờ kết thúc không hợp lệ.';
+    }
+    if (!end.isAfter(start)) {
+      return 'Giờ kết thúc phải sau giờ bắt đầu.';
+    }
+
+    const prices: [string, unknown][] = [
+      ['Giá vé phổ thông', this.newShowtime.basePrice],
+      ['Giá vé thương gia', this.newShowtime.vipPrice],
+      ['Giá vé phổ thông đặc biệt', this.newShowtime.couplePrice],
+    ];
+    for (const [label, value] of prices) {
+      if (value === null || value === undefined || value === '' || Number.isNaN(Number(value))) {
+        return `Vui lòng nhập ${label.toLowerCase()}.`;
+      }
+      if (Number(value) < 0) {
+        return `${label} không được là số âm.`;
+      }
+    }
+    if (Number(this.newShowtime.basePrice) === 0) {
+      return 'Giá vé phổ thông phải lớn hơn 0.';
+    }
+
+    for (const existing of this.showtimes()) {
+      if (existing.startTime?.isSame(start)) {
+        return 'Chuyến bay này đã có giờ bay bắt đầu vào thời điểm đó.';
+      }
+      if (existing.aircraft?.id === aircraftId && existing.startTime && existing.endTime && existing.startTime.isBefore(end) && existing.endTime.isAfter(start)) {
+        return 'Máy bay này đã có giờ bay khác trùng khoảng thời gian đã chọn.';
+      }
+    }
+
+    return null;
+  }
+
+  private serverErrorMessage(err: any): string {
+    const messages: Record<string, string> = {
+      'error.timerequired': 'Vui lòng nhập giờ bắt đầu và kết thúc.',
+      'error.invalidtime': 'Giờ kết thúc phải sau giờ bắt đầu.',
+      'error.negativeprice': 'Giá vé không được là số âm.',
+      'error.showtimeexists': 'Chuyến bay này đã có giờ bay bắt đầu vào thời điểm đó.',
+      'error.aircraftbusy': 'Máy bay này đã có giờ bay khác trùng khoảng thời gian đã chọn.',
+      'error.roomrequired': 'Vui lòng chọn máy bay.',
+    };
+    const key = (err?.error?.message ?? err?.headers?.get?.('X-dugxApp-error')) as string | undefined;
+    return (key && messages[key]) ?? err?.error?.title ?? 'Không tạo được giờ bay.';
   }
 
   delete(showtime: IShowtime): void {

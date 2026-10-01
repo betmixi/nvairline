@@ -33,19 +33,25 @@
 
         <div class="mb-3">
           <label class="form-label" for="field_totalRows" jhiTranslate="dugxApp.aircraft.totalRows">Total Rows</label>
-          <input type="number" class="form-control" name="totalRows" id="field_totalRows" data-cy="totalRows" formControlName="totalRows" />
+          <input type="number" min="0" class="form-control" name="totalRows" id="field_totalRows" data-cy="totalRows" formControlName="totalRows" />
+          @if (editForm.get('totalRows')?.errors?.min) {
+          <small class="form-text text-danger">Không được nhập số âm.</small>
+          }
         </div>
 
         <div class="mb-3">
           <label class="form-label" for="field_totalColumns" jhiTranslate="dugxApp.aircraft.totalColumns">Total Columns</label>
           <input
-            type="number"
+            type="number" min="0"
             class="form-control"
             name="totalColumns"
             id="field_totalColumns"
             data-cy="totalColumns"
             formControlName="totalColumns"
           />
+          @if (editForm.get('totalColumns')?.errors?.min) {
+          <small class="form-text text-danger">Không được nhập số âm.</small>
+          }
         </div>
 
         <div class="mb-3">

@@ -25,4 +25,11 @@ public interface ShowtimeRepository extends JpaRepository<Showtime, Long> {
     /** Id cua cac Event co it nhat 1 giờ bay (Showtime) bat dau trong khoang [start, end). */
     @Query("select distinct s.event.id from Showtime s where s.startTime >= :start and s.startTime < :end")
     List<Long> findEventIdsByStartTimeBetween(@Param("start") Instant start, @Param("end") Instant end);
+
+    /** Cung mot chuyen bay da co gio bay bat dau dung thoi diem nay. */
+    boolean existsByEvent_IdAndStartTime(Long eventId, Instant startTime);
+
+    /** May bay da co gio bay khac chong lan voi khoang [start, end). */
+    @Query("select count(s) > 0 from Showtime s where s.aircraft.id = :aircraftId and s.startTime < :end and s.endTime > :start")
+    boolean existsAircraftOverlap(@Param("aircraftId") Long aircraftId, @Param("start") Instant start, @Param("end") Instant end);
 }

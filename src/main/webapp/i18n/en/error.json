@@ -9,6 +9,14 @@
       "500": "Internal server error."
     },
     "concurrencyFailure": "Another user modified this data at the same time as you. Your changes were rejected.",
-    "validation": "Validation error on the server."
+    "validation": "Validation error on the server.",
+    "titlerequired": "Flight code must not be blank.",
+    "titleexists": "This flight code already exists.",
+    "invalidtime": "End time must not be before start time.",
+    "sameairport": "Departure and arrival airports must be different.",
+    "timerequired": "Start time and end time are required.",
+    "negativeprice": "Prices must not be negative.",
+    "showtimeexists": "This flight already has a showtime at that time.",
+    "aircraftbusy": "This aircraft is already scheduled in that time range."
   }
 }

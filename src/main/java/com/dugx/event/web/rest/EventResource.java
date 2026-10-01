@@ -119,6 +119,35 @@ public class EventResource {
     }
 
     /**
+     * Kiem tra du lieu chuyen bay: so hieu khong de trong/khong trung (khong phan biet hoa thuong) va
+     * (khi tao/cap nhat day du) gio ket thuc khong som hon gio bat dau.
+     */
+    private void validateEvent(EventDTO eventDTO, Long excludeId, boolean fullUpdate) {
+        if (eventDTO.getTitle() != null || fullUpdate) {
+            String title = eventDTO.getTitle() == null ? "" : eventDTO.getTitle().trim();
+            if (title.isEmpty()) {
+                throw new BadRequestAlertException("Flight code must not be blank", ENTITY_NAME, "titlerequired");
+            }
+            eventDTO.setTitle(title);
+            boolean duplicated = excludeId == null
+                ? eventRepository.existsByTitleIgnoreCase(title)
+                : eventRepository.existsByTitleIgnoreCaseAndIdNot(title, excludeId);
+            if (duplicated) {
+                throw new BadRequestAlertException("Flight code already exists", ENTITY_NAME, "titleexists");
+            }
+        }
+        if (
+            fullUpdate &&
+            eventDTO.getStartTime() != null &&
+            eventDTO.getEndTime() != null &&
+            eventDTO.getEndTime().isBefore(eventDTO.getStartTime())
+        ) {
+            throw new BadRequestAlertException("End time must not be before start time", ENTITY_NAME, "invalidtime");
+        }
+        validateDepartureArrivalAirports(eventDTO);
+    }
+
+    /**
      * {@code POST  /events} : Create a new event.
      *
      * @param eventDTO the eventDTO to create.
@@ -132,7 +161,7 @@ public class EventResource {
         if (eventDTO.getId() != null) {
             throw new BadRequestAlertException("A new event cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        validateDepartureArrivalAirports(eventDTO);
+        validateEvent(eventDTO, null, true);
         eventDTO = eventService.save(eventDTO);
         return ResponseEntity.created(new URI("/api/events/" + eventDTO.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, eventDTO.getId().toString()))
@@ -166,7 +195,7 @@ public class EventResource {
         if (!eventRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
-        validateDepartureArrivalAirports(eventDTO);
+        validateEvent(eventDTO, id, true);
 
         eventDTO = eventService.update(eventDTO);
         return ResponseEntity.ok()
@@ -202,7 +231,7 @@ public class EventResource {
         if (!eventRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
-        validateDepartureArrivalAirports(eventDTO);
+        validateEvent(eventDTO, id, false);
 
         Optional<EventDTO> result = eventService.partialUpdate(eventDTO);
 

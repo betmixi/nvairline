@@ -12,11 +12,13 @@ public class AircraftDTO implements Serializable {
 
     private Long id;
 
-    @NotNull
+    @NotBlank
     private String name;
 
+    @Min(value = 0)
     private Integer totalRows;
 
+    @Min(value = 0)
     private Integer totalColumns;
 
     private String roomType;

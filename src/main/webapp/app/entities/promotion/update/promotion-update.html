@@ -56,13 +56,16 @@
         <div class="mb-3">
           <label class="form-label" for="field_displayOrder" jhiTranslate="dugxApp.promotion.displayOrder">Thứ tự hiển thị</label>
           <input
-            type="number"
+            type="number" min="0"
             class="form-control"
             name="displayOrder"
             id="field_displayOrder"
             data-cy="displayOrder"
             formControlName="displayOrder"
           />
+          @if (editForm.get('displayOrder')?.errors?.min) {
+          <small class="form-text text-danger">Không được nhập số âm.</small>
+          }
           @if (displayOrderRef.invalid && (displayOrderRef.dirty || displayOrderRef.touched)) {
           <div>
             @if (displayOrderRef.errors?.required) {

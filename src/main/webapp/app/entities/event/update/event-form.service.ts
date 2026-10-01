@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 
 import dayjs from 'dayjs/esm';
 
@@ -55,6 +55,29 @@ type EventFormGroupContent = {
 
 export type EventFormGroup = FormGroup<EventFormGroupContent>;
 
+/** Khong cho phep chuoi chi gom khoang trang. */
+const notBlank: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  const value = control.value;
+  return typeof value === 'string' && value.length > 0 && value.trim().length === 0 ? { blank: true } : null;
+};
+
+/** Gio ket thuc khong duoc som hon gio bat dau. */
+const endNotBeforeStart: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
+  const start = group.get('startTime')?.value as string | null | undefined;
+  const end = group.get('endTime')?.value as string | null | undefined;
+  if (!start || !end) {
+    return null;
+  }
+  return dayjs(end, DATE_TIME_FORMAT).isBefore(dayjs(start, DATE_TIME_FORMAT)) ? { invalidTime: true } : null;
+};
+
+/** San bay di va san bay den phai khac nhau. */
+const differentAirports: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
+  const departure = group.get('departureAirport')?.value as { id?: number | null } | null | undefined;
+  const arrival = group.get('arrivalAirport')?.value as { id?: number | null } | null | undefined;
+  return departure?.id != null && arrival?.id != null && departure.id === arrival.id ? { sameAirport: true } : null;
+};
+
 @Injectable({ providedIn: 'root' })
 export class EventFormService {
   createEventFormGroup(event?: EventFormGroupInput): EventFormGroup {
@@ -63,31 +86,34 @@ export class EventFormService {
       ...(event ?? { id: null }),
     });
 
-    return new FormGroup<EventFormGroupContent>({
-      id: new FormControl(
-        { value: eventRawValue.id, disabled: true },
-        {
-          nonNullable: true,
-          validators: [Validators.required],
-        },
-      ),
-      title: new FormControl(eventRawValue.title, {
-        validators: [Validators.required],
-      }),
-      description: new FormControl(eventRawValue.description),
-      banner: new FormControl(eventRawValue.banner),
-      startTime: new FormControl(eventRawValue.startTime),
-      endTime: new FormControl(eventRawValue.endTime),
-      status: new FormControl(eventRawValue.status),
-      createdDate: new FormControl(eventRawValue.createdDate),
-      supportsOneWay: new FormControl(eventRawValue.supportsOneWay),
-      supportsRoundTrip: new FormControl(eventRawValue.supportsRoundTrip),
-      supportsMultiCity: new FormControl(eventRawValue.supportsMultiCity),
-      category: new FormControl(eventRawValue.category),
-      address: new FormControl(eventRawValue.address),
-      departureAirport: new FormControl(eventRawValue.departureAirport),
-      arrivalAirport: new FormControl(eventRawValue.arrivalAirport),
-    });
+    return new FormGroup<EventFormGroupContent>(
+      {
+        id: new FormControl(
+          { value: eventRawValue.id, disabled: true },
+          {
+            nonNullable: true,
+            validators: [Validators.required],
+          },
+        ),
+        title: new FormControl(eventRawValue.title, {
+          validators: [Validators.required, notBlank, Validators.maxLength(255)],
+        }),
+        description: new FormControl(eventRawValue.description),
+        banner: new FormControl(eventRawValue.banner),
+        startTime: new FormControl(eventRawValue.startTime, { validators: [Validators.required] }),
+        endTime: new FormControl(eventRawValue.endTime, { validators: [Validators.required] }),
+        status: new FormControl(eventRawValue.status),
+        createdDate: new FormControl(eventRawValue.createdDate),
+        supportsOneWay: new FormControl(eventRawValue.supportsOneWay),
+        supportsRoundTrip: new FormControl(eventRawValue.supportsRoundTrip),
+        supportsMultiCity: new FormControl(eventRawValue.supportsMultiCity),
+        category: new FormControl(eventRawValue.category),
+        address: new FormControl(eventRawValue.address),
+        departureAirport: new FormControl(eventRawValue.departureAirport, { validators: [Validators.required] }),
+        arrivalAirport: new FormControl(eventRawValue.arrivalAirport, { validators: [Validators.required] }),
+      },
+      { validators: [endNotBeforeStart, differentAirports] },
+    );
   }
 
   getEvent(form: EventFormGroup): IEvent | NewEvent {
