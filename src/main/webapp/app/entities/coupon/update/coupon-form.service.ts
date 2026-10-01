@@ -75,11 +75,11 @@ export class CouponFormService {
         code: new FormControl(couponRawValue.code, {
           validators: [Validators.required, notBlank],
         }),
-        discount: new FormControl(couponRawValue.discount),
-        startDate: new FormControl(couponRawValue.startDate),
-        endDate: new FormControl(couponRawValue.endDate),
-        quantity: new FormControl(couponRawValue.quantity),
-        event: new FormControl(couponRawValue.event),
+        discount: new FormControl(couponRawValue.discount, { validators: [Validators.required, Validators.min(0)] }),
+        startDate: new FormControl(couponRawValue.startDate, { validators: [Validators.required] }),
+        endDate: new FormControl(couponRawValue.endDate, { validators: [Validators.required] }),
+        quantity: new FormControl(couponRawValue.quantity, { validators: [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)] }),
+        event: new FormControl(couponRawValue.event, { validators: [Validators.required] }),
       },
       { validators: [endNotBeforeStart] },
     );

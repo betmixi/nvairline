@@ -41,7 +41,7 @@ export class BookingDetailFormService {
           validators: [Validators.required],
         },
       ),
-      price: new FormControl(bookingDetailRawValue.price),
+      price: new FormControl(bookingDetailRawValue.price, { validators: [Validators.min(0)] }),
       booking: new FormControl(bookingDetailRawValue.booking),
       showtimeSeatId: new FormControl(bookingDetailRawValue.showtimeSeat?.id ?? null),
     });

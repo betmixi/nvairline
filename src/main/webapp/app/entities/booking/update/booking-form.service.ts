@@ -57,7 +57,7 @@ export class BookingFormService {
         },
       ),
       bookingDate: new FormControl(bookingRawValue.bookingDate),
-      totalAmount: new FormControl(bookingRawValue.totalAmount),
+      totalAmount: new FormControl(bookingRawValue.totalAmount, { validators: [Validators.min(0)] }),
       status: new FormControl(bookingRawValue.status),
       user: new FormControl(bookingRawValue.user),
     });

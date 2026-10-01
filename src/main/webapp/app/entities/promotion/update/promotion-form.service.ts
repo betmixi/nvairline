@@ -59,7 +59,7 @@ export class PromotionFormService {
         validators: [Validators.maxLength(255)],
       }),
       displayOrder: new FormControl(promotionRawValue.displayOrder, {
-        validators: [Validators.required],
+        validators: [Validators.required, Validators.min(0)],
       }),
       active: new FormControl(promotionRawValue.active, {
         validators: [Validators.required],

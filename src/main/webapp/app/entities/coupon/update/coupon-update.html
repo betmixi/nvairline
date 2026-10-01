@@ -24,16 +24,26 @@
             <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
             } @if (codeRef.errors?.blank) {
             <small class="form-text text-danger">Không được chỉ nhập khoảng trắng.</small>
+            } @if (codeRef.errors?.codeExists) {
+            <small class="form-text text-danger">Mã ưu đãi này đã tồn tại, vui lòng nhập mã khác.</small>
             }
           </div>
+          } @if (codeRef.pending) {
+          <small class="form-text text-muted">Đang kiểm tra trùng mã...</small>
           }
         </div>
 
         <div class="mb-3">
           <label class="form-label" for="field_discount" jhiTranslate="dugxApp.coupon.discount">Giảm giá</label>
           <input type="number" min="0" class="form-control" name="discount" id="field_discount" data-cy="discount" formControlName="discount" />
-          @if (editForm.get('discount')?.errors?.min) {
-          <small class="form-text text-danger">Không được nhập số âm.</small>
+@if (editForm.controls.discount.invalid && (editForm.controls.discount.dirty || editForm.controls.discount.touched)) {
+          <div>
+            @if (editForm.controls.discount.errors?.required) {
+            <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            } @if (editForm.controls.discount.errors?.min) {
+            <small class="form-text text-danger">Giảm giá không được là số âm.</small>
+            }
+          </div>
           }
         </div>
 
@@ -50,6 +60,13 @@
               placeholder="YYYY-MM-DD HH:mm"
             />
           </div>
+          @if (editForm.controls.startDate.invalid && (editForm.controls.startDate.dirty || editForm.controls.startDate.touched)) {
+          <div>
+            @if (editForm.controls.startDate.errors?.required) {
+            <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            }
+          </div>
+          }
         </div>
 
         <div class="mb-3">
@@ -65,6 +82,13 @@
               placeholder="YYYY-MM-DD HH:mm"
             />
           </div>
+          @if (editForm.controls.endDate.invalid && (editForm.controls.endDate.dirty || editForm.controls.endDate.touched)) {
+          <div>
+            @if (editForm.controls.endDate.errors?.required) {
+            <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            }
+          </div>
+          }
           @if (editForm.errors?.invalidDate) {
           <small class="form-text text-danger">Ngày kết thúc không được sớm hơn ngày bắt đầu.</small>
           }
@@ -73,8 +97,16 @@
         <div class="mb-3">
           <label class="form-label" for="field_quantity" jhiTranslate="dugxApp.coupon.quantity">Số Lượng</label>
           <input type="number" min="0" class="form-control" name="quantity" id="field_quantity" data-cy="quantity" formControlName="quantity" />
-          @if (editForm.get('quantity')?.errors?.min) {
-          <small class="form-text text-danger">Không được nhập số âm.</small>
+@if (editForm.controls.quantity.invalid && (editForm.controls.quantity.dirty || editForm.controls.quantity.touched)) {
+          <div>
+            @if (editForm.controls.quantity.errors?.required) {
+            <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            } @if (editForm.controls.quantity.errors?.min) {
+            <small class="form-text text-danger">Số lượng không được là số âm.</small>
+            } @if (editForm.controls.quantity.errors?.pattern) {
+            <small class="form-text text-danger">Số lượng phải là số nguyên.</small>
+            }
+          </div>
           }
         </div>
 
@@ -86,6 +118,13 @@
             <option [ngValue]="eventOption">{{ eventOption.title }}</option>
             }
           </select>
+          @if (editForm.controls.event.invalid && (editForm.controls.event.dirty || editForm.controls.event.touched)) {
+          <div>
+            @if (editForm.controls.event.errors?.required) {
+            <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            }
+          </div>
+          }
         </div>
       </div>
 
@@ -98,7 +137,7 @@
           type="submit"
           id="save-entity"
           data-cy="entityCreateSaveButton"
-          [disabled]="editForm.invalid || isSaving()"
+          [disabled]="editForm.invalid || editForm.pending || isSaving()"
           class="btn btn-primary"
         >
           <fa-icon icon="save" />&nbsp;<span jhiTranslate="entity.action.save">Save</span>

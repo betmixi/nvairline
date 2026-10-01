@@ -60,7 +60,7 @@ export class PaymentFormService {
       ),
       method: new FormControl(paymentRawValue.method),
       transactionCode: new FormControl(paymentRawValue.transactionCode),
-      amount: new FormControl(paymentRawValue.amount),
+      amount: new FormControl(paymentRawValue.amount, { validators: [Validators.min(0)] }),
       status: new FormControl(paymentRawValue.status),
       paymentDate: new FormControl(paymentRawValue.paymentDate),
       booking: new FormControl(paymentRawValue.booking),

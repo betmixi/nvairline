@@ -1,11 +1,11 @@
 import { HttpResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject, signal } from '@angular/core';
+import { AsyncValidatorFn, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Observable, finalize, map } from 'rxjs';
+import { Observable, catchError, finalize, map, of, switchMap, tap, timer } from 'rxjs';
 
 import { IEvent } from 'app/entities/event/event.model';
 import { EventService } from 'app/entities/event/service/event.service';
@@ -32,6 +32,7 @@ export class CouponUpdate implements OnInit {
   protected couponFormService = inject(CouponFormService);
   protected eventService = inject(EventService);
   protected activatedRoute = inject(ActivatedRoute);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
   editForm: CouponFormGroup = this.couponFormService.createCouponFormGroup();
@@ -39,6 +40,8 @@ export class CouponUpdate implements OnInit {
   compareEvent = (o1: IEvent | null, o2: IEvent | null): boolean => this.eventService.compareEvent(o1, o2);
 
   ngOnInit(): void {
+    this.editForm.controls.code.addAsyncValidators(this.codeUniqueValidator());
+
     this.activatedRoute.data.subscribe(({ coupon }) => {
       this.coupon = coupon;
       if (coupon) {
@@ -47,6 +50,26 @@ export class CouponUpdate implements OnInit {
 
       this.loadRelationshipsOptions();
     });
+  }
+
+  /** Bao loi neu ma uu dai da ton tai (khong phan biet hoa thuong), bo qua chinh uu dai dang sua. */
+  private codeUniqueValidator(): AsyncValidatorFn {
+    return control => {
+      const value = ((control.value as string | null) ?? '').trim();
+      if (!value) {
+        return of(null);
+      }
+      return timer(400).pipe(
+        switchMap(() => this.couponService.query({ 'code.contains': value, size: 50 })),
+        map(res =>
+          (res.body ?? []).some(c => c.id !== this.coupon?.id && (c.code ?? '').trim().toLowerCase() === value.toLowerCase())
+            ? { codeExists: true }
+            : null,
+        ),
+        catchError(() => of(null)),
+        tap(() => this.cdr.markForCheck()),
+      );
+    };
   }
 
   previousState(): void {
