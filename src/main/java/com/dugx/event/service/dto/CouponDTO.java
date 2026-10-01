@@ -17,13 +17,17 @@ public class CouponDTO implements Serializable {
     @NotBlank
     private String code;
 
+    @NotNull
     @DecimalMin(value = "0")
     private BigDecimal discount;
 
+    @NotNull
     private Instant startDate;
 
+    @NotNull
     private Instant endDate;
 
+    @NotNull
     @Min(value = 0)
     private Integer quantity;
 
