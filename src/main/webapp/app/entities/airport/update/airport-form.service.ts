@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
+import { notBlank } from 'app/shared/validators/not-blank.validator';
+
 import { IAirport, NewAirport } from '../airport.model';
 
 /**
@@ -42,10 +44,10 @@ export class AirportFormService {
         },
       ),
       code: new FormControl(airportRawValue.code, {
-        validators: [Validators.required, Validators.maxLength(10)],
+        validators: [Validators.required, notBlank, Validators.maxLength(10)],
       }),
       name: new FormControl(airportRawValue.name, {
-        validators: [Validators.required, Validators.maxLength(150)],
+        validators: [Validators.required, notBlank, Validators.maxLength(150)],
       }),
       city: new FormControl(airportRawValue.city, {
         validators: [Validators.maxLength(100)],

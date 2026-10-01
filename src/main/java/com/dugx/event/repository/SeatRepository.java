@@ -11,4 +11,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SeatRepository extends JpaRepository<Seat, Long> {
     List<Seat> findByAircraft_Id(Long aircraftId);
+
+    boolean existsByAircraft_IdAndRowLabelIgnoreCaseAndSeatNumber(Long aircraftId, String rowLabel, Integer seatNumber);
+
+    boolean existsByAircraft_IdAndRowLabelIgnoreCaseAndSeatNumberAndIdNot(Long aircraftId, String rowLabel, Integer seatNumber, Long id);
 }

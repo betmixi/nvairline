@@ -22,6 +22,8 @@
           <div>
             @if (titleRef.errors?.required) {
             <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            } @if (titleRef.errors?.blank) {
+            <small class="form-text text-danger">Không được chỉ nhập khoảng trắng.</small>
             } @if (titleRef.errors?.maxlength) {
             <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '150' }"
               >This field cannot be longer than 150 characters.</small

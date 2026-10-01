@@ -17,6 +17,15 @@
     "timerequired": "Vui lòng nhập giờ bắt đầu và kết thúc.",
     "negativeprice": "Giá vé không được là số âm.",
     "showtimeexists": "Chuyến bay này đã có giờ bay bắt đầu vào thời điểm đó.",
-    "aircraftbusy": "Máy bay này đã có giờ bay khác trùng khoảng thời gian đã chọn."
+    "aircraftbusy": "Máy bay này đã có giờ bay khác trùng khoảng thời gian đã chọn.",
+    "coderequired": "Mã không được để trống.",
+    "codeexists": "Mã này đã tồn tại, vui lòng nhập mã khác.",
+    "namerequired": "Tên không được để trống.",
+    "nameexists": "Tên này đã tồn tại, vui lòng nhập tên khác.",
+    "locationrequired": "Địa điểm không được để trống.",
+    "locationexists": "Địa điểm này đã tồn tại.",
+    "invaliddate": "Ngày kết thúc không được sớm hơn ngày bắt đầu.",
+    "seatrequired": "Vui lòng nhập hàng ghế và số ghế hợp lệ (từ 1 trở lên).",
+    "seatexists": "Ghế này đã tồn tại trên máy bay."
   }
 }

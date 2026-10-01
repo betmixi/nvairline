@@ -3,6 +3,7 @@ package com.dugx.event.service;
 import com.dugx.event.domain.Aircraft;
 import com.dugx.event.domain.Seat;
 import com.dugx.event.domain.SeatType;
+import com.dugx.event.web.rest.errors.BadRequestAlertException;
 import com.dugx.event.repository.AircraftRepository;
 import com.dugx.event.repository.SeatRepository;
 import com.dugx.event.service.dto.AircraftDTO;
@@ -47,6 +48,7 @@ public class AircraftService {
      */
     public AircraftDTO save(AircraftDTO aircraftDTO) {
         LOG.debug("Request to save Aircraft : {}", aircraftDTO);
+        validateAircraft(aircraftDTO, null);
         boolean isNew = aircraftDTO.getId() == null;
         Aircraft aircraft = aircraftMapper.toEntity(aircraftDTO);
         aircraft = aircraftRepository.save(aircraft);
@@ -85,6 +87,7 @@ public class AircraftService {
      */
     public AircraftDTO update(AircraftDTO aircraftDTO) {
         LOG.debug("Request to update Aircraft : {}", aircraftDTO);
+        validateAircraft(aircraftDTO, aircraftDTO.getId());
         Aircraft aircraft = aircraftMapper.toEntity(aircraftDTO);
         aircraft = aircraftRepository.save(aircraft);
         return aircraftMapper.toDto(aircraft);
@@ -121,5 +124,18 @@ public class AircraftService {
     public void delete(Long id) {
         LOG.debug("Request to delete Aircraft : {}", id);
         aircraftRepository.deleteById(id);
+    }
+
+    /** Kiem tra Aircraft name: khong de trong va khong trung (khong phan biet hoa thuong). */
+    private void validateAircraft(AircraftDTO dto, Long excludeId) {
+        String value = dto.getName() == null ? "" : dto.getName().trim();
+        if (value.isEmpty()) {
+            throw new BadRequestAlertException("Aircraft name must not be blank", "aircraft", "namerequired");
+        }
+        dto.setName(value);
+        boolean duplicated = excludeId == null ? aircraftRepository.existsByNameIgnoreCase(value) : aircraftRepository.existsByNameIgnoreCaseAndIdNot(value, excludeId);
+        if (duplicated) {
+            throw new BadRequestAlertException("Aircraft name already exists", "aircraft", "nameexists");
+        }
     }
 }

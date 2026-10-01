@@ -1,6 +1,7 @@
 package com.dugx.event.service;
 
 import com.dugx.event.domain.Address;
+import com.dugx.event.web.rest.errors.BadRequestAlertException;
 import com.dugx.event.repository.AddressRepository;
 import com.dugx.event.service.dto.AddressDTO;
 import com.dugx.event.service.mapper.AddressMapper;
@@ -36,6 +37,7 @@ public class AddressService {
      */
     public AddressDTO save(AddressDTO addressDTO) {
         LOG.debug("Request to save Address : {}", addressDTO);
+        validateAddress(addressDTO, null);
         Address address = addressMapper.toEntity(addressDTO);
         address = addressRepository.save(address);
         return addressMapper.toDto(address);
@@ -49,6 +51,7 @@ public class AddressService {
      */
     public AddressDTO update(AddressDTO addressDTO) {
         LOG.debug("Request to update Address : {}", addressDTO);
+        validateAddress(addressDTO, addressDTO.getId());
         Address address = addressMapper.toEntity(addressDTO);
         address = addressRepository.save(address);
         return addressMapper.toDto(address);
@@ -94,5 +97,18 @@ public class AddressService {
     public void delete(Long id) {
         LOG.debug("Request to delete Address : {}", id);
         addressRepository.deleteById(id);
+    }
+
+    /** Kiem tra Location: khong de trong va khong trung (khong phan biet hoa thuong). */
+    private void validateAddress(AddressDTO dto, Long excludeId) {
+        String value = dto.getLocation() == null ? "" : dto.getLocation().trim();
+        if (value.isEmpty()) {
+            throw new BadRequestAlertException("Location must not be blank", "address", "locationrequired");
+        }
+        dto.setLocation(value);
+        boolean duplicated = excludeId == null ? addressRepository.existsByLocationIgnoreCase(value) : addressRepository.existsByLocationIgnoreCaseAndIdNot(value, excludeId);
+        if (duplicated) {
+            throw new BadRequestAlertException("Location already exists", "address", "locationexists");
+        }
     }
 }

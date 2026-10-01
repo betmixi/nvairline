@@ -11,4 +11,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PromotionRepository extends JpaRepository<Promotion, Long> {
     List<Promotion> findByActiveTrueOrderByDisplayOrderAsc();
+
+    boolean existsByTitleIgnoreCase(String title);
+
+    boolean existsByTitleIgnoreCaseAndIdNot(String title, Long id);
 }

@@ -1,6 +1,7 @@
 package com.dugx.event.service;
 
 import com.dugx.event.domain.Coupon;
+import com.dugx.event.web.rest.errors.BadRequestAlertException;
 import com.dugx.event.repository.CouponRepository;
 import com.dugx.event.service.dto.CouponDTO;
 import com.dugx.event.service.mapper.CouponMapper;
@@ -38,6 +39,7 @@ public class CouponService {
      */
     public CouponDTO save(CouponDTO couponDTO) {
         LOG.debug("Request to save Coupon : {}", couponDTO);
+        validateCoupon(couponDTO, null);
         Coupon coupon = couponMapper.toEntity(couponDTO);
         coupon = couponRepository.save(coupon);
         return couponMapper.toDto(coupon);
@@ -51,6 +53,7 @@ public class CouponService {
      */
     public CouponDTO update(CouponDTO couponDTO) {
         LOG.debug("Request to update Coupon : {}", couponDTO);
+        validateCoupon(couponDTO, couponDTO.getId());
         Coupon coupon = couponMapper.toEntity(couponDTO);
         coupon = couponRepository.save(coupon);
         return couponMapper.toDto(coupon);
@@ -105,5 +108,21 @@ public class CouponService {
     public void delete(Long id) {
         LOG.debug("Request to delete Coupon : {}", id);
         couponRepository.deleteById(id);
+    }
+
+    /** Kiem tra Coupon code: khong de trong va khong trung (khong phan biet hoa thuong). */
+    private void validateCoupon(CouponDTO dto, Long excludeId) {
+        String value = dto.getCode() == null ? "" : dto.getCode().trim();
+        if (value.isEmpty()) {
+            throw new BadRequestAlertException("Coupon code must not be blank", "coupon", "coderequired");
+        }
+        dto.setCode(value);
+        boolean duplicated = excludeId == null ? couponRepository.existsByCodeIgnoreCase(value) : couponRepository.existsByCodeIgnoreCaseAndIdNot(value, excludeId);
+        if (duplicated) {
+            throw new BadRequestAlertException("Coupon code already exists", "coupon", "codeexists");
+        }
+        if (dto.getStartDate() != null && dto.getEndDate() != null && dto.getEndDate().isBefore(dto.getStartDate())) {
+            throw new BadRequestAlertException("End date must not be before start date", "coupon", "invaliddate");
+        }
     }
 }

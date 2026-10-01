@@ -9,4 +9,8 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface VenueRepository extends JpaRepository<Venue, Long> {}
+public interface VenueRepository extends JpaRepository<Venue, Long> {
+    boolean existsByNameIgnoreCase(String name);
+
+    boolean existsByNameIgnoreCaseAndIdNot(String name, Long id);
+}

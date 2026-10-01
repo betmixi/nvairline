@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
+import { notBlank } from 'app/shared/validators/not-blank.validator';
+
 import { ISeat, NewSeat } from '../seat.model';
 
 /**
@@ -43,7 +45,7 @@ export class SeatFormService {
         },
       ),
       rowLabel: new FormControl(seatRawValue.rowLabel, {
-        validators: [Validators.required, Validators.maxLength(5)],
+        validators: [Validators.required, notBlank, Validators.maxLength(5)],
       }),
       seatNumber: new FormControl(seatRawValue.seatNumber, {
         validators: [Validators.required, Validators.min(1)],

@@ -43,4 +43,8 @@ public interface CouponRepository extends JpaRepository<Coupon, Long>, JpaSpecif
 
     @Query("select coupon from Coupon coupon left join fetch coupon.event where coupon.id =:id")
     Optional<Coupon> findOneWithToOneRelationships(@Param("id") Long id);
+
+    boolean existsByCodeIgnoreCase(String code);
+
+    boolean existsByCodeIgnoreCaseAndIdNot(String code, Long id);
 }

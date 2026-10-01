@@ -43,6 +43,21 @@ public class VenueResource {
         this.venueRepository = venueRepository;
     }
 
+    /** Ten dia diem khong de trong va khong trung (khong phan biet hoa thuong). */
+    private void validateVenueName(Venue venue, Long excludeId) {
+        String name = venue.getName() == null ? "" : venue.getName().trim();
+        if (name.isEmpty()) {
+            throw new BadRequestAlertException("Venue name must not be blank", ENTITY_NAME, "namerequired");
+        }
+        venue.setName(name);
+        boolean duplicated = excludeId == null
+            ? venueRepository.existsByNameIgnoreCase(name)
+            : venueRepository.existsByNameIgnoreCaseAndIdNot(name, excludeId);
+        if (duplicated) {
+            throw new BadRequestAlertException("Venue name already exists", ENTITY_NAME, "nameexists");
+        }
+    }
+
     /**
      * {@code POST  /venues} : Create a new venue.
      *
@@ -56,6 +71,7 @@ public class VenueResource {
         if (venue.getId() != null) {
             throw new BadRequestAlertException("A new venue cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        validateVenueName(venue, null);
         venue = venueRepository.save(venue);
         return ResponseEntity.created(new URI("/api/venues/" + venue.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, venue.getId().toString()))
@@ -87,6 +103,7 @@ public class VenueResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
+        validateVenueName(venue, id);
         venue = venueRepository.save(venue);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, venue.getId().toString()))

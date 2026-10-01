@@ -8,4 +8,8 @@ import org.springframework.stereotype.Repository;
  * Spring Data JPA repository for the Aircraft entity.
  */
 @Repository
-public interface AircraftRepository extends JpaRepository<Aircraft, Long> {}
+public interface AircraftRepository extends JpaRepository<Aircraft, Long> {
+    boolean existsByNameIgnoreCase(String name);
+
+    boolean existsByNameIgnoreCaseAndIdNot(String name, Long id);
+}

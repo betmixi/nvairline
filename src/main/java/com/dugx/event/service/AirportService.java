@@ -1,6 +1,7 @@
 package com.dugx.event.service;
 
 import com.dugx.event.domain.Airport;
+import com.dugx.event.web.rest.errors.BadRequestAlertException;
 import com.dugx.event.repository.AirportRepository;
 import com.dugx.event.service.dto.AirportDTO;
 import com.dugx.event.service.mapper.AirportMapper;
@@ -31,6 +32,7 @@ public class AirportService {
 
     public AirportDTO save(AirportDTO airportDTO) {
         LOG.debug("Request to save Airport : {}", airportDTO);
+        validateAirport(airportDTO, null);
         Airport airport = airportMapper.toEntity(airportDTO);
         airport = airportRepository.save(airport);
         return airportMapper.toDto(airport);
@@ -38,6 +40,7 @@ public class AirportService {
 
     public AirportDTO update(AirportDTO airportDTO) {
         LOG.debug("Request to update Airport : {}", airportDTO);
+        validateAirport(airportDTO, airportDTO.getId());
         Airport airport = airportMapper.toEntity(airportDTO);
         airport = airportRepository.save(airport);
         return airportMapper.toDto(airport);
@@ -57,5 +60,18 @@ public class AirportService {
     public void delete(Long id) {
         LOG.debug("Request to delete Airport : {}", id);
         airportRepository.deleteById(id);
+    }
+
+    /** Kiem tra Airport code: khong de trong va khong trung (khong phan biet hoa thuong). */
+    private void validateAirport(AirportDTO dto, Long excludeId) {
+        String value = dto.getCode() == null ? "" : dto.getCode().trim();
+        if (value.isEmpty()) {
+            throw new BadRequestAlertException("Airport code must not be blank", "airport", "coderequired");
+        }
+        dto.setCode(value);
+        boolean duplicated = excludeId == null ? airportRepository.existsByCodeIgnoreCase(value) : airportRepository.existsByCodeIgnoreCaseAndIdNot(value, excludeId);
+        if (duplicated) {
+            throw new BadRequestAlertException("Airport code already exists", "airport", "codeexists");
+        }
     }
 }

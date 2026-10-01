@@ -22,6 +22,8 @@
           <div>
             @if (codeRef.errors?.required) {
             <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            } @if (codeRef.errors?.blank) {
+            <small class="form-text text-danger">Không được chỉ nhập khoảng trắng.</small>
             } @if (codeRef.errors?.maxlength) {
             <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '10' }"
               >This field cannot be longer than 10 characters.</small
@@ -38,6 +40,8 @@
           <div>
             @if (nameRef.errors?.required) {
             <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            } @if (nameRef.errors?.blank) {
+            <small class="form-text text-danger">Không được chỉ nhập khoảng trắng.</small>
             } @if (nameRef.errors?.maxlength) {
             <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '150' }"
               >This field cannot be longer than 150 characters.</small

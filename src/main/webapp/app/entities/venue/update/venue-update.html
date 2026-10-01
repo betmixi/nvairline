@@ -22,6 +22,8 @@
           <div>
             @if (nameRef.errors?.required) {
             <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            } @if (nameRef.errors?.blank) {
+            <small class="form-text text-danger">Không được chỉ nhập khoảng trắng.</small>
             }
           </div>
           }
@@ -35,6 +37,8 @@
           <div>
             @if (addressRef.errors?.required) {
             <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            } @if (addressRef.errors?.blank) {
+            <small class="form-text text-danger">Không được chỉ nhập khoảng trắng.</small>
             }
           </div>
           }
@@ -48,6 +52,8 @@
           <div>
             @if (cityRef.errors?.required) {
             <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            } @if (cityRef.errors?.blank) {
+            <small class="form-text text-danger">Không được chỉ nhập khoảng trắng.</small>
             }
           </div>
           }
@@ -61,6 +67,8 @@
           <div>
             @if (countryRef.errors?.required) {
             <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            } @if (countryRef.errors?.blank) {
+            <small class="form-text text-danger">Không được chỉ nhập khoảng trắng.</small>
             }
           </div>
           }
@@ -69,9 +77,9 @@
         @let capacityRef = editForm.get('capacity')!;
         <div class="mb-3">
           <label class="form-label" for="field_capacity" jhiTranslate="dugxApp.venue.capacity">Capacity</label>
-          <input type="number" min="0" class="form-control" name="capacity" id="field_capacity" data-cy="capacity" formControlName="capacity" />
+          <input type="number" min="1" class="form-control" name="capacity" id="field_capacity" data-cy="capacity" formControlName="capacity" />
           @if (editForm.get('capacity')?.errors?.min) {
-          <small class="form-text text-danger">Không được nhập số âm.</small>
+          <small class="form-text text-danger">Giá trị phải từ 1 trở lên (không được là số âm hoặc 0).</small>
           }
           @if (capacityRef.invalid && (capacityRef.dirty || capacityRef.touched)) {
           <div>

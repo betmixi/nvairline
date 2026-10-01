@@ -12,7 +12,7 @@ public class PromotionDTO implements Serializable {
 
     private Long id;
 
-    @NotNull
+    @NotBlank
     private String title;
 
     private String description;
@@ -22,6 +22,7 @@ public class PromotionDTO implements Serializable {
     private String targetUrl;
 
     @NotNull
+    @Min(value = 0)
     private Integer displayOrder;
 
     @NotNull

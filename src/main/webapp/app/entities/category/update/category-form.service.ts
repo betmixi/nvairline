@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
+import { notBlank } from 'app/shared/validators/not-blank.validator';
+
 import { ICategory, NewCategory } from '../category.model';
 
 /**
@@ -41,7 +43,7 @@ export class CategoryFormService {
         },
       ),
       name: new FormControl(categoryRawValue.name, {
-        validators: [Validators.required, Validators.maxLength(100)],
+        validators: [Validators.required, notBlank, Validators.maxLength(100)],
       }),
       description: new FormControl(categoryRawValue.description),
     });

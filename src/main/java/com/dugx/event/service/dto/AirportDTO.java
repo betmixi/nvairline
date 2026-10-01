@@ -12,10 +12,10 @@ public class AirportDTO implements Serializable {
 
     private Long id;
 
-    @NotNull
+    @NotBlank
     private String code;
 
-    @NotNull
+    @NotBlank
     private String name;
 
     private String city;

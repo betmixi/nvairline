@@ -22,6 +22,8 @@
           <div>
             @if (codeRef.errors?.required) {
             <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            } @if (codeRef.errors?.blank) {
+            <small class="form-text text-danger">Không được chỉ nhập khoảng trắng.</small>
             }
           </div>
           }
@@ -63,6 +65,9 @@
               placeholder="YYYY-MM-DD HH:mm"
             />
           </div>
+          @if (editForm.errors?.invalidDate) {
+          <small class="form-text text-danger">Ngày kết thúc không được sớm hơn ngày bắt đầu.</small>
+          }
         </div>
 
         <div class="mb-3">

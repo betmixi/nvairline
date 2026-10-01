@@ -1,6 +1,7 @@
 package com.dugx.event.service;
 
 import com.dugx.event.domain.Category;
+import com.dugx.event.web.rest.errors.BadRequestAlertException;
 import com.dugx.event.repository.CategoryRepository;
 import com.dugx.event.service.dto.CategoryDTO;
 import com.dugx.event.service.mapper.CategoryMapper;
@@ -36,6 +37,7 @@ public class CategoryService {
      */
     public CategoryDTO save(CategoryDTO categoryDTO) {
         LOG.debug("Request to save Category : {}", categoryDTO);
+        validateCategory(categoryDTO, null);
         Category category = categoryMapper.toEntity(categoryDTO);
         category = categoryRepository.save(category);
         return categoryMapper.toDto(category);
@@ -49,6 +51,7 @@ public class CategoryService {
      */
     public CategoryDTO update(CategoryDTO categoryDTO) {
         LOG.debug("Request to update Category : {}", categoryDTO);
+        validateCategory(categoryDTO, categoryDTO.getId());
         Category category = categoryMapper.toEntity(categoryDTO);
         category = categoryRepository.save(category);
         return categoryMapper.toDto(category);
@@ -94,5 +97,18 @@ public class CategoryService {
     public void delete(Long id) {
         LOG.debug("Request to delete Category : {}", id);
         categoryRepository.deleteById(id);
+    }
+
+    /** Kiem tra Category name: khong de trong va khong trung (khong phan biet hoa thuong). */
+    private void validateCategory(CategoryDTO dto, Long excludeId) {
+        String value = dto.getName() == null ? "" : dto.getName().trim();
+        if (value.isEmpty()) {
+            throw new BadRequestAlertException("Category name must not be blank", "category", "namerequired");
+        }
+        dto.setName(value);
+        boolean duplicated = excludeId == null ? categoryRepository.existsByNameIgnoreCase(value) : categoryRepository.existsByNameIgnoreCaseAndIdNot(value, excludeId);
+        if (duplicated) {
+            throw new BadRequestAlertException("Category name already exists", "category", "nameexists");
+        }
     }
 }

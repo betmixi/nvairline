@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
+import { notBlank } from 'app/shared/validators/not-blank.validator';
+
 import { IPromotion, NewPromotion } from '../promotion.model';
 
 /**
@@ -45,7 +47,7 @@ export class PromotionFormService {
         },
       ),
       title: new FormControl(promotionRawValue.title, {
-        validators: [Validators.required, Validators.maxLength(150)],
+        validators: [Validators.required, notBlank, Validators.maxLength(150)],
       }),
       description: new FormControl(promotionRawValue.description, {
         validators: [Validators.maxLength(255)],

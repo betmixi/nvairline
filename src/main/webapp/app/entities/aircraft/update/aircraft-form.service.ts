@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
+import { notBlank } from 'app/shared/validators/not-blank.validator';
+
 import { IAircraft, NewAircraft } from '../aircraft.model';
 
 /**
@@ -43,10 +45,10 @@ export class AircraftFormService {
         },
       ),
       name: new FormControl(aircraftRawValue.name, {
-        validators: [Validators.required, Validators.maxLength(100)],
+        validators: [Validators.required, notBlank, Validators.maxLength(100)],
       }),
       totalRows: new FormControl(aircraftRawValue.totalRows, {
-        validators: [Validators.min(1)],
+        validators: [Validators.min(1), Validators.max(26)],
       }),
       totalColumns: new FormControl(aircraftRawValue.totalColumns, {
         validators: [Validators.min(1)],

@@ -1,6 +1,7 @@
 package com.dugx.event.service.dto;
 
 import com.dugx.event.domain.SeatType;
+import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -12,8 +13,10 @@ public class SeatDTO implements Serializable {
 
     private Long id;
 
+    @NotBlank
     private String rowLabel;
 
+    @Min(value = 1)
     private Integer seatNumber;
 
     private SeatType seatType;

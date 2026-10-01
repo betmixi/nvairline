@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
+import { notBlank } from 'app/shared/validators/not-blank.validator';
+
 import { IAddress, NewAddress } from '../address.model';
 
 /**
@@ -43,13 +45,13 @@ export class AddressFormService {
         },
       ),
       location: new FormControl(addressRawValue.location, {
-        validators: [Validators.required],
+        validators: [Validators.required, notBlank],
       }),
       address: new FormControl(addressRawValue.address, {
-        validators: [Validators.required],
+        validators: [Validators.required, notBlank],
       }),
       city: new FormControl(addressRawValue.city, {
-        validators: [Validators.required],
+        validators: [Validators.required, notBlank],
       }),
       capacity: new FormControl(addressRawValue.capacity, {
         validators: [Validators.required, Validators.min(1)],

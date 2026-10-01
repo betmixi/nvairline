@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+
+import { notBlank } from 'app/shared/validators/not-blank.validator';
 
 import dayjs from 'dayjs/esm';
 
@@ -43,6 +45,16 @@ type CouponFormGroupContent = {
 
 export type CouponFormGroup = FormGroup<CouponFormGroupContent>;
 
+/** Ngay ket thuc khong duoc som hon ngay bat dau. */
+const endNotBeforeStart: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
+  const start = group.get('startDate')?.value as string | null | undefined;
+  const end = group.get('endDate')?.value as string | null | undefined;
+  if (!start || !end) {
+    return null;
+  }
+  return dayjs(end, DATE_TIME_FORMAT).isBefore(dayjs(start, DATE_TIME_FORMAT)) ? { invalidDate: true } : null;
+};
+
 @Injectable({ providedIn: 'root' })
 export class CouponFormService {
   createCouponFormGroup(coupon?: CouponFormGroupInput): CouponFormGroup {
@@ -51,23 +63,26 @@ export class CouponFormService {
       ...(coupon ?? { id: null }),
     });
 
-    return new FormGroup<CouponFormGroupContent>({
-      id: new FormControl(
-        { value: couponRawValue.id, disabled: true },
-        {
-          nonNullable: true,
-          validators: [Validators.required],
-        },
-      ),
-      code: new FormControl(couponRawValue.code, {
-        validators: [Validators.required],
-      }),
-      discount: new FormControl(couponRawValue.discount),
-      startDate: new FormControl(couponRawValue.startDate),
-      endDate: new FormControl(couponRawValue.endDate),
-      quantity: new FormControl(couponRawValue.quantity),
-      event: new FormControl(couponRawValue.event),
-    });
+    return new FormGroup<CouponFormGroupContent>(
+      {
+        id: new FormControl(
+          { value: couponRawValue.id, disabled: true },
+          {
+            nonNullable: true,
+            validators: [Validators.required],
+          },
+        ),
+        code: new FormControl(couponRawValue.code, {
+          validators: [Validators.required, notBlank],
+        }),
+        discount: new FormControl(couponRawValue.discount),
+        startDate: new FormControl(couponRawValue.startDate),
+        endDate: new FormControl(couponRawValue.endDate),
+        quantity: new FormControl(couponRawValue.quantity),
+        event: new FormControl(couponRawValue.event),
+      },
+      { validators: [endNotBeforeStart] },
+    );
   }
 
   getCoupon(form: CouponFormGroup): ICoupon | NewCoupon {

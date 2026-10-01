@@ -22,6 +22,8 @@
           <div>
             @if (nameRef.errors?.required) {
             <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            } @if (nameRef.errors?.blank) {
+            <small class="form-text text-danger">Không được chỉ nhập khoảng trắng.</small>
             } @if (nameRef.errors?.maxlength) {
             <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '100' }"
               >This field cannot be longer than 100 characters.</small
@@ -33,16 +35,19 @@
 
         <div class="mb-3">
           <label class="form-label" for="field_totalRows" jhiTranslate="dugxApp.aircraft.totalRows">Total Rows</label>
-          <input type="number" min="0" class="form-control" name="totalRows" id="field_totalRows" data-cy="totalRows" formControlName="totalRows" />
+          <input type="number" min="1" class="form-control" name="totalRows" id="field_totalRows" data-cy="totalRows" formControlName="totalRows" />
+          @if (editForm.get('totalRows')?.errors?.max) {
+          <small class="form-text text-danger">Số hàng tối đa là 26.</small>
+          }
           @if (editForm.get('totalRows')?.errors?.min) {
-          <small class="form-text text-danger">Không được nhập số âm.</small>
+          <small class="form-text text-danger">Giá trị phải từ 1 trở lên (không được là số âm hoặc 0).</small>
           }
         </div>
 
         <div class="mb-3">
           <label class="form-label" for="field_totalColumns" jhiTranslate="dugxApp.aircraft.totalColumns">Total Columns</label>
           <input
-            type="number" min="0"
+            type="number" min="1"
             class="form-control"
             name="totalColumns"
             id="field_totalColumns"
@@ -50,7 +55,7 @@
             formControlName="totalColumns"
           />
           @if (editForm.get('totalColumns')?.errors?.min) {
-          <small class="form-text text-danger">Không được nhập số âm.</small>
+          <small class="form-text text-danger">Giá trị phải từ 1 trở lên (không được là số âm hoặc 0).</small>
           }
         </div>
 

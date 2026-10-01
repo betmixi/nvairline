@@ -17,6 +17,15 @@
     "timerequired": "Start time and end time are required.",
     "negativeprice": "Prices must not be negative.",
     "showtimeexists": "This flight already has a showtime at that time.",
-    "aircraftbusy": "This aircraft is already scheduled in that time range."
+    "aircraftbusy": "This aircraft is already scheduled in that time range.",
+    "coderequired": "Code must not be blank.",
+    "codeexists": "This code already exists.",
+    "namerequired": "Name must not be blank.",
+    "nameexists": "This name already exists.",
+    "locationrequired": "Location must not be blank.",
+    "locationexists": "This location already exists.",
+    "invaliddate": "End date must not be before start date.",
+    "seatrequired": "Please enter a valid seat row and number (1 or more).",
+    "seatexists": "This seat already exists on the aircraft."
   }
 }

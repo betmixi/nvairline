@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
+import { notBlank } from 'app/shared/validators/not-blank.validator';
+
 import { IVenue, NewVenue } from '../venue.model';
 
 /**
@@ -44,16 +46,16 @@ export class VenueFormService {
         },
       ),
       name: new FormControl(venueRawValue.name, {
-        validators: [Validators.required],
+        validators: [Validators.required, notBlank],
       }),
       address: new FormControl(venueRawValue.address, {
-        validators: [Validators.required],
+        validators: [Validators.required, notBlank],
       }),
       city: new FormControl(venueRawValue.city, {
-        validators: [Validators.required],
+        validators: [Validators.required, notBlank],
       }),
       country: new FormControl(venueRawValue.country, {
-        validators: [Validators.required],
+        validators: [Validators.required, notBlank],
       }),
       capacity: new FormControl(venueRawValue.capacity, {
         validators: [Validators.required, Validators.min(1)],

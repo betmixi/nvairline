@@ -19,12 +19,15 @@
         <div class="mb-3">
           <label class="form-label" for="field_rowLabel" jhiTranslate="dugxApp.seat.rowLabel">Row Label</label>
           <input type="text" class="form-control" name="rowLabel" id="field_rowLabel" data-cy="rowLabel" formControlName="rowLabel" />
+          @if (editForm.get('rowLabel')?.invalid && (editForm.get('rowLabel')?.dirty || editForm.get('rowLabel')?.touched)) {
+          <small class="form-text text-danger">Vui lòng nhập hàng ghế (không để trống, tối đa 5 ký tự).</small>
+          }
         </div>
 
         <div class="mb-3">
           <label class="form-label" for="field_seatNumber" jhiTranslate="dugxApp.seat.seatNumber">Seat Number</label>
           <input
-            type="number" min="0"
+            type="number" min="1"
             class="form-control"
             name="seatNumber"
             id="field_seatNumber"
@@ -32,7 +35,7 @@
             formControlName="seatNumber"
           />
           @if (editForm.get('seatNumber')?.errors?.min) {
-          <small class="form-text text-danger">Không được nhập số âm.</small>
+          <small class="form-text text-danger">Giá trị phải từ 1 trở lên (không được là số âm hoặc 0).</small>
           }
         </div>
 

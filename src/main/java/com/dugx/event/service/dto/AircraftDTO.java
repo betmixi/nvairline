@@ -16,6 +16,7 @@ public class AircraftDTO implements Serializable {
     private String name;
 
     @Min(value = 0)
+    @Max(value = 26)
     private Integer totalRows;
 
     @Min(value = 0)
