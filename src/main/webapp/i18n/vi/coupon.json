@@ -2,27 +2,27 @@
   "dugxApp": {
     "coupon": {
       "home": {
-        "title": "Coupons",
-        "refreshListLabel": "Refresh list",
-        "createLabel": "Thêm mới một Coupon",
-        "createOrEditLabel": "Thêm mới hoặc cập nhật Coupon",
-        "notFound": "No Coupons found"
+        "title": "Danh sách ưu đãi",
+        "refreshListLabel": "Làm mới danh sách",
+        "createLabel": "Thêm mới ưu đãi",
+        "createOrEditLabel": "Thêm mới hoặc cập nhật ưu đãi",
+        "notFound": "Không tìm thấy ưu đãi nào"
       },
-      "created": "Một Coupon mới được tạo với định danh {{ param }}",
-      "updated": "Một Coupon cập nhật với định danh {{ param }}",
-      "deleted": "Một Coupon đã xóa với định danh {{ param }}",
+      "created": "Một ưu đãi mới được tạo với định danh {{ param }}",
+      "updated": "Một ưu đãi được cập nhật với định danh {{ param }}",
+      "deleted": "Một ưu đãi đã được xóa với định danh {{ param }}",
       "delete": {
-        "question": "Bạn có chắc là muốn xóa Coupon {{ id }}?"
+        "question": "Bạn có chắc là muốn xóa ưu đãi {{ id }}?"
       },
       "detail": {
-        "title": "Coupon"
+        "title": "Ưu đãi"
       },
       "id": "ID",
-      "code": "Code",
-      "discount": "Discount",
-      "startDate": "Start Date",
-      "endDate": "End Date",
-      "quantity": "Quantity",
+      "code": "Mã ưu đãi",
+      "discount": "Giảm giá",
+      "startDate": "Ngày bắt đầu",
+      "endDate": "Ngày kết thúc",
+      "quantity": "Số lượng",
       "event": "Chuyến bay"
     }
   }
