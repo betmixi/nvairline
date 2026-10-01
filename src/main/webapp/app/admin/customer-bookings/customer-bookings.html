@@ -29,13 +29,6 @@
       <button type="button" [class.active]="statusFilter === s" (click)="statusFilter = s">{{ s }}</button>
       }
     </div>
-
-    <div class="status-filter">
-      <button type="button" [class.active]="typeFilter === 'all'" (click)="typeFilter = 'all'">Tất cả loại đơn</button>
-      @for (t of types; track t) {
-      <button type="button" [class.active]="typeFilter === t" (click)="typeFilter = t">{{ bookingTypeLabelFor(t) }}</button>
-      }
-    </div>
   </div>
 
   <!-- Danh sách -->

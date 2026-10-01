@@ -27,7 +27,6 @@ export class AdminCustomerBookingsComponent implements OnInit {
 
   keyword = '';
   statusFilter = 'all';
-  typeFilter = 'all';
 
   private readonly customerBookingService = inject(CustomerBookingService);
   private readonly cdr = inject(ChangeDetectorRef);
@@ -36,18 +35,13 @@ export class AdminCustomerBookingsComponent implements OnInit {
     return Array.from(new Set(this.bookings.map(b => b.status))).filter(s => !!s);
   }
 
-  get types(): CustomerBookingType[] {
-    return Array.from(new Set(this.bookings.map(b => b.bookingType)));
-  }
-
   get filteredBookings(): ICustomerBooking[] {
     const kw = this.keyword.trim().toLowerCase();
 
     return this.bookings.filter(b => {
       const matchStatus = this.statusFilter === 'all' || b.status === this.statusFilter;
-      const matchType = this.typeFilter === 'all' || b.bookingType === this.typeFilter;
 
-      if (!matchStatus || !matchType) {
+      if (!matchStatus) {
         return false;
       }
 

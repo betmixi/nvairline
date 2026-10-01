@@ -139,6 +139,7 @@
 
 .table {
   width: 100%;
+  min-width: 1200px;
   border-collapse: collapse;
 }
 
@@ -176,7 +177,7 @@
 .flight-cell {
   color: #1f2937;
   font-weight: 500;
-  max-width: 220px;
+  min-width: 240px;
   white-space: normal;
   line-height: 1.5;
 }
@@ -184,7 +185,7 @@
 .route-cell,
 .table tbody td.route-cell {
   color: #374151;
-  max-width: 260px;
+  min-width: 170px;
   white-space: normal;
   line-height: 1.6;
 }
