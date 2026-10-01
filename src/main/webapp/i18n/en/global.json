@@ -161,7 +161,8 @@
     "file": {
       "could.not.extract": "Could not extract file",
       "not.image": "File was expected to be an image but was found to be \"{{ fileType }}\""
-    }
+    },
+    "NotBlank": "Field {{ fieldName }} must not be blank!"
   },
   "footer": "This is your footer"
 }

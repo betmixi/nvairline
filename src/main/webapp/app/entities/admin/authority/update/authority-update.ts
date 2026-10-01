@@ -61,7 +61,8 @@ export class AuthorityUpdate implements OnInit {
   }
 
   protected onSaveError(): void {
-    // Api for inheritance.
+    // Cuon len thong bao loi (jhi-alert-error) de nguoi dung nhin thay ly do luu that bai (trung, de trong, so am...).
+    setTimeout(() => document.querySelector('jhi-alert-error')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
   }
 
   protected onSaveFinalize(): void {

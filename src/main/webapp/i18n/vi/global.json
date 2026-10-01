@@ -159,7 +159,8 @@
     "file": {
       "could.not.extract": "Could not extract file",
       "not.image": "File was expected to be an image but was found to be \"{{ fileType }}\""
-    }
+    },
+    "NotBlank": "Trường {{ fieldName }} không được để trống hoặc chỉ chứa khoảng trắng!"
   },
   "footer": "Đây là chân trang của bạn"
 }
