@@ -56,7 +56,7 @@
       <!-- ĐÁNH GIÁ -->
       <section class="review-section">
         <div class="review-head">
-          <h4>Đánh giá</h4>
+          <h4>Chia sẻ của bạn về dịch vụ của chúng tôi</h4>
 
           @if (averageRating !== null) {
           <div class="avg-rating">
@@ -161,16 +161,8 @@
         </div>
         }
 
-        <div class="price-line">
-          <span class="text-muted">{{ selectedShowtime ? 'Giá vé' : 'Giá vé từ' }}</span>
-          <strong class="price-value">
-            {{ (selectedShowtime ? selectedShowtime.basePrice : lowestPrice) !== null ? ((selectedShowtime ? selectedShowtime.basePrice :
-            lowestPrice) | number) + ' đ' : 'Liên hệ' }}
-          </strong>
-        </div>
-
         <button class="btn btn-primary w-100 buy-btn" [disabled]="!hasAvailableTickets" (click)="buyTicket()">
-          {{ hasAvailableTickets ? 'Xác nhận mua vé' : 'Đã hết vé' }}
+          {{ hasAvailableTickets ? 'Tiếp tục' : 'Đã hết vé' }}
         </button>
       </div>
     </aside>

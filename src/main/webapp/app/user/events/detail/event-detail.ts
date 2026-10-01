@@ -70,14 +70,6 @@ export default class UserEventDetailComponent implements OnInit {
     return (this.event?.showtimes ?? []).filter(showtime => dayjs(showtime.startTime as never).isAfter(dayjs()));
   }
 
-  get lowestPrice(): number | null {
-    const prices = this.upcomingShowtimes
-      .map(showtime => showtime.basePrice)
-      .filter((price): price is number => price !== null && price !== undefined);
-
-    return prices.length ? Math.min(...prices) : null;
-  }
-
   /** Suat chieu cu the da chon tu the ket qua tim kiem, de hien ro ngay/gio/gia dang xac nhan mua. */
   get selectedShowtime(): IShowtime | null {
     if (this.preselectedShowtimeId === null) {
