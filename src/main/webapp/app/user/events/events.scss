@@ -46,6 +46,7 @@
 }
 
 .search-tabs {
+  justify-content: center;
   border-radius: 20px 20px 0 0;
   overflow: hidden;
   display: flex;
@@ -208,32 +209,6 @@
   flex-shrink: 0;
   font-size: 20px;
   color: #c3cbdc;
-}
-
-.checkin-item {
-  cursor: default;
-
-  &:hover {
-    border-color: #e7ebf3;
-    box-shadow: none;
-    transform: none;
-  }
-}
-
-.btn-checkin {
-  flex-shrink: 0;
-  border: none;
-  background: #01319f;
-  color: #fff;
-  border-radius: 10px;
-  padding: 9px 16px;
-  font-weight: 700;
-  font-size: 13px;
-  white-space: nowrap;
-
-  &:disabled {
-    opacity: 0.6;
-  }
 }
 
 /* =========================

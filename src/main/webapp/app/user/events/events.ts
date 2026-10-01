@@ -10,12 +10,9 @@ import { IShowtime } from 'app/entities/showtime/showtime.model';
 import { IAirport } from 'app/entities/airport/airport.model';
 import { AirportService } from 'app/entities/airport/service/airport.service';
 import { AccountService } from 'app/core/auth/account.service';
-import { IMyTicket } from 'app/my-tickets/my-ticket.model';
-import { MyTicketService } from 'app/my-tickets/my-ticket.service';
-import { AdminCheckInService } from 'app/admin/check-in/check-in.service';
 import { TripBuilderService } from 'app/booking/trip-builder.service';
 
-type BookingTabId = 'mua-ve' | 'quan-ly' | 'lam-thu-tuc' | 'trang-thai' | 'lich-bay';
+type BookingTabId = 'mua-ve' | 'trang-thai' | 'lich-bay';
 type TripType = 'round-trip' | 'one-way' | 'multi-city';
 
 interface BookingTab {
@@ -37,8 +34,6 @@ export class EventsComponent implements OnInit {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
   protected readonly accountService = inject(AccountService);
-  private readonly myTicketService = inject(MyTicketService);
-  private readonly checkInService = inject(AdminCheckInService);
   private readonly tripBuilder = inject(TripBuilderService);
 
   /** Loi hien thi tren the tim kiem (vd chua chon du ngay di/ve cho ve khu hoi). */
@@ -48,22 +43,6 @@ export class EventsComponent implements OnInit {
   get tripBuilderLegCount(): number {
     return this.tripBuilder.legs().length;
   }
-
-  /**
-   * "Quản lý đặt chỗ": hiện sẵn toàn bộ vé của người dùng đang đăng nhập
-   * (không cần nhập lại mã vé/họ để "xác minh" vì đã đăng nhập rồi).
-   * Mã vé chỉ dùng để lọc bớt khi có nhiều vé.
-   */
-  bookingSearchCode = '';
-  bookingTickets: IMyTicket[] = [];
-  bookingLoading = false;
-  bookingLoaded = false;
-
-  /** Ve cua nguoi dung du dieu kien lam thu tuc (da thanh toan, chua check-in). */
-  checkinTickets: IMyTicket[] = [];
-  checkinLoading = false;
-  checkinLoaded = false;
-  confirmingTicketId: number | null = null;
 
   events: IEvent[] = [];
   filteredEvents: IEvent[] = [];
@@ -86,7 +65,7 @@ export class EventsComponent implements OnInit {
 
   /** Cac tab kieu dat cho (chi "Mua ve" la thuc su hoat dong, con lai la placeholder de giong giao dien tham chieu). */
   readonly bookingTabs: BookingTab[] = [
-    { id: 'mua-ve', label: 'Mua vé' },
+    { id: 'mua-ve', label: 'Tra cứu chuyến bay' },
     { id: 'trang-thai', label: 'Trạng thái chuyến bay' },
     { id: 'lich-bay', label: 'Tra cứu lịch bay' },
   ];
@@ -483,14 +462,6 @@ export class EventsComponent implements OnInit {
 
   selectTab(tabId: BookingTabId): void {
     this.activeTab.set(tabId);
-
-    if (tabId === 'quan-ly' && !this.bookingLoaded && this.accountService.isAuthenticated()) {
-      this.loadMyBookings();
-    }
-
-    if (tabId === 'lam-thu-tuc' && !this.checkinLoaded && this.accountService.isAuthenticated()) {
-      this.loadCheckinEligibleTickets();
-    }
   }
 
   selectTripType(type: TripType): void {
@@ -547,77 +518,6 @@ export class EventsComponent implements OnInit {
       relativeTo: this.activatedRoute,
       queryParams,
       queryParamsHandling: 'merge',
-    });
-  }
-
-  /** Tai toan bo ve cua nguoi dung dang dang nhap cho tab "Quan ly dat cho". */
-  loadMyBookings(): void {
-    this.bookingLoading = true;
-
-    this.myTicketService.query({ page: 0, size: 100, sort: ['id,desc'] }).subscribe({
-      next: res => {
-        this.bookingTickets = res.body ?? [];
-        this.bookingLoading = false;
-        this.bookingLoaded = true;
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        this.bookingLoading = false;
-        this.bookingLoaded = true;
-        this.cdr.detectChanges();
-      },
-    });
-  }
-
-  /** Danh sach ve da loc theo mã vé (neu co nhap), khong bat buoc. */
-  get filteredBookingTickets(): IMyTicket[] {
-    const code = this.bookingSearchCode.trim().toLowerCase();
-    if (!code) {
-      return this.bookingTickets;
-    }
-    return this.bookingTickets.filter(
-      ticket => (ticket.qrCode ?? '').toLowerCase().includes(code) || String(ticket.bookingId ?? '') === code,
-    );
-  }
-
-  /** Tai ve du dieu kien lam thu tuc: da thanh toan va chua check-in. */
-  loadCheckinEligibleTickets(): void {
-    this.checkinLoading = true;
-
-    this.myTicketService.query({ page: 0, size: 100, sort: ['id,desc'] }).subscribe({
-      next: res => {
-        const tickets = res.body ?? [];
-        this.checkinTickets = tickets.filter(t => t.bookingStatus === 'PAID' && !t.checkedIn);
-        this.checkinLoading = false;
-        this.checkinLoaded = true;
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        this.checkinLoading = false;
-        this.checkinLoaded = true;
-        this.cdr.detectChanges();
-      },
-    });
-  }
-
-  /** Khach tu lam thu tuc cho ve cua chinh minh (chi cho phep voi ve minh so huu - kiem tra o backend). */
-  confirmSelfCheckIn(ticket: IMyTicket): void {
-    if (this.confirmingTicketId !== null) {
-      return;
-    }
-
-    this.confirmingTicketId = ticket.id;
-
-    this.checkInService.confirmCheckIn(ticket.id).subscribe({
-      next: () => {
-        this.checkinTickets = this.checkinTickets.filter(t => t.id !== ticket.id);
-        this.confirmingTicketId = null;
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        this.confirmingTicketId = null;
-        this.cdr.detectChanges();
-      },
     });
   }
 

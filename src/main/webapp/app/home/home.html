@@ -159,50 +159,6 @@
       <div class="search-error-message">⚠️ {{ searchErrorMessage }}</div>
       }
     </div>
-    } @else if (activeTab() === 'quan-ly') {
-    <div class="search-panel">
-      @if (!accountService.isAuthenticated()) {
-      <div class="manage-booking-result manage-booking-not-found">🔒 Vui lòng <a routerLink="/login">đăng nhập</a> để xem vé đã đặt.</div>
-      } @else {
-      <div class="search-fields-row">
-        <div class="airport-field">
-          <label>Mã đặt chỗ/số vé điện tử</label>
-          <input
-            type="text"
-            class="airport-input"
-            placeholder="Nhập mã vé để lọc (bỏ trống để xem tất cả)"
-            [(ngModel)]="bookingSearchCode"
-          />
-        </div>
-        <a routerLink="/my-tickets" class="btn-search">🎫 Xem tất cả vé của tôi</a>
-      </div>
-
-      @if (bookingLoading) {
-      <div class="manage-booking-result">Đang tải vé của bạn...</div>
-      } @else if (filteredBookingTickets.length === 0) {
-      <div class="manage-booking-result manage-booking-not-found">
-        {{ bookingSearchCode.trim() ? 'Không tìm thấy vé phù hợp với mã đã nhập.' : 'Bạn chưa có vé nào.' }}
-      </div>
-      } @else {
-      <div class="manage-booking-list">
-        @for (ticket of filteredBookingTickets; track ticket.id) {
-        <a routerLink="/my-tickets" class="manage-booking-item">
-          <div class="manage-booking-body">
-            <strong class="manage-booking-title">{{ ticket.eventTitle }}</strong>
-            <div class="manage-booking-meta">
-              <span class="manage-booking-seat">💺 Ghế {{ ticket.seatLabel }}</span>
-              <span class="manage-booking-code">{{ ticket.qrCode }}</span>
-            </div>
-          </div>
-          <span class="manage-booking-status" [class.is-used]="ticket.checkedIn" [class.is-cancelled]="ticket.status === 'CANCELLED'">
-            {{ ticket.checkedIn ? 'Đã check-in' : ticket.status }}
-          </span>
-          <span class="manage-booking-arrow">›</span>
-        </a>
-        }
-      </div>
-      } }
-    </div>
     }
   </div>
 

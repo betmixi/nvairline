@@ -8,11 +8,9 @@ import { IAirport } from 'app/entities/airport/airport.model';
 import { AirportService } from 'app/entities/airport/service/airport.service';
 import { AccountService } from 'app/core/auth/account.service';
 import { TranslateDirective } from 'app/shared/language';
-import { IMyTicket } from 'app/my-tickets/my-ticket.model';
-import { MyTicketService } from 'app/my-tickets/my-ticket.service';
 import { TripBuilderService } from 'app/booking/trip-builder.service';
 
-type BookingTabId = 'mua-ve' | 'quan-ly' | 'lam-thu-tuc' | 'trang-thai' | 'lich-bay';
+type BookingTabId = 'mua-ve' | 'trang-thai' | 'lich-bay';
 type TripType = 'round-trip' | 'one-way' | 'multi-city';
 
 interface BookingTab {
@@ -36,21 +34,10 @@ export default class Home implements OnInit {
   public readonly account = this.accountService.account;
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly router = inject(Router);
-  private readonly myTicketService = inject(MyTicketService);
   private readonly tripBuilder = inject(TripBuilderService);
 
   /** Loi hien thi tren the tim kiem (vd chua chon du ngay di/ve cho ve khu hoi). */
   searchErrorMessage = '';
-
-  /**
-   * "Quản lý đặt chỗ": hiện sẵn toàn bộ vé của người dùng đang đăng nhập
-   * (không cần nhập lại mã vé/họ để "xác minh" vì đã đăng nhập rồi).
-   * Mã vé chỉ dùng để lọc bớt khi có nhiều vé.
-   */
-  bookingSearchCode = '';
-  bookingTickets: IMyTicket[] = [];
-  bookingLoading = false;
-  bookingLoaded = false;
 
   /** Tin nhanh hien thi duoi khung tim kiem, duyet qua lai bang nut < / >. */
   readonly flashNews: FlashNews[] = [
@@ -77,7 +64,7 @@ export default class Home implements OnInit {
 
   /** Cac tab kieu dat cho (chi "Mua ve" la thuc su hoat dong, con lai la placeholder de giong giao dien tham chieu). */
   readonly bookingTabs: BookingTab[] = [
-    { id: 'mua-ve', label: 'Mua vé' },
+    { id: 'mua-ve', label: 'Tra cứu chuyến bay' },
     { id: 'trang-thai', label: 'Trạng thái chuyến bay' },
     { id: 'lich-bay', label: 'Tra cứu lịch bay' },
   ];
@@ -285,17 +272,13 @@ export default class Home implements OnInit {
   }
 
   selectTab(tabId: BookingTabId): void {
-    if (tabId === 'lam-thu-tuc' || tabId === 'trang-thai' || tabId === 'lich-bay') {
+    if (tabId === 'trang-thai' || tabId === 'lich-bay') {
       // Cac tab nay da duoc trien khai day du ben trang tim kiem chuyen bay (/events), khong lap lai UI o Home.
       void this.router.navigate(['/events'], { queryParams: { tab: tabId } });
       return;
     }
 
     this.activeTab.set(tabId);
-
-    if (tabId === 'quan-ly' && !this.bookingLoaded && this.accountService.isAuthenticated()) {
-      this.loadMyBookings();
-    }
   }
 
   selectTripType(type: TripType): void {
@@ -348,35 +331,5 @@ export default class Home implements OnInit {
     const temp = this.searchDepartureAirportId;
     this.searchDepartureAirportId = this.searchArrivalAirportId;
     this.searchArrivalAirportId = temp;
-  }
-
-  /** Tai toan bo ve cua nguoi dung dang dang nhap cho tab "Quan ly dat cho". */
-  loadMyBookings(): void {
-    this.bookingLoading = true;
-
-    this.myTicketService.query({ page: 0, size: 100, sort: ['id,desc'] }).subscribe({
-      next: res => {
-        this.bookingTickets = res.body ?? [];
-        this.bookingLoading = false;
-        this.bookingLoaded = true;
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        this.bookingLoading = false;
-        this.bookingLoaded = true;
-        this.cdr.detectChanges();
-      },
-    });
-  }
-
-  /** Danh sach ve da loc theo mã vé (neu co nhap), khong bat buoc. */
-  get filteredBookingTickets(): IMyTicket[] {
-    const code = this.bookingSearchCode.trim().toLowerCase();
-    if (!code) {
-      return this.bookingTickets;
-    }
-    return this.bookingTickets.filter(
-      ticket => (ticket.qrCode ?? '').toLowerCase().includes(code) || String(ticket.bookingId ?? '') === code,
-    );
   }
 }
